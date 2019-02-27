@@ -1363,7 +1363,7 @@ public final class NTInterpreters implements NTInterpreterProviderType
     private final InstrumentZone zone;
     private final int source_operator;
     private final NTGenerator target_operator;
-    private final int modulation_amount;
+    private final short modulation_amount;
     private final int modulation_amount_source_operator;
     private final NTTransform modulation_transform_operator;
 
@@ -1371,7 +1371,7 @@ public final class NTInterpreters implements NTInterpreterProviderType
       final InstrumentZone in_zone,
       final int in_source_operator,
       final NTGenerator in_target_operator,
-      final int in_modulation_amount,
+      final short in_modulation_amount,
       final int in_modulation_amount_source_operator,
       final NTTransform in_modulation_transform_operator)
     {
@@ -1442,7 +1442,7 @@ public final class NTInterpreters implements NTInterpreterProviderType
     }
 
     @Override
-    public int modulationAmount()
+    public short modulationAmount()
     {
       return this.modulation_amount;
     }

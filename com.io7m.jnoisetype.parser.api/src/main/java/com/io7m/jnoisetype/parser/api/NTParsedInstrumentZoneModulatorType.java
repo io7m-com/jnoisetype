@@ -48,7 +48,7 @@ public interface NTParsedInstrumentZoneModulatorType extends NTParsedElementType
    */
 
   @NTNativeType(name = "short")
-  int modulationAmount();
+  short modulationAmount();
 
   /**
    * @return The degree to which the source modulates the destination is to be controlled by the
