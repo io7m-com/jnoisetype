@@ -26,7 +26,7 @@ import org.immutables.value.Value;
 
 @ImmutablesStyleType
 @Value.Immutable
-public interface NTShortStringType
+public interface NTShortStringType extends Comparable<NTShortStringType>
 {
   /**
    * @return The actual string value
@@ -53,5 +53,12 @@ public interface NTShortStringType
     if (text.chars().anyMatch(code -> code == 0)) {
       throw new IllegalArgumentException("Strings must not contain codepoint 0x0");
     }
+  }
+
+  @Override
+  default int compareTo(
+    final NTShortStringType other)
+  {
+    return this.value().compareTo(other.value());
   }
 }

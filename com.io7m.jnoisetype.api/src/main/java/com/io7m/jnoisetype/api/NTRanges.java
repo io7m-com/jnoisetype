@@ -16,6 +16,7 @@
 
 package com.io7m.jnoisetype.api;
 
+import com.io7m.jaffirm.core.Invariants;
 import com.io7m.jranges.RangeInclusiveI;
 
 /**
@@ -31,7 +32,7 @@ public final class NTRanges
    */
 
   public static final RangeInclusiveI SHORT_STRING_LENGTH_RANGE =
-    RangeInclusiveI.of(0, 255);
+    RangeInclusiveI.of(0, 253);
 
   /**
    * The length range of long strings. The SountFontⓡ specification defines many strings as "an
@@ -40,10 +41,10 @@ public final class NTRanges
    */
 
   public static final RangeInclusiveI LONG_STRING_LENGTH_RANGE =
-    RangeInclusiveI.of(0, 65535);
+    RangeInclusiveI.of(0, 65533);
 
   /**
-   * The range of valid value for version numbers. Numbers are encoded as 16-bit unsigned
+   * The range of valid values for version numbers. Numbers are encoded as 16-bit unsigned
    * integers.
    */
 
@@ -70,6 +71,71 @@ public final class NTRanges
 
   public static final RangeInclusiveI INSTRUMENT_NAME_LENGTH_RANGE =
     RangeInclusiveI.of(0, 20);
+
+  /**
+   * The range of valid values for instrument indices. Numbers are encoded as 16-bit unsigned
+   * integers.
+   */
+
+  public static final RangeInclusiveI INSTRUMENT_INDEX_RANGE =
+    RangeInclusiveI.of(0, 65535);
+
+  /**
+   * The range of valid values for instrument bag indices. Numbers are encoded as 16-bit unsigned
+   * integers.
+   */
+
+  public static final RangeInclusiveI INSTRUMENT_BAG_INDEX_RANGE =
+    RangeInclusiveI.of(0, 65535);
+
+  /**
+   * The range of valid values for preset indices. Numbers are encoded as 16-bit unsigned integers.
+   */
+
+  public static final RangeInclusiveI PRESET_INDEX_RANGE =
+    RangeInclusiveI.of(0, 65535);
+
+  /**
+   * The range of valid values for preset bag indices. Numbers are encoded as 16-bit unsigned
+   * integers.
+   */
+
+  public static final RangeInclusiveI PRESET_BAG_INDEX_RANGE =
+    RangeInclusiveI.of(0, 65535);
+
+  /**
+   * The range of valid values for sample indices. Numbers are encoded as 16-bit unsigned integers.
+   */
+
+  public static final RangeInclusiveI SAMPLE_INDEX_RANGE =
+    RangeInclusiveI.of(0, 65535);
+
+  /**
+   * The range of valid values for generator indices. Numbers are encoded as 16-bit unsigned
+   * integers.
+   */
+
+  public static final RangeInclusiveI GENERATOR_INDEX_RANGE =
+    RangeInclusiveI.of(0, 65535);
+
+  /**
+   * The range of valid values for pitch values.
+   */
+
+  public static final RangeInclusiveI PITCH_RANGE =
+    RangeInclusiveI.of(0, 127);
+
+  static {
+    Invariants.checkInvariantI(
+      SHORT_STRING_LENGTH_RANGE.interval(),
+      SHORT_STRING_LENGTH_RANGE.interval() % 2 == 0,
+      i -> "Short string interval must be even");
+
+    Invariants.checkInvariantI(
+      LONG_STRING_LENGTH_RANGE.interval(),
+      LONG_STRING_LENGTH_RANGE.interval() % 2 == 0,
+      i -> "Long string interval must be even");
+  }
 
   private NTRanges()
   {

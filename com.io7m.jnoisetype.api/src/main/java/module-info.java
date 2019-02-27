@@ -25,6 +25,7 @@ module com.io7m.jnoisetype.api
   requires static org.osgi.annotation.bundle;
 
   requires transitive com.io7m.jranges.core;
+  requires com.io7m.jaffirm.core;
 
   exports com.io7m.jnoisetype.api;
 }

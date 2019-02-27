@@ -17,6 +17,7 @@
 package com.io7m.jnoisetype.api;
 
 import com.io7m.immutables.styles.ImmutablesStyleType;
+import com.io7m.jranges.RangeCheck;
 import org.immutables.value.Value;
 
 /**
@@ -40,4 +41,18 @@ public interface NTGeneratorType
 
   @Value.Parameter
   String name();
+
+  /**
+   * Check preconditions for the type.
+   */
+
+  @Value.Check
+  default void checkPreconditions()
+  {
+    RangeCheck.checkIncludedInInteger(
+      this.index(),
+      "Generator index",
+      NTRanges.GENERATOR_INDEX_RANGE,
+      "Valid generator indices");
+  }
 }

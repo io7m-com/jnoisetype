@@ -176,16 +176,17 @@ public abstract class NTParsersContract
             1, file.sampleRecords().size(), "1 sample record");
 
           final var record = file.sampleRecords().get(0);
-          Assertions.assertEquals("EOS", record.name().value(), "Correct sample record name");
-          Assertions.assertEquals(0, record.kind().value(), "Correct sample kind");
-          Assertions.assertEquals(0L, record.loopStart(), "Correct sample loopStart");
-          Assertions.assertEquals(0L, record.loopEnd(), "Correct sample loopEnd");
-          Assertions.assertEquals(0L, record.start(), "Correct sample start");
-          Assertions.assertEquals(0L, record.end(), "Correct sample end");
-          Assertions.assertEquals(0, record.originalPitch(), "Correct sample originalPitch");
-          Assertions.assertEquals(0, record.pitchCorrection(), "Correct sample pitchCorrection");
-          Assertions.assertEquals(0, record.sampleRate(), "Correct sample sampleRate");
-          Assertions.assertEquals(0, record.sampleLink(), "Correct sample sampleLink");
+          final var description = record.description();
+          Assertions.assertEquals("EOS", description.name().value(), "Correct sample record name");
+          Assertions.assertEquals(0, description.kind().value(), "Correct sample kind");
+          Assertions.assertEquals(0L, description.loopStart(), "Correct sample loopStart");
+          Assertions.assertEquals(0L, description.loopEnd(), "Correct sample loopEnd");
+          Assertions.assertEquals(0L, description.start(), "Correct sample start");
+          Assertions.assertEquals(0L, description.end(), "Correct sample end");
+          Assertions.assertEquals(0, description.originalPitch(), "Correct sample originalPitch");
+          Assertions.assertEquals(0, description.pitchCorrection(), "Correct sample pitchCorrection");
+          Assertions.assertEquals(0, description.sampleRate(), "Correct sample sampleRate");
+          Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");
         },
 
         () -> {
@@ -266,33 +267,35 @@ public abstract class NTParsersContract
 
         () -> {
           final var record = file.sampleRecords().get(0);
-          Assertions.assertEquals("000_60", record.name().value(), "Correct sample record name");
+          final var description = record.description();
+          Assertions.assertEquals("000_60", description.name().value(), "Correct sample record name");
           Assertions.assertEquals(
             NTSampleKind.SAMPLE_KIND_MONO.value(),
-            record.kind().value(),
+            description.kind().value(),
             "Correct sample kind");
-          Assertions.assertEquals(0L, record.loopStart(), "Correct sample loopStart");
-          Assertions.assertEquals(8269L, record.loopEnd(), "Correct sample loopEnd");
-          Assertions.assertEquals(0L, record.start(), "Correct sample start");
-          Assertions.assertEquals(8270L, record.end(), "Correct sample end");
-          Assertions.assertEquals(60, record.originalPitch(), "Correct sample originalPitch");
-          Assertions.assertEquals(0, record.pitchCorrection(), "Correct sample pitchCorrection");
-          Assertions.assertEquals(22050, record.sampleRate(), "Correct sample sampleRate");
-          Assertions.assertEquals(0, record.sampleLink(), "Correct sample sampleLink");
+          Assertions.assertEquals(0L, description.loopStart(), "Correct sample loopStart");
+          Assertions.assertEquals(8269L, description.loopEnd(), "Correct sample loopEnd");
+          Assertions.assertEquals(0L, description.start(), "Correct sample start");
+          Assertions.assertEquals(8270L, description.end(), "Correct sample end");
+          Assertions.assertEquals(60, description.originalPitch(), "Correct sample originalPitch");
+          Assertions.assertEquals(0, description.pitchCorrection(), "Correct sample pitchCorrection");
+          Assertions.assertEquals(22050, description.sampleRate(), "Correct sample sampleRate");
+          Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");
         },
 
         () -> {
           final var record = file.sampleRecords().get(1);
-          Assertions.assertEquals("EOS", record.name().value(), "Correct sample record name");
-          Assertions.assertEquals(0, record.kind().value(), "Correct sample kind");
-          Assertions.assertEquals(0L, record.loopStart(), "Correct sample loopStart");
-          Assertions.assertEquals(0L, record.loopEnd(), "Correct sample loopEnd");
-          Assertions.assertEquals(0L, record.start(), "Correct sample start");
-          Assertions.assertEquals(0L, record.end(), "Correct sample end");
-          Assertions.assertEquals(0, record.originalPitch(), "Correct sample originalPitch");
-          Assertions.assertEquals(0, record.pitchCorrection(), "Correct sample pitchCorrection");
-          Assertions.assertEquals(0, record.sampleRate(), "Correct sample sampleRate");
-          Assertions.assertEquals(0, record.sampleLink(), "Correct sample sampleLink");
+          final var description = record.description();
+          Assertions.assertEquals("EOS", description.name().value(), "Correct sample record name");
+          Assertions.assertEquals(0, description.kind().value(), "Correct sample kind");
+          Assertions.assertEquals(0L, description.loopStart(), "Correct sample loopStart");
+          Assertions.assertEquals(0L, description.loopEnd(), "Correct sample loopEnd");
+          Assertions.assertEquals(0L, description.start(), "Correct sample start");
+          Assertions.assertEquals(0L, description.end(), "Correct sample end");
+          Assertions.assertEquals(0, description.originalPitch(), "Correct sample originalPitch");
+          Assertions.assertEquals(0, description.pitchCorrection(), "Correct sample pitchCorrection");
+          Assertions.assertEquals(0, description.sampleRate(), "Correct sample sampleRate");
+          Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");
         },
 
         () -> {
@@ -418,33 +421,35 @@ public abstract class NTParsersContract
 
         () -> {
           final var record = file.sampleRecords().get(0);
-          Assertions.assertEquals("000_60", record.name().value(), "Correct sample record name");
+          final var description = record.description();
+          Assertions.assertEquals("000_60", description.name().value(), "Correct sample record name");
           Assertions.assertEquals(
             NTSampleKind.SAMPLE_KIND_MONO.value(),
-            record.kind().value(),
+            description.kind().value(),
             "Correct sample kind");
-          Assertions.assertEquals(0L, record.loopStart(), "Correct sample loopStart");
-          Assertions.assertEquals(8269L, record.loopEnd(), "Correct sample loopEnd");
-          Assertions.assertEquals(0L, record.start(), "Correct sample start");
-          Assertions.assertEquals(8270L, record.end(), "Correct sample end");
-          Assertions.assertEquals(60, record.originalPitch(), "Correct sample originalPitch");
-          Assertions.assertEquals(0, record.pitchCorrection(), "Correct sample pitchCorrection");
-          Assertions.assertEquals(22050, record.sampleRate(), "Correct sample sampleRate");
-          Assertions.assertEquals(0, record.sampleLink(), "Correct sample sampleLink");
+          Assertions.assertEquals(0L, description.loopStart(), "Correct sample loopStart");
+          Assertions.assertEquals(8269L, description.loopEnd(), "Correct sample loopEnd");
+          Assertions.assertEquals(0L, description.start(), "Correct sample start");
+          Assertions.assertEquals(8270L, description.end(), "Correct sample end");
+          Assertions.assertEquals(60, description.originalPitch(), "Correct sample originalPitch");
+          Assertions.assertEquals(0, description.pitchCorrection(), "Correct sample pitchCorrection");
+          Assertions.assertEquals(22050, description.sampleRate(), "Correct sample sampleRate");
+          Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");
         },
 
         () -> {
           final var record = file.sampleRecords().get(1);
-          Assertions.assertEquals("EOS", record.name().value(), "Correct sample record name");
-          Assertions.assertEquals(0, record.kind().value(), "Correct sample kind");
-          Assertions.assertEquals(0L, record.loopStart(), "Correct sample loopStart");
-          Assertions.assertEquals(0L, record.loopEnd(), "Correct sample loopEnd");
-          Assertions.assertEquals(0L, record.start(), "Correct sample start");
-          Assertions.assertEquals(0L, record.end(), "Correct sample end");
-          Assertions.assertEquals(0, record.originalPitch(), "Correct sample originalPitch");
-          Assertions.assertEquals(0, record.pitchCorrection(), "Correct sample pitchCorrection");
-          Assertions.assertEquals(0, record.sampleRate(), "Correct sample sampleRate");
-          Assertions.assertEquals(0, record.sampleLink(), "Correct sample sampleLink");
+          final var description = record.description();
+          Assertions.assertEquals("EOS", description.name().value(), "Correct sample record name");
+          Assertions.assertEquals(0, description.kind().value(), "Correct sample kind");
+          Assertions.assertEquals(0L, description.loopStart(), "Correct sample loopStart");
+          Assertions.assertEquals(0L, description.loopEnd(), "Correct sample loopEnd");
+          Assertions.assertEquals(0L, description.start(), "Correct sample start");
+          Assertions.assertEquals(0L, description.end(), "Correct sample end");
+          Assertions.assertEquals(0, description.originalPitch(), "Correct sample originalPitch");
+          Assertions.assertEquals(0, description.pitchCorrection(), "Correct sample pitchCorrection");
+          Assertions.assertEquals(0, description.sampleRate(), "Correct sample sampleRate");
+          Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");
         },
 
         () -> {
@@ -589,50 +594,53 @@ public abstract class NTParsersContract
 
         () -> {
           final var record = file.sampleRecords().get(0);
-          Assertions.assertEquals("000_60", record.name().value(), "Correct sample record name");
+          final var description = record.description();
+          Assertions.assertEquals("000_60", description.name().value(), "Correct sample record name");
           Assertions.assertEquals(
             NTSampleKind.SAMPLE_KIND_MONO.value(),
-            record.kind().value(),
+            description.kind().value(),
             "Correct sample kind");
-          Assertions.assertEquals(0L, record.loopStart(), "Correct sample loopStart");
-          Assertions.assertEquals(8269L, record.loopEnd(), "Correct sample loopEnd");
-          Assertions.assertEquals(0L, record.start(), "Correct sample start");
-          Assertions.assertEquals(8270L, record.end(), "Correct sample end");
-          Assertions.assertEquals(60, record.originalPitch(), "Correct sample originalPitch");
-          Assertions.assertEquals(0, record.pitchCorrection(), "Correct sample pitchCorrection");
-          Assertions.assertEquals(22050, record.sampleRate(), "Correct sample sampleRate");
-          Assertions.assertEquals(0, record.sampleLink(), "Correct sample sampleLink");
+          Assertions.assertEquals(0L, description.loopStart(), "Correct sample loopStart");
+          Assertions.assertEquals(8269L, description.loopEnd(), "Correct sample loopEnd");
+          Assertions.assertEquals(0L, description.start(), "Correct sample start");
+          Assertions.assertEquals(8270L, description.end(), "Correct sample end");
+          Assertions.assertEquals(60, description.originalPitch(), "Correct sample originalPitch");
+          Assertions.assertEquals(0, description.pitchCorrection(), "Correct sample pitchCorrection");
+          Assertions.assertEquals(22050, description.sampleRate(), "Correct sample sampleRate");
+          Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");
         },
 
         () -> {
           final var record = file.sampleRecords().get(1);
-          Assertions.assertEquals("002_60", record.name().value(), "Correct sample record name");
+          final var description = record.description();
+          Assertions.assertEquals("002_60", description.name().value(), "Correct sample record name");
           Assertions.assertEquals(
             NTSampleKind.SAMPLE_KIND_MONO.value(),
-            record.kind().value(),
+            description.kind().value(),
             "Correct sample kind");
-          Assertions.assertEquals(8316L, record.loopStart(), "Correct sample loopStart");
-          Assertions.assertEquals(16585L, record.loopEnd(), "Correct sample loopEnd");
-          Assertions.assertEquals(8316L, record.start(), "Correct sample start");
-          Assertions.assertEquals(16586L, record.end(), "Correct sample end");
-          Assertions.assertEquals(60, record.originalPitch(), "Correct sample originalPitch");
-          Assertions.assertEquals(0, record.pitchCorrection(), "Correct sample pitchCorrection");
-          Assertions.assertEquals(22050, record.sampleRate(), "Correct sample sampleRate");
-          Assertions.assertEquals(0, record.sampleLink(), "Correct sample sampleLink");
+          Assertions.assertEquals(8316L, description.loopStart(), "Correct sample loopStart");
+          Assertions.assertEquals(16585L, description.loopEnd(), "Correct sample loopEnd");
+          Assertions.assertEquals(8316L, description.start(), "Correct sample start");
+          Assertions.assertEquals(16586L, description.end(), "Correct sample end");
+          Assertions.assertEquals(60, description.originalPitch(), "Correct sample originalPitch");
+          Assertions.assertEquals(0, description.pitchCorrection(), "Correct sample pitchCorrection");
+          Assertions.assertEquals(22050, description.sampleRate(), "Correct sample sampleRate");
+          Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");
         },
 
         () -> {
           final var record = file.sampleRecords().get(2);
-          Assertions.assertEquals("EOS", record.name().value(), "Correct sample record name");
-          Assertions.assertEquals(0, record.kind().value(), "Correct sample kind");
-          Assertions.assertEquals(0L, record.loopStart(), "Correct sample loopStart");
-          Assertions.assertEquals(0L, record.loopEnd(), "Correct sample loopEnd");
-          Assertions.assertEquals(0L, record.start(), "Correct sample start");
-          Assertions.assertEquals(0L, record.end(), "Correct sample end");
-          Assertions.assertEquals(0, record.originalPitch(), "Correct sample originalPitch");
-          Assertions.assertEquals(0, record.pitchCorrection(), "Correct sample pitchCorrection");
-          Assertions.assertEquals(0, record.sampleRate(), "Correct sample sampleRate");
-          Assertions.assertEquals(0, record.sampleLink(), "Correct sample sampleLink");
+          final var description = record.description();
+          Assertions.assertEquals("EOS", description.name().value(), "Correct sample record name");
+          Assertions.assertEquals(0, description.kind().value(), "Correct sample kind");
+          Assertions.assertEquals(0L, description.loopStart(), "Correct sample loopStart");
+          Assertions.assertEquals(0L, description.loopEnd(), "Correct sample loopEnd");
+          Assertions.assertEquals(0L, description.start(), "Correct sample start");
+          Assertions.assertEquals(0L, description.end(), "Correct sample end");
+          Assertions.assertEquals(0, description.originalPitch(), "Correct sample originalPitch");
+          Assertions.assertEquals(0, description.pitchCorrection(), "Correct sample pitchCorrection");
+          Assertions.assertEquals(0, description.sampleRate(), "Correct sample sampleRate");
+          Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");
         },
 
         () -> {

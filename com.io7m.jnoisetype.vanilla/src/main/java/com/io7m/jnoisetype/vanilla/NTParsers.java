@@ -21,6 +21,7 @@ import com.io7m.jnoisetype.api.NTInstrumentName;
 import com.io7m.jnoisetype.api.NTLongString;
 import com.io7m.jnoisetype.api.NTPresetName;
 import com.io7m.jnoisetype.api.NTRanges;
+import com.io7m.jnoisetype.api.NTSampleDescription;
 import com.io7m.jnoisetype.api.NTSampleKind;
 import com.io7m.jnoisetype.api.NTSampleName;
 import com.io7m.jnoisetype.api.NTShortString;
@@ -130,6 +131,93 @@ public final class NTParsers implements NTFileParserProviderType
         Objects.requireNonNull(in_data, "data");
     }
 
+    private static void describeChunk(
+      final RiffChunkType chunk,
+      final StringBuilder message)
+    {
+      final var separator = System.lineSeparator();
+      message.append("  Chunk name: ")
+        .append(chunk.name().value())
+        .append(separator)
+        .append("  Chunk offset: 0x")
+        .append(Long.toUnsignedString(chunk.offset(), 16))
+        .append(separator)
+        .append("  Chunk data size: ")
+        .append(Long.toUnsignedString(chunk.dataSizeIncludingForm().size(), 10))
+        .append(separator);
+    }
+
+    private static ByteBuffer makeChunkDataView(
+      final ByteBuffer data,
+      final RiffChunkType chunk)
+    {
+      final var view = data.duplicate();
+      view.position(Math.toIntExact(chunk.dataOffset()));
+      view.limit(Math.toIntExact(
+        Math.addExact(
+          chunk.dataOffset(),
+          chunk.dataSizeIncludingForm().size())));
+      view.order(data.order());
+      return view;
+    }
+
+    private static String newString(
+      final byte[] name,
+      final int offset_null)
+    {
+      // CHECKSTYLE:OFF
+      return new String(name, 0, offset_null, US_ASCII);
+      // CHECKSTYLE:ON
+    }
+
+    private static NTSampleName readSampleName(
+      final ByteBuffer view)
+    {
+      final var name = new byte[NTRanges.SAMPLE_NAME_LENGTH_RANGE.upper()];
+      view.get(name);
+
+      final var offset_null = findNull(name);
+      return NTSampleName.of(newString(name, offset_null));
+    }
+
+    private static NTPresetName readPresetName(
+      final ByteBuffer view)
+    {
+      final var name = new byte[NTRanges.PRESET_NAME_LENGTH_RANGE.upper()];
+      view.get(name);
+
+      final var offset_null = findNull(name);
+      return NTPresetName.of(newString(name, offset_null));
+    }
+
+    private static NTInstrumentName readInstrumentName(
+      final ByteBuffer view)
+    {
+      final var name = new byte[NTRanges.INSTRUMENT_NAME_LENGTH_RANGE.upper()];
+      view.get(name);
+
+      final var offset_null = findNull(name);
+      return NTInstrumentName.of(newString(name, offset_null));
+    }
+
+    private static int findNull(final byte[] name)
+    {
+      var offset_null = 0;
+      for (var index = 0; index < name.length; ++index) {
+        if (name[index] == 0) {
+          offset_null = index;
+          break;
+        }
+      }
+      return offset_null;
+    }
+
+    private static boolean codePointIsNotNull(
+      final int code)
+    {
+      return code != 0;
+    }
+
     @Override
     public NTParsedFile parse()
       throws NTParseException
@@ -225,38 +313,6 @@ public final class NTParsers implements NTFileParserProviderType
           chunk.offset());
       }
       return chunk;
-    }
-
-    private static void describeChunk(
-      final RiffChunkType chunk,
-      final StringBuilder message)
-    {
-      final var separator = System.lineSeparator();
-      message.append("A terminal record is required but was not present.")
-        .append(separator)
-        .append("  Chunk name: ")
-        .append(chunk.name().value())
-        .append(separator)
-        .append("  Chunk offset: 0x")
-        .append(Long.toUnsignedString(chunk.offset(), 16))
-        .append(separator)
-        .append("  Chunk data size: ")
-        .append(Long.toUnsignedString(chunk.dataSizeIncludingForm().size(), 10))
-        .append(separator);
-    }
-
-    private static ByteBuffer makeChunkDataView(
-      final ByteBuffer data,
-      final RiffChunkType chunk)
-    {
-      final var view = data.duplicate();
-      view.position(Math.toIntExact(chunk.dataOffset()));
-      view.limit(Math.toIntExact(
-        Math.addExact(
-          chunk.dataOffset(),
-          chunk.dataSizeIncludingForm().size())));
-      view.order(data.order());
-      return view;
     }
 
     private void parsePData(
@@ -681,9 +737,8 @@ public final class NTParsers implements NTFileParserProviderType
         final var sample_link = view.getShort() & 0xffff;
         final var sample_kind = view.getShort() & 0xffff;
 
-        final var result =
-          NTParsedSample.builder()
-            .setSource(NTSource.of(this.source, Integer.toUnsignedLong(position)))
+        final var description =
+          NTSampleDescription.builder()
             .setName(name)
             .setStart(Integer.toUnsignedLong(start))
             .setEnd(Integer.toUnsignedLong(end))
@@ -694,6 +749,12 @@ public final class NTParsers implements NTFileParserProviderType
             .setPitchCorrection(pitch_correct)
             .setSampleLink(sample_link)
             .setKind(this.sampleKindOf(shdr, position, name, sample_kind))
+            .build();
+
+        final var result =
+          NTParsedSample.builder()
+            .setSource(NTSource.of(this.source, Integer.toUnsignedLong(position)))
+            .setDescription(description)
             .build();
 
         LOG.trace("[shdr][{}] {}", Integer.valueOf(index), result);
@@ -752,57 +813,6 @@ public final class NTParsers implements NTFileParserProviderType
           .toString(),
         this.source,
         chunk.offset());
-    }
-
-    private static String newString(
-      final byte[] name,
-      final int offset_null)
-    {
-      // CHECKSTYLE:OFF
-      return new String(name, 0, offset_null, US_ASCII);
-      // CHECKSTYLE:ON
-    }
-
-    private static NTSampleName readSampleName(
-      final ByteBuffer view)
-    {
-      final var name = new byte[NTRanges.SAMPLE_NAME_LENGTH_RANGE.upper()];
-      view.get(name);
-
-      final var offset_null = findNull(name);
-      return NTSampleName.of(newString(name, offset_null));
-    }
-
-    private static NTPresetName readPresetName(
-      final ByteBuffer view)
-    {
-      final var name = new byte[NTRanges.PRESET_NAME_LENGTH_RANGE.upper()];
-      view.get(name);
-
-      final var offset_null = findNull(name);
-      return NTPresetName.of(newString(name, offset_null));
-    }
-
-    private static NTInstrumentName readInstrumentName(
-      final ByteBuffer view)
-    {
-      final var name = new byte[NTRanges.INSTRUMENT_NAME_LENGTH_RANGE.upper()];
-      view.get(name);
-
-      final var offset_null = findNull(name);
-      return NTInstrumentName.of(newString(name, offset_null));
-    }
-
-    private static int findNull(final byte[] name)
-    {
-      var offset_null = 0;
-      for (var index = 0; index < name.length; ++index) {
-        if (name[index] == 0) {
-          offset_null = index;
-          break;
-        }
-      }
-      return offset_null;
     }
 
     private NTInfo parseInfo(
@@ -888,12 +898,6 @@ public final class NTParsers implements NTFileParserProviderType
         .takeWhile(Parser::codePointIsNotNull)
         .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
         .toString();
-    }
-
-    private static boolean codePointIsNotNull(
-      final int code)
-    {
-      return code != 0;
     }
 
     private NTLongString parseLongString(

@@ -268,65 +268,67 @@ final class CommandShow extends CommandRoot
   {
     for (var index = 0; index < samples.size(); ++index) {
       final var sample = samples.get(index);
+      final var description = sample.description();
+
       System.out.printf(
         "sample %d %s : %s\n",
         Integer.valueOf(index),
         "name",
-        sample.name().value());
+        description.name().value());
 
       System.out.printf(
         "sample %d %s : %s\n",
         Integer.valueOf(index),
         "type",
-        sample.kind());
+        description.kind());
 
       System.out.printf(
         "sample %d %s : %d\n",
         Integer.valueOf(index),
         "sample rate",
-        Integer.valueOf(sample.sampleRate()));
+        Integer.valueOf(description.sampleRate()));
 
       System.out.printf(
         "sample %d %s : %d\n",
         Integer.valueOf(index),
         "start",
-        Long.valueOf(sample.start()));
+        Long.valueOf(description.start()));
 
       System.out.printf(
         "sample %d %s : %d\n",
         Integer.valueOf(index),
         "end",
-        Long.valueOf(sample.end()));
+        Long.valueOf(description.end()));
 
       System.out.printf(
         "sample %d %s : %d\n",
         Integer.valueOf(index),
         "loop start",
-        Long.valueOf(sample.loopStart()));
+        Long.valueOf(description.loopStart()));
 
       System.out.printf(
         "sample %d %s : %d\n",
         Integer.valueOf(index),
         "loop end",
-        Long.valueOf(sample.loopEnd()));
+        Long.valueOf(description.loopEnd()));
 
       System.out.printf(
         "sample %d %s : %d\n",
         Integer.valueOf(index),
         "original pitch",
-        Integer.valueOf(sample.originalPitch()));
+        Integer.valueOf(description.originalPitch()));
 
       System.out.printf(
         "sample %d %s : %d\n",
         Integer.valueOf(index),
         "pitch correction",
-        Integer.valueOf(sample.pitchCorrection()));
+        Integer.valueOf(description.pitchCorrection()));
 
       System.out.printf(
         "sample %d %s : %d\n",
         Integer.valueOf(index),
         "link",
-        Integer.valueOf(sample.sampleLink()));
+        Integer.valueOf(description.sampleLink()));
 
       System.out.println();
     }

@@ -20,6 +20,8 @@ import com.io7m.immutables.styles.ImmutablesStyleType;
 import com.io7m.jranges.RangeCheck;
 import org.immutables.value.Value;
 
+import java.util.Comparator;
+
 /**
  * A version number.
  *
@@ -28,7 +30,7 @@ import org.immutables.value.Value;
 
 @ImmutablesStyleType
 @Value.Immutable
-public interface NTVersionType
+public interface NTVersionType extends Comparable<NTVersionType>
 {
   /**
    * @return The major version number
@@ -62,5 +64,13 @@ public interface NTVersionType
       "Minor version",
       NTRanges.VERSION_RANGE,
       "Valid minor version range");
+  }
+
+  @Override
+  default int compareTo(final NTVersionType other)
+  {
+    return Comparator.comparingInt(NTVersionType::major)
+      .thenComparingInt(NTVersionType::minor)
+      .compare(this, other);
   }
 }

@@ -39,7 +39,11 @@ public interface NTInfoType
    * @return The wavetable sound engine for which the file was optimized
    */
 
-  NTShortString soundEngine();
+  @Value.Default
+  default NTShortString soundEngine()
+  {
+    return NTShortString.of("EMU8000");
+  }
 
   /**
    * @return The name of the SoundFont compatible bank

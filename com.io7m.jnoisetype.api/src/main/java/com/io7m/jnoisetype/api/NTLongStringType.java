@@ -26,7 +26,7 @@ import org.immutables.value.Value;
 
 @ImmutablesStyleType
 @Value.Immutable
-public interface NTLongStringType
+public interface NTLongStringType extends Comparable<NTLongStringType>
 {
   /**
    * @return The actual string value
@@ -53,5 +53,12 @@ public interface NTLongStringType
     if (text.chars().anyMatch(code -> code == 0)) {
       throw new IllegalArgumentException("Strings must not contain codepoint 0x0");
     }
+  }
+
+  @Override
+  default int compareTo(
+    final NTLongStringType other)
+  {
+    return this.value().compareTo(other.value());
   }
 }

@@ -33,6 +33,11 @@ public final class NTGenerators
 {
   private static final Map<Integer, NTGenerator> GENERATORS = loadGenerators();
 
+  private NTGenerators()
+  {
+
+  }
+
   private static Map<Integer, NTGenerator> loadGenerators()
   {
     try (var stream = NTGenerators.class.getResourceAsStream(
@@ -56,11 +61,6 @@ public final class NTGenerators
     } catch (final IOException e) {
       throw new UncheckedIOException(e);
     }
-  }
-
-  private NTGenerators()
-  {
-
   }
 
   /**

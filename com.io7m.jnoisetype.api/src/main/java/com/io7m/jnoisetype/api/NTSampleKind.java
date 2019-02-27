@@ -76,6 +76,14 @@ public enum NTSampleKind
 
   SAMPLE_KIND_ROM_LINKED(32776);
 
+  private final int value;
+
+  NTSampleKind(
+    final int i)
+  {
+    this.value = i;
+  }
+
   /**
    * @return The integer value of the enumeration
    */
@@ -83,13 +91,5 @@ public enum NTSampleKind
   public int value()
   {
     return this.value;
-  }
-
-  private final int value;
-
-  NTSampleKind(
-    final int i)
-  {
-    this.value = i;
   }
 }

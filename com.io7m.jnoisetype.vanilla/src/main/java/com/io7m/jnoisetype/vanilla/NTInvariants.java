@@ -36,21 +36,6 @@ public final class NTInvariants
   }
 
   /**
-   * A function that can add extra information to an exception message.
-   */
-
-  public interface ExtraInformationType
-  {
-    /**
-     * Add extra message to an exception message.
-     *
-     * @param message The message being built
-     */
-
-    void addExtraInformation(StringBuilder message);
-  }
-
-  /**
    * Check that a named terminal record exists as the last element in the list of elements. This is
    * required in various places by the specification.
    *
@@ -204,7 +189,8 @@ public final class NTInvariants
         .append(source.source())
         .append(separator)
         .append("  Offset: 0x")
-        .append(Long.toUnsignedString(source.offset(), 16));
+        .append(Long.toUnsignedString(source.offset(), 16))
+        .append(separator);
 
     extra_information.addExtraInformation(message);
 
@@ -245,5 +231,20 @@ public final class NTInvariants
     extra_information.addExtraInformation(message);
 
     return new NTParseException(message.toString(), source.source(), source.offset());
+  }
+
+  /**
+   * A function that can add extra information to an exception message.
+   */
+
+  public interface ExtraInformationType
+  {
+    /**
+     * Add extra message to an exception message.
+     *
+     * @param message The message being built
+     */
+
+    void addExtraInformation(StringBuilder message);
   }
 }

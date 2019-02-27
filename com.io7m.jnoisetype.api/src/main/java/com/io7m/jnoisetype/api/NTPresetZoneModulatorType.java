@@ -22,5 +22,41 @@ package com.io7m.jnoisetype.api;
 
 public interface NTPresetZoneModulatorType extends NTPresetZoneMemberType
 {
+  /**
+   * @return The source data for the modulator
+   */
 
+  @NTNativeType(name = "SFModulator")
+  int sourceOperator();
+
+  /**
+   * @return The destination of the modulator
+   */
+
+  @NTNativeType(name = "SFGenerator")
+  NTGenerator targetOperator();
+
+  /**
+   * @return The degree to which the source modulates the destination. A zero value indicates there
+   * is no fixed amount.
+   */
+
+  @NTNativeType(name = "short")
+  int modulationAmount();
+
+  /**
+   * @return The degree to which the source modulates the destination is to be controlled by the
+   * specified modulation source
+   */
+
+  @NTNativeType(name = "SFModulator")
+  int modulationAmountSourceOperator();
+
+  /**
+   * @return A value that indicates that a transform of the specified type will be applied to the
+   * modulation source before application to the modulator
+   */
+
+  @NTNativeType(name = "SFTransform")
+  NTTransform modulationTransformOperator();
 }

@@ -33,9 +33,10 @@ import com.io7m.jnoisetype.api.NTPresetType;
 import com.io7m.jnoisetype.api.NTPresetZoneGeneratorType;
 import com.io7m.jnoisetype.api.NTPresetZoneModulatorType;
 import com.io7m.jnoisetype.api.NTPresetZoneType;
-import com.io7m.jnoisetype.api.NTSampleKind;
-import com.io7m.jnoisetype.api.NTSampleName;
+import com.io7m.jnoisetype.api.NTSampleDescription;
 import com.io7m.jnoisetype.api.NTSampleType;
+import com.io7m.jnoisetype.api.NTTransform;
+import com.io7m.jnoisetype.api.NTTransforms;
 import com.io7m.jnoisetype.parser.api.NTInterpreterProviderType;
 import com.io7m.jnoisetype.parser.api.NTInterpreterType;
 import com.io7m.jnoisetype.parser.api.NTParseException;
@@ -106,12 +107,14 @@ public final class NTInterpreters implements NTInterpreterProviderType
   {
     private final NTParsedFile file;
     private final Map<Integer, NTGenerator> generators;
+    private final Map<Integer, NTTransform> transforms;
 
     private Interpreter(
       final NTParsedFile in_file)
     {
       this.file = Objects.requireNonNull(in_file, "file");
       this.generators = NTGenerators.generators();
+      this.transforms = NTTransforms.transforms();
     }
 
     private static boolean isNamedTerminalRecord(
@@ -129,11 +132,12 @@ public final class NTInterpreters implements NTInterpreterProviderType
       final NTParsedSample sample)
     {
       if (LOG.isTraceEnabled()) {
+        final var description = sample.description();
         LOG.trace(
           "sample [{}][\"{}\"] {}",
           Integer.valueOf(sample_index),
-          sample.name().value(),
-          sample.kind());
+          description.name().value(),
+          description.kind());
       }
 
       return new Sample(font, sample);
@@ -279,8 +283,7 @@ public final class NTInterpreters implements NTInterpreterProviderType
 
       if (gen_range.interval() >= 2) {
         for (var gen_index = gen_range.lower(); gen_index < gen_range.upper(); ++gen_index) {
-          final var gen_curr = pgen.get(gen_index);
-          zone.generators.add(this.interpretPresetZoneGenerator(zone, gen_curr));
+          zone.generators.add(this.interpretPresetZoneGenerator(zone, pgen.get(gen_index)));
         }
       }
 
@@ -302,13 +305,7 @@ public final class NTInterpreters implements NTInterpreterProviderType
 
       if (mod_range.interval() >= 2) {
         for (var mod_index = mod_range.lower(); mod_index < mod_range.upper(); ++mod_index) {
-          final var mod_curr = pmod.get(mod_index);
-          final var mod_next = pmod.get(mod_index + 1);
-          zone.modulators.add(this.interpretPresetZoneModulator(
-            zone,
-            mod_index,
-            mod_curr,
-            mod_next));
+          zone.modulators.add(this.interpretPresetZoneModulator(zone, pmod.get(mod_index)));
         }
       }
 
@@ -327,14 +324,20 @@ public final class NTInterpreters implements NTInterpreterProviderType
 
     private PresetZoneModulator interpretPresetZoneModulator(
       final PresetZone zone,
-      final int mod_index,
-      final NTParsedPresetZoneModulator mod_curr,
-      final NTParsedPresetZoneModulator mod_next)
+      final NTParsedPresetZoneModulator mod_curr)
     {
       final var named_generator =
         this.generators.get(Integer.valueOf(mod_curr.targetOperator()));
+      final var named_transform =
+        this.transforms.get(Integer.valueOf(mod_curr.modulationTransformOperator()));
 
-      return new PresetZoneModulator(zone);
+      return new PresetZoneModulator(
+        zone,
+        mod_curr.sourceOperator(),
+        named_generator,
+        mod_curr.modulationAmount(),
+        mod_curr.modulationAmountSourceOperator(),
+        named_transform);
     }
 
     private PresetZoneGenerator interpretPresetZoneGenerator(
@@ -358,7 +361,7 @@ public final class NTInterpreters implements NTInterpreterProviderType
 
       if (LOG.isDebugEnabled()) {
         LOG.debug(
-          "interpreting {} preset records (including terminal record)",
+          "interpreting {} instrument records (including terminal record)",
           Integer.valueOf(inst.size()));
       }
 
@@ -401,7 +404,7 @@ public final class NTInterpreters implements NTInterpreterProviderType
 
       if (LOG.isTraceEnabled()) {
         LOG.trace(
-          "preset [{}][\"{}\"] zone range [{}, {}) ({} zones)",
+          "instrument [{}][\"{}\"] zone range [{}, {}) ({} zones)",
           Integer.valueOf(instrument_index),
           input_instrument_curr.name().value(),
           Integer.valueOf(zone_range.lower()),
@@ -469,7 +472,7 @@ public final class NTInterpreters implements NTInterpreterProviderType
 
       if (LOG.isTraceEnabled()) {
         LOG.trace(
-          "preset [{}][\"{}\"] zone [{}] generator range [{}, {}) ({} generators)",
+          "instrument [{}][\"{}\"] zone [{}] generator range [{}, {}) ({} generators)",
           Integer.valueOf(instrument_index),
           instrument.name().value(),
           Integer.valueOf(zone_index),
@@ -480,8 +483,7 @@ public final class NTInterpreters implements NTInterpreterProviderType
 
       if (gen_range.interval() >= 2) {
         for (var gen_index = gen_range.lower(); gen_index < gen_range.upper(); ++gen_index) {
-          final var gen_curr = igen.get(gen_index);
-          zone.generators.add(this.interpretInstrumentZoneGenerator(zone, gen_curr));
+          zone.generators.add(this.interpretInstrumentZoneGenerator(zone, igen.get(gen_index)));
         }
       }
 
@@ -492,7 +494,7 @@ public final class NTInterpreters implements NTInterpreterProviderType
 
       if (LOG.isTraceEnabled()) {
         LOG.trace(
-          "preset [{}][\"{}\"] zone [{}] modulator range [{}, {}) ({} modulators)",
+          "instrument [{}][\"{}\"] zone [{}] modulator range [{}, {}) ({} modulators)",
           Integer.valueOf(instrument_index),
           instrument.name().value(),
           Integer.valueOf(zone_index),
@@ -503,16 +505,13 @@ public final class NTInterpreters implements NTInterpreterProviderType
 
       if (mod_range.interval() >= 2) {
         for (var mod_index = mod_range.lower(); mod_index < mod_range.upper(); ++mod_index) {
-          final var mod_curr = imod.get(mod_index);
-          final var mod_next = imod.get(mod_index + 1);
-          zone.modulators.add(
-            this.interpretInstrumentZoneModulator(zone, mod_index, mod_curr, mod_next));
+          zone.modulators.add(this.interpretInstrumentZoneModulator(zone, imod.get(mod_index)));
         }
       }
 
       if (LOG.isTraceEnabled()) {
         LOG.trace(
-          "preset [{}][\"{}\"] zone [{}] global {}",
+          "instrument [{}][\"{}\"] zone [{}] global {}",
           Integer.valueOf(instrument_index),
           instrument.name().value(),
           Integer.valueOf(zone_index),
@@ -524,13 +523,20 @@ public final class NTInterpreters implements NTInterpreterProviderType
 
     private InstrumentZoneModulator interpretInstrumentZoneModulator(
       final InstrumentZone zone,
-      final int mod_index,
-      final NTParsedInstrumentZoneModulator mod_curr,
-      final NTParsedInstrumentZoneModulator mod_next)
+      final NTParsedInstrumentZoneModulator mod_curr)
     {
-      final var imod = this.file.imod();
+      final var named_generator =
+        this.generators.get(Integer.valueOf(mod_curr.targetOperator()));
+      final var named_transform =
+        this.transforms.get(Integer.valueOf(mod_curr.modulationTransformOperator()));
 
-      return new InstrumentZoneModulator(zone);
+      return new InstrumentZoneModulator(
+        zone,
+        mod_curr.sourceOperator(),
+        named_generator,
+        mod_curr.modulationAmount(),
+        mod_curr.modulationAmountSourceOperator(),
+        named_transform);
     }
 
     private InstrumentZoneGenerator interpretInstrumentZoneGenerator(
@@ -640,6 +646,27 @@ public final class NTInterpreters implements NTInterpreterProviderType
     }
 
     @Override
+    public boolean equals(final Object o)
+    {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || !Objects.equals(this.getClass(), o.getClass())) {
+        return false;
+      }
+      final var that = (InstrumentZone) o;
+      return this.index == that.index
+        && Objects.equals(this.generators, that.generators)
+        && Objects.equals(this.modulators, that.modulators);
+    }
+
+    @Override
+    public int hashCode()
+    {
+      return Objects.hash(this.generators, this.modulators, Integer.valueOf(this.index));
+    }
+
+    @Override
     public String toString()
     {
       return new StringBuilder(32)
@@ -713,6 +740,27 @@ public final class NTInterpreters implements NTInterpreterProviderType
       this.generators_read = Collections.unmodifiableList(this.generators);
       this.modulators = new ArrayList<>();
       this.modulators_read = Collections.unmodifiableList(this.modulators);
+    }
+
+    @Override
+    public boolean equals(final Object o)
+    {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || !Objects.equals(this.getClass(), o.getClass())) {
+        return false;
+      }
+      final var that = (PresetZone) o;
+      return this.index == that.index
+        && Objects.equals(this.generators, that.generators)
+        && Objects.equals(this.modulators, that.modulators);
+    }
+
+    @Override
+    public int hashCode()
+    {
+      return Objects.hash(this.generators, this.modulators, Integer.valueOf(this.index));
     }
 
     @Override
@@ -791,6 +839,27 @@ public final class NTInterpreters implements NTInterpreterProviderType
     }
 
     @Override
+    public boolean equals(final Object o)
+    {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || !Objects.equals(this.getClass(), o.getClass())) {
+        return false;
+      }
+      final var preset = (Preset) o;
+      return this.index == preset.index
+        && Objects.equals(this.name, preset.name)
+        && Objects.equals(this.zones, preset.zones);
+    }
+
+    @Override
+    public int hashCode()
+    {
+      return Objects.hash(this.name, Integer.valueOf(this.index), this.zones);
+    }
+
+    @Override
     public String toString()
     {
       return new StringBuilder(64)
@@ -845,6 +914,26 @@ public final class NTInterpreters implements NTInterpreterProviderType
     }
 
     @Override
+    public boolean equals(final Object o)
+    {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || !Objects.equals(this.getClass(), o.getClass())) {
+        return false;
+      }
+      final var that = (PresetZoneGenerator) o;
+      return Objects.equals(this.generator, that.generator)
+        && Objects.equals(this.amount, that.amount);
+    }
+
+    @Override
+    public int hashCode()
+    {
+      return Objects.hash(this.generator, this.amount);
+    }
+
+    @Override
     public String toString()
     {
       return new StringBuilder(64)
@@ -880,20 +969,66 @@ public final class NTInterpreters implements NTInterpreterProviderType
   private static final class PresetZoneModulator implements NTPresetZoneModulatorType
   {
     private final PresetZone zone;
+    private final int source_operator;
+    private final NTGenerator target_operator;
+    private final int modulation_amount;
+    private final int modulation_amount_source_operator;
+    private final NTTransform modulation_transform_operator;
 
     private PresetZoneModulator(
-      final PresetZone in_zone)
+      final PresetZone in_zone,
+      final int in_source_operator,
+      final NTGenerator in_target_operator,
+      final int in_modulation_amount,
+      final int in_modulation_amount_source_operator,
+      final NTTransform in_modulation_transform_operator)
     {
-      this.zone = Objects.requireNonNull(in_zone, "zone");
+      this.zone =
+        Objects.requireNonNull(in_zone, "zone");
+      this.source_operator =
+        in_source_operator;
+      this.target_operator =
+        Objects.requireNonNull(in_target_operator, "target_operator");
+      this.modulation_amount =
+        in_modulation_amount;
+      this.modulation_amount_source_operator =
+        in_modulation_amount_source_operator;
+      this.modulation_transform_operator =
+        Objects.requireNonNull(in_modulation_transform_operator, "modulation_transform_operator");
+    }
+
+    @Override
+    public boolean equals(final Object o)
+    {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || !Objects.equals(this.getClass(), o.getClass())) {
+        return false;
+      }
+      final var that = (PresetZoneModulator) o;
+      return this.source_operator == that.source_operator
+        && this.modulation_amount == that.modulation_amount
+        && this.modulation_amount_source_operator == that.modulation_amount_source_operator
+        && Objects.equals(this.target_operator, that.target_operator)
+        && Objects.equals(this.modulation_transform_operator, that.modulation_transform_operator);
+    }
+
+    @Override
+    public int hashCode()
+    {
+      return Objects.hash(
+        Integer.valueOf(this.source_operator),
+        this.target_operator,
+        Integer.valueOf(this.modulation_amount),
+        Integer.valueOf(this.modulation_amount_source_operator),
+        this.modulation_transform_operator);
     }
 
     @Override
     public String toString()
     {
-      return new StringBuilder(64)
-        .append("[PresetZoneModulator ")
-        .append(']')
-        .toString();
+      return "[PresetZoneModulator]";
     }
 
     @Override
@@ -901,8 +1036,37 @@ public final class NTInterpreters implements NTInterpreterProviderType
     {
       return this.zone;
     }
-  }
 
+    @Override
+    public int sourceOperator()
+    {
+      return this.source_operator;
+    }
+
+    @Override
+    public NTGenerator targetOperator()
+    {
+      return this.target_operator;
+    }
+
+    @Override
+    public int modulationAmount()
+    {
+      return this.modulation_amount;
+    }
+
+    @Override
+    public int modulationAmountSourceOperator()
+    {
+      return this.modulation_amount_source_operator;
+    }
+
+    @Override
+    public NTTransform modulationTransformOperator()
+    {
+      return this.modulation_transform_operator;
+    }
+  }
 
   private static final class Instrument implements NTInstrumentType
   {
@@ -924,6 +1088,27 @@ public final class NTInterpreters implements NTInterpreterProviderType
       this.name = Objects.requireNonNull(in_name, "name");
       this.zones = new ArrayList<>();
       this.zones_read = Collections.unmodifiableList(this.zones);
+    }
+
+    @Override
+    public boolean equals(final Object o)
+    {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || !Objects.equals(this.getClass(), o.getClass())) {
+        return false;
+      }
+      final var that = (Instrument) o;
+      return this.index == that.index
+        && Objects.equals(this.name, that.name)
+        && Objects.equals(this.zones, that.zones);
+    }
+
+    @Override
+    public int hashCode()
+    {
+      return Objects.hash(this.name, this.zones, Integer.valueOf(this.index));
     }
 
     @Override
@@ -990,6 +1175,28 @@ public final class NTInterpreters implements NTInterpreterProviderType
     }
 
     @Override
+    public boolean equals(final Object o)
+    {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || !Objects.equals(this.getClass(), o.getClass())) {
+        return false;
+      }
+      final var font = (Font) o;
+      return Objects.equals(this.info, font.info)
+        && Objects.equals(this.instruments, font.instruments)
+        && Objects.equals(this.presets, font.presets)
+        && Objects.equals(this.samples, font.samples);
+    }
+
+    @Override
+    public int hashCode()
+    {
+      return Objects.hash(this.info, this.instruments, this.presets, this.samples);
+    }
+
+    @Override
     public String toString()
     {
       return new StringBuilder(64)
@@ -1038,13 +1245,33 @@ public final class NTInterpreters implements NTInterpreterProviderType
     }
 
     @Override
+    public boolean equals(final Object o)
+    {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || !Objects.equals(this.getClass(), o.getClass())) {
+        return false;
+      }
+      final var sample1 = (Sample) o;
+      return Objects.equals(this.sample, sample1.sample);
+    }
+
+    @Override
+    public int hashCode()
+    {
+      return Objects.hash(this.sample);
+    }
+
+    @Override
     public String toString()
     {
+      final var description = this.sample.description();
       return new StringBuilder(64)
         .append("[Sample '")
-        .append(this.sample.name().value())
+        .append(description.name().value())
         .append("' ")
-        .append(this.sample.kind())
+        .append(description.kind())
         .append(']')
         .toString();
     }
@@ -1056,69 +1283,9 @@ public final class NTInterpreters implements NTInterpreterProviderType
     }
 
     @Override
-    public String nameText()
+    public NTSampleDescription description()
     {
-      return this.name().value();
-    }
-
-    @Override
-    public long start()
-    {
-      return this.sample.start();
-    }
-
-    @Override
-    public long end()
-    {
-      return this.sample.end();
-    }
-
-    @Override
-    public long loopStart()
-    {
-      return this.sample.loopStart();
-    }
-
-    @Override
-    public long loopEnd()
-    {
-      return this.sample.loopEnd();
-    }
-
-    @Override
-    public int sampleRate()
-    {
-      return this.sample.sampleRate();
-    }
-
-    @Override
-    public int originalPitch()
-    {
-      return this.sample.originalPitch();
-    }
-
-    @Override
-    public int pitchCorrection()
-    {
-      return this.sample.pitchCorrection();
-    }
-
-    @Override
-    public int sampleLink()
-    {
-      return this.sample.sampleLink();
-    }
-
-    @Override
-    public NTSampleName name()
-    {
-      return this.sample.name();
-    }
-
-    @Override
-    public NTSampleKind kind()
-    {
-      return this.sample.kind();
+      return this.sample.description();
     }
   }
 
@@ -1136,6 +1303,26 @@ public final class NTInterpreters implements NTInterpreterProviderType
       this.zone = Objects.requireNonNull(in_zone, "zone");
       this.generator = Objects.requireNonNull(in_generator, "generator");
       this.amount = Objects.requireNonNull(in_amount, "amount");
+    }
+
+    @Override
+    public boolean equals(final Object o)
+    {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || !Objects.equals(this.getClass(), o.getClass())) {
+        return false;
+      }
+      final var that = (InstrumentZoneGenerator) o;
+      return Objects.equals(this.generator, that.generator)
+        && Objects.equals(this.amount, that.amount);
+    }
+
+    @Override
+    public int hashCode()
+    {
+      return Objects.hash(this.generator, this.amount);
     }
 
     @Override
@@ -1174,26 +1361,102 @@ public final class NTInterpreters implements NTInterpreterProviderType
   private static final class InstrumentZoneModulator implements NTInstrumentZoneModulatorType
   {
     private final InstrumentZone zone;
+    private final int source_operator;
+    private final NTGenerator target_operator;
+    private final int modulation_amount;
+    private final int modulation_amount_source_operator;
+    private final NTTransform modulation_transform_operator;
 
     private InstrumentZoneModulator(
-      final InstrumentZone in_zone)
+      final InstrumentZone in_zone,
+      final int in_source_operator,
+      final NTGenerator in_target_operator,
+      final int in_modulation_amount,
+      final int in_modulation_amount_source_operator,
+      final NTTransform in_modulation_transform_operator)
     {
-      this.zone = Objects.requireNonNull(in_zone, "zone");
+      this.zone =
+        Objects.requireNonNull(in_zone, "zone");
+      this.source_operator =
+        in_source_operator;
+      this.target_operator =
+        Objects.requireNonNull(in_target_operator, "target_operator");
+      this.modulation_amount =
+        in_modulation_amount;
+      this.modulation_amount_source_operator =
+        in_modulation_amount_source_operator;
+      this.modulation_transform_operator =
+        Objects.requireNonNull(in_modulation_transform_operator, "modulation_transform_operator");
+    }
+
+    @Override
+    public boolean equals(final Object o)
+    {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || !Objects.equals(this.getClass(), o.getClass())) {
+        return false;
+      }
+      final var that = (InstrumentZoneModulator) o;
+      return this.source_operator == that.source_operator
+        && this.modulation_amount == that.modulation_amount
+        && this.modulation_amount_source_operator == that.modulation_amount_source_operator
+        && Objects.equals(this.target_operator, that.target_operator)
+        && Objects.equals(this.modulation_transform_operator, that.modulation_transform_operator);
+    }
+
+    @Override
+    public int hashCode()
+    {
+      return Objects.hash(
+        Integer.valueOf(this.source_operator),
+        this.target_operator,
+        Integer.valueOf(this.modulation_amount),
+        Integer.valueOf(this.modulation_amount_source_operator),
+        this.modulation_transform_operator);
     }
 
     @Override
     public String toString()
     {
-      return new StringBuilder(64)
-        .append("[InstrumentZoneModulator ")
-        .append(']')
-        .toString();
+      return "[InstrumentZoneModulator]";
     }
 
     @Override
     public NTInstrumentZoneType zone()
     {
       return this.zone;
+    }
+
+    @Override
+    public int sourceOperator()
+    {
+      return this.source_operator;
+    }
+
+    @Override
+    public NTGenerator targetOperator()
+    {
+      return this.target_operator;
+    }
+
+    @Override
+    public int modulationAmount()
+    {
+      return this.modulation_amount;
+    }
+
+    @Override
+    public int modulationAmountSourceOperator()
+    {
+      return this.modulation_amount_source_operator;
+    }
+
+    @Override
+    public NTTransform modulationTransformOperator()
+    {
+      return this.modulation_transform_operator;
     }
   }
 }

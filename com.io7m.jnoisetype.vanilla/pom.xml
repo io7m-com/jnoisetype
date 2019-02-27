@@ -29,6 +29,11 @@
       <artifactId>com.io7m.jnoisetype.parser.api</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.jnoisetype.writer.api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>com.io7m.jaffirm</groupId>
@@ -42,11 +47,11 @@
       <groupId>com.io7m.jspiel</groupId>
       <artifactId>com.io7m.jspiel.api</artifactId>
     </dependency>
-
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.annotation.bundle</artifactId>
@@ -55,6 +60,7 @@
     <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.service.component.annotations</artifactId>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 

@@ -30,6 +30,7 @@
     <module>com.io7m.jnoisetype.parser.api</module>
     <module>com.io7m.jnoisetype.tests</module>
     <module>com.io7m.jnoisetype.vanilla</module>
+    <module>com.io7m.jnoisetype.writer.api</module>
   </modules>
 
   <properties>
@@ -143,6 +144,11 @@
         <groupId>com.io7m.junreachable</groupId>
         <artifactId>com.io7m.junreachable.core</artifactId>
         <version>2.1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>2.6</version>
       </dependency>
       <dependency>
         <groupId>com.beust</groupId>

@@ -26,7 +26,7 @@ import org.immutables.value.Value;
 
 @ImmutablesStyleType
 @Value.Immutable
-public interface NTSampleNameType
+public interface NTSampleNameType extends Comparable<NTSampleNameType>
 {
   /**
    * @return The actual string value
@@ -53,5 +53,12 @@ public interface NTSampleNameType
     if (text.chars().anyMatch(code -> code == 0)) {
       throw new IllegalArgumentException("Strings must not contain codepoint 0x0");
     }
+  }
+
+  @Override
+  default int compareTo(
+    final NTSampleNameType other)
+  {
+    return this.value().compareTo(other.value());
   }
 }

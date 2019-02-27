@@ -26,7 +26,7 @@ public final class NTParsedSampleTest
   public void testEquals()
   {
     EqualsVerifier.forClass(NTParsedSample.class)
-      .withNonnullFields("name", "kind", "source")
+      .withNonnullFields("description", "source")
       .verify();
   }
 }

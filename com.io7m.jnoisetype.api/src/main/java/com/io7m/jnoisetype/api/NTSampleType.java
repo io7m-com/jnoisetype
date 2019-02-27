@@ -16,8 +16,6 @@
 
 package com.io7m.jnoisetype.api;
 
-import org.immutables.value.Value;
-
 /**
  * The type of samples.
  */
@@ -25,73 +23,14 @@ import org.immutables.value.Value;
 public interface NTSampleType extends NTFontMemberType, NTNamedType
 {
   /**
-   * @return The name of the sample
+   * @return The sample description
    */
 
-  NTSampleName name();
+  NTSampleDescription description();
 
-  /**
-   * @return The kind of the sample
-   */
-
-  NTSampleKind kind();
-
-  /**
-   * @return The index, in sample data points, from the beginning of the sample data field to the
-   * first data point of this sample
-   */
-
-  long start();
-
-  /**
-   * @return The index, in sample data points, from the beginning of the sample data field to the
-   * first of the set of 46 zero valued data points following this sample
-   */
-
-  long end();
-
-  /**
-   * @return The index, in sample data points, from the beginning of the sample data field to the
-   * first data point in the loop of this sample
-   */
-
-  long loopStart();
-
-  /**
-   * @return The index, in sample data points, from the beginning of the sample data field to the
-   * first data point following the loop of this sample. Note that this is the data point
-   * “equivalent to” the first loop data point, and that to produce portable artifact free loops,
-   * the eight proximal data points surrounding both the Startloop and Endloop points should be
-   * identical.
-   */
-
-  long loopEnd();
-
-  /**
-   * @return The sample rate in hz
-   */
-
-  int sampleRate();
-
-  /**
-   * @return The original pitch of the sample
-   */
-
-  int originalPitch();
-
-  /**
-   * @return The pitch correction value for the sample
-   */
-
-  int pitchCorrection();
-
-  /**
-   * @return The sample link
-   */
-
-  @Value.Default
-  default int sampleLink()
+  @Override
+  default String nameText()
   {
-    return 0;
+    return this.description().nameText();
   }
 }

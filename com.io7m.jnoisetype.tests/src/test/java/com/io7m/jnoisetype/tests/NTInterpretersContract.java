@@ -204,7 +204,7 @@ public abstract class NTInterpretersContract
           Assertions.assertEquals("000_60", sample.nameText(), "Correct sample name");
           Assertions.assertEquals(
             NTSampleKind.SAMPLE_KIND_MONO,
-            sample.kind(),
+            sample.description().kind(),
             "Correct sample kind");
         }
       );
@@ -272,7 +272,7 @@ public abstract class NTInterpretersContract
           Assertions.assertEquals("000_60", sample.nameText(), "Correct sample name");
           Assertions.assertEquals(
             NTSampleKind.SAMPLE_KIND_MONO,
-            sample.kind(),
+            sample.description().kind(),
             "Correct sample kind");
         }
       );
@@ -459,7 +459,7 @@ public abstract class NTInterpretersContract
           Assertions.assertEquals("000_60", sample.nameText(), "Correct sample");
           Assertions.assertEquals(
             NTSampleKind.SAMPLE_KIND_MONO,
-            sample.kind(),
+            sample.description().kind(),
             "Correct sample kind");
         },
 
@@ -468,7 +468,7 @@ public abstract class NTInterpretersContract
           Assertions.assertEquals("002_60", sample.nameText(), "Correct sample");
           Assertions.assertEquals(
             NTSampleKind.SAMPLE_KIND_MONO,
-            sample.kind(),
+            sample.description().kind(),
             "Correct sample kind");
         }
       );
