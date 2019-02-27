@@ -17,7 +17,7 @@
 package com.io7m.jnoisetype.writer.api;
 
 import com.io7m.immutables.styles.ImmutablesStyleType;
-import com.io7m.jnoisetype.api.NTRanges;
+import com.io7m.jnoisetype.api.NTSampleIndex;
 import com.io7m.jranges.RangeCheck;
 import org.immutables.value.Value;
 
@@ -39,7 +39,7 @@ public interface NTSampleWriterDescriptionType
    * @return The unique index of the sample, monotonically increasing and starting at {@code 0}
    */
 
-  int sampleIndex();
+  NTSampleIndex sampleIndex();
 
   /**
    * @return The index, in sample data points, from the beginning of the sample data field to the
@@ -79,12 +79,6 @@ public interface NTSampleWriterDescriptionType
   @Value.Check
   default void checkPreconditions()
   {
-    RangeCheck.checkIncludedInInteger(
-      this.sampleIndex(),
-      "Sample index",
-      NTRanges.SAMPLE_INDEX_RANGE,
-      "Valid sample indices");
-
     RangeCheck.checkLessEqualLong(
       this.sampleAbsoluteStart(),
       "Sample start",

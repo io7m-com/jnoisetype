@@ -19,6 +19,7 @@ package com.io7m.jnoisetype.vanilla;
 import com.io7m.jnoisetype.api.NTInfo;
 import com.io7m.jnoisetype.api.NTInstrumentName;
 import com.io7m.jnoisetype.api.NTLongString;
+import com.io7m.jnoisetype.api.NTPitch;
 import com.io7m.jnoisetype.api.NTPresetName;
 import com.io7m.jnoisetype.api.NTRanges;
 import com.io7m.jnoisetype.api.NTSampleDescription;
@@ -732,7 +733,7 @@ public final class NTParsers implements NTFileParserProviderType
         final var loop_start = view.getInt();
         final var loop_end = view.getInt();
         final var sample_rate = view.getInt();
-        final var original_pitch = view.get() & 0xff;
+        final var original_pitch = NTPitch.of((int) view.get() & 0x7f);
         final var pitch_correct = view.get();
         final var sample_link = view.getShort() & 0xffff;
         final var sample_kind = view.getShort() & 0xffff;

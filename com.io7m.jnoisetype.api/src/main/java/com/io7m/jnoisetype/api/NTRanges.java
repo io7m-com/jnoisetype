@@ -44,12 +44,19 @@ public final class NTRanges
     RangeInclusiveI.of(0, 65533);
 
   /**
+   * The range of valid values for 16-bit unsigned integers.
+   */
+
+  public static final RangeInclusiveI UNSIGNED_16_RANGE =
+    RangeInclusiveI.of(0, 65535);
+
+  /**
    * The range of valid values for version numbers. Numbers are encoded as 16-bit unsigned
    * integers.
    */
 
   public static final RangeInclusiveI VERSION_RANGE =
-    RangeInclusiveI.of(0, 65535);
+    UNSIGNED_16_RANGE;
 
   /**
    * The length range of sample names.
@@ -78,7 +85,7 @@ public final class NTRanges
    */
 
   public static final RangeInclusiveI INSTRUMENT_INDEX_RANGE =
-    RangeInclusiveI.of(0, 65535);
+    UNSIGNED_16_RANGE;
 
   /**
    * The range of valid values for instrument bag indices. Numbers are encoded as 16-bit unsigned
@@ -86,14 +93,14 @@ public final class NTRanges
    */
 
   public static final RangeInclusiveI INSTRUMENT_BAG_INDEX_RANGE =
-    RangeInclusiveI.of(0, 65535);
+    UNSIGNED_16_RANGE;
 
   /**
    * The range of valid values for preset indices. Numbers are encoded as 16-bit unsigned integers.
    */
 
   public static final RangeInclusiveI PRESET_INDEX_RANGE =
-    RangeInclusiveI.of(0, 65535);
+    UNSIGNED_16_RANGE;
 
   /**
    * The range of valid values for preset bag indices. Numbers are encoded as 16-bit unsigned
@@ -101,14 +108,14 @@ public final class NTRanges
    */
 
   public static final RangeInclusiveI PRESET_BAG_INDEX_RANGE =
-    RangeInclusiveI.of(0, 65535);
+    UNSIGNED_16_RANGE;
 
   /**
    * The range of valid values for sample indices. Numbers are encoded as 16-bit unsigned integers.
    */
 
   public static final RangeInclusiveI SAMPLE_INDEX_RANGE =
-    RangeInclusiveI.of(0, 65535);
+    UNSIGNED_16_RANGE;
 
   /**
    * The range of valid values for generator indices. Numbers are encoded as 16-bit unsigned
@@ -116,7 +123,7 @@ public final class NTRanges
    */
 
   public static final RangeInclusiveI GENERATOR_INDEX_RANGE =
-    RangeInclusiveI.of(0, 65535);
+    UNSIGNED_16_RANGE;
 
   /**
    * The range of valid values for pitch values.

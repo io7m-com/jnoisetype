@@ -183,7 +183,7 @@ public abstract class NTParsersContract
           Assertions.assertEquals(0L, description.loopEnd(), "Correct sample loopEnd");
           Assertions.assertEquals(0L, description.start(), "Correct sample start");
           Assertions.assertEquals(0L, description.end(), "Correct sample end");
-          Assertions.assertEquals(0, description.originalPitch(), "Correct sample originalPitch");
+          Assertions.assertEquals(0, description.originalPitch().value(), "Correct sample originalPitch");
           Assertions.assertEquals(0, description.pitchCorrection(), "Correct sample pitchCorrection");
           Assertions.assertEquals(0, description.sampleRate(), "Correct sample sampleRate");
           Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");
@@ -277,7 +277,7 @@ public abstract class NTParsersContract
           Assertions.assertEquals(8269L, description.loopEnd(), "Correct sample loopEnd");
           Assertions.assertEquals(0L, description.start(), "Correct sample start");
           Assertions.assertEquals(8270L, description.end(), "Correct sample end");
-          Assertions.assertEquals(60, description.originalPitch(), "Correct sample originalPitch");
+          Assertions.assertEquals(60, description.originalPitch().value(), "Correct sample originalPitch");
           Assertions.assertEquals(0, description.pitchCorrection(), "Correct sample pitchCorrection");
           Assertions.assertEquals(22050, description.sampleRate(), "Correct sample sampleRate");
           Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");
@@ -292,7 +292,7 @@ public abstract class NTParsersContract
           Assertions.assertEquals(0L, description.loopEnd(), "Correct sample loopEnd");
           Assertions.assertEquals(0L, description.start(), "Correct sample start");
           Assertions.assertEquals(0L, description.end(), "Correct sample end");
-          Assertions.assertEquals(0, description.originalPitch(), "Correct sample originalPitch");
+          Assertions.assertEquals(0, description.originalPitch().value(), "Correct sample originalPitch");
           Assertions.assertEquals(0, description.pitchCorrection(), "Correct sample pitchCorrection");
           Assertions.assertEquals(0, description.sampleRate(), "Correct sample sampleRate");
           Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");
@@ -431,7 +431,7 @@ public abstract class NTParsersContract
           Assertions.assertEquals(8269L, description.loopEnd(), "Correct sample loopEnd");
           Assertions.assertEquals(0L, description.start(), "Correct sample start");
           Assertions.assertEquals(8270L, description.end(), "Correct sample end");
-          Assertions.assertEquals(60, description.originalPitch(), "Correct sample originalPitch");
+          Assertions.assertEquals(60, description.originalPitch().value(), "Correct sample originalPitch");
           Assertions.assertEquals(0, description.pitchCorrection(), "Correct sample pitchCorrection");
           Assertions.assertEquals(22050, description.sampleRate(), "Correct sample sampleRate");
           Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");
@@ -446,7 +446,7 @@ public abstract class NTParsersContract
           Assertions.assertEquals(0L, description.loopEnd(), "Correct sample loopEnd");
           Assertions.assertEquals(0L, description.start(), "Correct sample start");
           Assertions.assertEquals(0L, description.end(), "Correct sample end");
-          Assertions.assertEquals(0, description.originalPitch(), "Correct sample originalPitch");
+          Assertions.assertEquals(0, description.originalPitch().value(), "Correct sample originalPitch");
           Assertions.assertEquals(0, description.pitchCorrection(), "Correct sample pitchCorrection");
           Assertions.assertEquals(0, description.sampleRate(), "Correct sample sampleRate");
           Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");
@@ -604,7 +604,7 @@ public abstract class NTParsersContract
           Assertions.assertEquals(8269L, description.loopEnd(), "Correct sample loopEnd");
           Assertions.assertEquals(0L, description.start(), "Correct sample start");
           Assertions.assertEquals(8270L, description.end(), "Correct sample end");
-          Assertions.assertEquals(60, description.originalPitch(), "Correct sample originalPitch");
+          Assertions.assertEquals(60, description.originalPitch().value(), "Correct sample originalPitch");
           Assertions.assertEquals(0, description.pitchCorrection(), "Correct sample pitchCorrection");
           Assertions.assertEquals(22050, description.sampleRate(), "Correct sample sampleRate");
           Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");
@@ -622,7 +622,7 @@ public abstract class NTParsersContract
           Assertions.assertEquals(16585L, description.loopEnd(), "Correct sample loopEnd");
           Assertions.assertEquals(8316L, description.start(), "Correct sample start");
           Assertions.assertEquals(16586L, description.end(), "Correct sample end");
-          Assertions.assertEquals(60, description.originalPitch(), "Correct sample originalPitch");
+          Assertions.assertEquals(60, description.originalPitch().value(), "Correct sample originalPitch");
           Assertions.assertEquals(0, description.pitchCorrection(), "Correct sample pitchCorrection");
           Assertions.assertEquals(22050, description.sampleRate(), "Correct sample sampleRate");
           Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");
@@ -637,7 +637,7 @@ public abstract class NTParsersContract
           Assertions.assertEquals(0L, description.loopEnd(), "Correct sample loopEnd");
           Assertions.assertEquals(0L, description.start(), "Correct sample start");
           Assertions.assertEquals(0L, description.end(), "Correct sample end");
-          Assertions.assertEquals(0, description.originalPitch(), "Correct sample originalPitch");
+          Assertions.assertEquals(0, description.originalPitch().value(), "Correct sample originalPitch");
           Assertions.assertEquals(0, description.pitchCorrection(), "Correct sample pitchCorrection");
           Assertions.assertEquals(0, description.sampleRate(), "Correct sample sampleRate");
           Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");

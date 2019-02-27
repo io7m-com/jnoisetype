@@ -16,6 +16,7 @@
 
 package com.io7m.jnoisetype.writer.api;
 
+import com.io7m.jnoisetype.api.NTInstrumentIndex;
 import com.io7m.jnoisetype.api.NTInstrumentName;
 
 /**
@@ -42,5 +43,5 @@ public interface NTInstrumentBuilderType
    * @return The unique, monotonically increasing instrument index
    */
 
-  int instrumentIndex();
+  NTInstrumentIndex instrumentIndex();
 }

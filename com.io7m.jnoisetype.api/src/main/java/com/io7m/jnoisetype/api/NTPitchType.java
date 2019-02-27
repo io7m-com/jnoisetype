@@ -14,57 +14,26 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jnoisetype.writer.api;
+package com.io7m.jnoisetype.api;
 
 import com.io7m.immutables.styles.ImmutablesStyleType;
-import com.io7m.jnoisetype.api.NTInstrumentIndex;
-import com.io7m.jnoisetype.api.NTInstrumentName;
-import com.io7m.jnoisetype.api.NTRanges;
 import com.io7m.jranges.RangeCheck;
 import org.immutables.value.Value;
 
-import java.util.List;
-
 /**
- * The description of an instrument consumed by a writer.
+ * The valid values for pitches.
  */
 
 @ImmutablesStyleType
 @Value.Immutable
-public interface NTInstrumentWriterDescriptionType
+public interface NTPitchType extends Comparable<NTPitchType>
 {
   /**
-   * @return The unique index of the instrument, monotonically increasing and starting at {@code 0}
+   * @return The raw value in the range {@code [0, 127]}
    */
 
-  NTInstrumentIndex instrumentIndex();
-
-  /**
-   * @return The name of the instrument
-   */
-
-  NTInstrumentName name();
-
-  /**
-   * @return The index into the instrument bag
-   */
-
-  int instrumentBagIndex();
-
-  /**
-   * @return The zones in the instrument
-   */
-
-  List<NTInstrumentWriterZoneDescription> zones();
-
-  /**
-   * @return The predicted index of the next instrument's bag
-   */
-
-  default int instrumentNextBagIndex()
-  {
-    return this.instrumentBagIndex() + this.zones().size();
-  }
+  @Value.Parameter
+  int value();
 
   /**
    * Check preconditions for the type.
@@ -74,9 +43,15 @@ public interface NTInstrumentWriterDescriptionType
   default void checkPreconditions()
   {
     RangeCheck.checkIncludedInInteger(
-      this.instrumentBagIndex(),
-      "Instrument bag index",
-      NTRanges.INSTRUMENT_BAG_INDEX_RANGE,
-      "Valid instrument bag indices");
+      this.value(),
+      "Pitch value",
+      NTRanges.PITCH_RANGE,
+      "Valid pitch values");
+  }
+
+  @Override
+  default int compareTo(final NTPitchType other)
+  {
+    return Integer.compareUnsigned(this.value(), other.value());
   }
 }

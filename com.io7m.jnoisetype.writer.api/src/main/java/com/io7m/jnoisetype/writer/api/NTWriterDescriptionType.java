@@ -18,8 +18,12 @@ package com.io7m.jnoisetype.writer.api;
 
 import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jnoisetype.api.NTInfo;
+import com.io7m.jnoisetype.api.NTInstrumentIndex;
+import com.io7m.jnoisetype.api.NTPresetIndex;
+import com.io7m.jnoisetype.api.NTSampleIndex;
 import org.immutables.value.Value;
 
+import java.util.Objects;
 import java.util.SortedMap;
 
 /**
@@ -38,19 +42,19 @@ public interface NTWriterDescriptionType
    * @return The samples that will be written
    */
 
-  SortedMap<Integer, NTSampleWriterDescription> samples();
+  SortedMap<NTSampleIndex, NTSampleWriterDescription> samples();
 
   /**
    * @return The instruments that will be written
    */
 
-  SortedMap<Integer, NTInstrumentWriterDescription> instruments();
+  SortedMap<NTInstrumentIndex, NTInstrumentWriterDescription> instruments();
 
   /**
    * @return The presets that will be written
    */
 
-  SortedMap<Integer, NTPresetWriterDescription> presets();
+  SortedMap<NTPresetIndex, NTPresetWriterDescription> presets();
 
   /**
    * Check preconditions for the type.
@@ -60,24 +64,24 @@ public interface NTWriterDescriptionType
   default void checkPreconditions()
   {
     this.samples().forEach((index, description) -> {
-      Preconditions.checkPreconditionI(
-        index.intValue(),
-        description.sampleIndex() == index.intValue(),
-        x -> "Sample index must match description index " + description.sampleIndex());
+      Preconditions.checkPrecondition(
+        index,
+        Objects.equals(description.sampleIndex(), index),
+        x -> "Sample index must match description index " + description.sampleIndex().value());
     });
 
     this.instruments().forEach((index, description) -> {
-      Preconditions.checkPreconditionI(
-        index.intValue(),
-        description.instrumentIndex() == index.intValue(),
-        x -> "Instrument index must match description index " + description.instrumentIndex());
+      Preconditions.checkPrecondition(
+        index,
+        Objects.equals(description.instrumentIndex(), index),
+        x -> "Instrument index must match description index " + description.instrumentIndex().value());
     });
 
     this.presets().forEach((index, description) -> {
-      Preconditions.checkPreconditionI(
-        index.intValue(),
-        description.presetIndex() == index.intValue(),
-        x -> "Preset index must match description index " + description.presetIndex());
+      Preconditions.checkPrecondition(
+        index,
+        Objects.equals(description.presetIndex(), index),
+        x -> "Preset index must match description index " + description.presetIndex().value());
     });
   }
 }

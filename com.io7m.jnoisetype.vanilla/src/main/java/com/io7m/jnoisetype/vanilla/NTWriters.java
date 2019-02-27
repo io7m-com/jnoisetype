@@ -18,7 +18,11 @@ package com.io7m.jnoisetype.vanilla;
 
 import com.io7m.jaffirm.core.Invariants;
 import com.io7m.jaffirm.core.Preconditions;
+import com.io7m.jnoisetype.api.NTGeneratorIndex;
+import com.io7m.jnoisetype.api.NTInstrumentIndex;
 import com.io7m.jnoisetype.api.NTLongString;
+import com.io7m.jnoisetype.api.NTModulatorIndex;
+import com.io7m.jnoisetype.api.NTPresetIndex;
 import com.io7m.jnoisetype.api.NTShortString;
 import com.io7m.jnoisetype.api.NTVersion;
 import com.io7m.jnoisetype.writer.api.NTInstrumentWriterDescription;
@@ -145,8 +149,8 @@ public final class NTWriters implements NTWriterProviderType
         final var samples = description.samples();
 
         smpl.setDataWriter(w_channel -> {
-          for (final int sample_index : samples.keySet()) {
-            final var sample = samples.get(Integer.valueOf(sample_index));
+          for (final var sample_index : samples.keySet()) {
+            final var sample = samples.get(sample_index);
             sample.description().dataWriter().write(w_channel);
 
             padding.position(0);
@@ -276,7 +280,7 @@ public final class NTWriters implements NTWriterProviderType
     {
       buffer.position(0);
       buffer.putShort((short) 0);
-      buffer.putShort((short) 0);
+      buffer.putChar((char) 0);
 
       checkAndFlipBuffer(buffer);
     }
@@ -287,7 +291,7 @@ public final class NTWriters implements NTWriterProviderType
     {
       buffer.position(0);
       buffer.putShort((short) (generator.generator().index() & 0xffff));
-      buffer.putShort((short) generator.amount().asUnsigned16());
+      buffer.putChar(generator.amount().asUnsigned16());
 
       checkAndFlipBuffer(buffer);
     }
@@ -297,7 +301,7 @@ public final class NTWriters implements NTWriterProviderType
     {
       buffer.position(0);
       buffer.putShort((short) 0);
-      buffer.putShort((short) 0);
+      buffer.putChar((char) 0);
 
       checkAndFlipBuffer(buffer);
     }
@@ -308,13 +312,13 @@ public final class NTWriters implements NTWriterProviderType
     {
       buffer.position(0);
       buffer.putShort((short) (generator.generator().index() & 0xffff));
-      buffer.putShort((short) generator.amount().asUnsigned16());
+      buffer.putChar(generator.amount().asUnsigned16());
 
       checkAndFlipBuffer(buffer);
     }
 
     private static long countRequiredInstrumentGeneratorRecords(
-      final SortedMap<Integer, NTInstrumentWriterDescription> instruments)
+      final SortedMap<NTInstrumentIndex, NTInstrumentWriterDescription> instruments)
     {
       var generators = 1L;
       for (final var instrument : instruments.values()) {
@@ -328,7 +332,7 @@ public final class NTWriters implements NTWriterProviderType
     }
 
     private static long countRequiredPresetGeneratorRecords(
-      final SortedMap<Integer, NTPresetWriterDescription> presets)
+      final SortedMap<NTPresetIndex, NTPresetWriterDescription> presets)
     {
       var generators = 1L;
       for (final var preset : presets.values()) {
@@ -342,7 +346,7 @@ public final class NTWriters implements NTWriterProviderType
     }
 
     private static long countRequiredInstrumentModulatorRecords(
-      final SortedMap<Integer, NTInstrumentWriterDescription> instruments)
+      final SortedMap<NTInstrumentIndex, NTInstrumentWriterDescription> instruments)
     {
       var modulators = 1L;
       for (final var instrument : instruments.values()) {
@@ -398,8 +402,8 @@ public final class NTWriters implements NTWriterProviderType
         ibag.setDataWriter(w_channel -> {
           final var buffer = ByteBuffer.allocate(4).order(LITTLE_ENDIAN);
 
-          var gen_index = 0;
-          var mod_index = 0;
+          var gen_index = NTGeneratorIndex.of(0);
+          var mod_index = NTModulatorIndex.of(0);
 
           for (final var instrument_index : instruments.keySet()) {
             final var instrument = instruments.get(instrument_index);
@@ -415,8 +419,8 @@ public final class NTWriters implements NTWriterProviderType
               packIBAGRecord(buffer, gen_index, mod_index);
               w_channel.write(buffer);
 
-              gen_index += zone.generators().size();
-              mod_index += zone.modulators().size();
+              gen_index = NTGeneratorIndex.of(gen_index.value() + zone.generators().size());
+              mod_index = NTModulatorIndex.of(mod_index.value() + zone.modulators().size());
             }
           }
 
@@ -428,18 +432,18 @@ public final class NTWriters implements NTWriterProviderType
 
     private static void packIBAGRecord(
       final ByteBuffer buffer,
-      final int gen_index,
-      final int mod_index)
+      final NTGeneratorIndex gen_index,
+      final NTModulatorIndex mod_index)
     {
       buffer.position(0);
-      buffer.putShort((short) (gen_index & 0xffff));
-      buffer.putShort((short) (mod_index & 0xffff));
+      buffer.putChar(gen_index.asUnsigned16());
+      buffer.putChar(mod_index.asUnsigned16());
 
       checkAndFlipBuffer(buffer);
     }
 
     private static long countRequiredPresetZoneRecords(
-      final SortedMap<Integer, NTPresetWriterDescription> presets)
+      final SortedMap<NTPresetIndex, NTPresetWriterDescription> presets)
     {
       var zones = 1L;
       for (final var preset : presets.values()) {
@@ -449,7 +453,7 @@ public final class NTWriters implements NTWriterProviderType
     }
 
     private static long countRequiredInstrumentZoneRecords(
-      final SortedMap<Integer, NTInstrumentWriterDescription> instruments)
+      final SortedMap<NTInstrumentIndex, NTInstrumentWriterDescription> instruments)
     {
       var zones = 1L;
       for (final var instrument : instruments.values()) {
@@ -570,8 +574,8 @@ public final class NTWriters implements NTWriterProviderType
         pbag.setDataWriter(w_channel -> {
           final var buffer = ByteBuffer.allocate(4).order(LITTLE_ENDIAN);
 
-          var gen_index = 0;
-          var mod_index = 0;
+          var gen_index = NTGeneratorIndex.of(0);
+          var mod_index = NTModulatorIndex.of(0);
 
           for (final var preset_index : presets.keySet()) {
             final var preset = presets.get(preset_index);
@@ -587,8 +591,8 @@ public final class NTWriters implements NTWriterProviderType
               packIBAGRecord(buffer, gen_index, mod_index);
               w_channel.write(buffer);
 
-              gen_index += zone.generators().size();
-              mod_index += zone.modulators().size();
+              gen_index = NTGeneratorIndex.of(gen_index.value() + zone.generators().size());
+              mod_index = NTModulatorIndex.of(mod_index.value() + zone.modulators().size());
             }
           }
 
@@ -653,7 +657,7 @@ public final class NTWriters implements NTWriterProviderType
       buffer.putInt(Math.toIntExact(writer_description.sampleAbsoluteLoopStart()));
       buffer.putInt(Math.toIntExact(writer_description.sampleAbsoluteLoopEnd()));
       buffer.putInt(description.sampleRate());
-      buffer.put((byte) description.originalPitch());
+      buffer.put((byte) description.originalPitch().value());
       buffer.put((byte) description.pitchCorrection());
       buffer.putShort((short) 0);
       buffer.putShort((short) description.kind().value());
@@ -732,7 +736,7 @@ public final class NTWriters implements NTWriterProviderType
 
       buffer.position(0);
       buffer.put(buffer_name);
-      buffer.putShort((short) preset.presetIndex());
+      buffer.putChar(preset.presetIndex().asUnsigned16());
       buffer.putShort((short) preset.bank());
       buffer.putShort((short) preset.presetBagIndex());
       buffer.putInt(0);

@@ -18,9 +18,8 @@ package com.io7m.jnoisetype.writer.api;
 
 import com.io7m.immutables.styles.ImmutablesStyleType;
 import com.io7m.jnoisetype.api.NTGenerator;
+import com.io7m.jnoisetype.api.NTGeneratorIndex;
 import com.io7m.jnoisetype.api.NTGenericAmount;
-import com.io7m.jnoisetype.api.NTRanges;
-import com.io7m.jranges.RangeCheck;
 import org.immutables.value.Value;
 
 /**
@@ -35,7 +34,7 @@ public interface NTInstrumentWriterZoneGeneratorDescriptionType
    * @return The index of the generator in the zone
    */
 
-  int index();
+  NTGeneratorIndex index();
 
   /**
    * @return The generator value
@@ -48,18 +47,4 @@ public interface NTInstrumentWriterZoneGeneratorDescriptionType
    */
 
   NTGenericAmount amount();
-
-  /**
-   * Check preconditions for the type.
-   */
-
-  @Value.Check
-  default void checkPreconditions()
-  {
-    RangeCheck.checkIncludedInInteger(
-      this.index(),
-      "Instrument zone generator index",
-      NTRanges.INSTRUMENT_BAG_INDEX_RANGE,
-      "Valid instrument generator indices");
-  }
 }

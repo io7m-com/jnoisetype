@@ -316,7 +316,7 @@ final class CommandShow extends CommandRoot
         "sample %d %s : %d\n",
         Integer.valueOf(index),
         "original pitch",
-        Integer.valueOf(description.originalPitch()));
+        Integer.valueOf(description.originalPitch().value()));
 
       System.out.printf(
         "sample %d %s : %d\n",

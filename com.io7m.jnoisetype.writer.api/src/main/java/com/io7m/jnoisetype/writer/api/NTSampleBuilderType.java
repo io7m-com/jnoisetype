@@ -16,6 +16,8 @@
 
 package com.io7m.jnoisetype.writer.api;
 
+import com.io7m.jnoisetype.api.NTPitch;
+import com.io7m.jnoisetype.api.NTSampleIndex;
 import com.io7m.jnoisetype.api.NTSampleKind;
 import com.io7m.jnoisetype.api.NTSampleName;
 
@@ -35,7 +37,7 @@ public interface NTSampleBuilderType
    * @return The unique, monotonically increasing sample index number
    */
 
-  int sampleIndex();
+  NTSampleIndex sampleIndex();
 
   /**
    * @return The length of the sample in sample values
@@ -123,7 +125,7 @@ public interface NTSampleBuilderType
    * @return The current sample original pitch
    */
 
-  int originalPitch();
+  NTPitch originalPitch();
 
   /**
    * Set the original pitch of the sample as a MIDI key value. Middle C is defined to be 60.
@@ -133,7 +135,7 @@ public interface NTSampleBuilderType
    * @return The current builder
    */
 
-  NTSampleBuilderType setOriginalPitch(int pitch);
+  NTSampleBuilderType setOriginalPitch(NTPitch pitch);
 
   /**
    * @return The current sample pitch correction

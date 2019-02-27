@@ -71,6 +71,6 @@ public interface NTPresetZoneBuilderType
   {
     return this.addGenerator(
       NTGenerator.of(41, "instrument"),
-      NTGenericAmount.of(instrument.instrumentIndex()));
+      NTGenericAmount.of(instrument.instrumentIndex().value()));
   }
 }

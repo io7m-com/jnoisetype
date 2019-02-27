@@ -32,24 +32,6 @@ public final class NTParseException extends NTException
   private final long offset;
 
   /**
-   * @return The source of the exception
-   */
-
-  public URI source()
-  {
-    return this.source;
-  }
-
-  /**
-   * @return The offset in octets within the input that caused the error
-   */
-
-  public long offset()
-  {
-    return this.offset;
-  }
-
-  /**
    * Construct an exception.
    *
    * @param message   The message
@@ -103,5 +85,23 @@ public final class NTParseException extends NTException
     super(cause);
     this.source = Objects.requireNonNull(in_source, "source");
     this.offset = in_offset;
+  }
+
+  /**
+   * @return The source of the exception
+   */
+
+  public URI source()
+  {
+    return this.source;
+  }
+
+  /**
+   * @return The offset in octets within the input that caused the error
+   */
+
+  public long offset()
+  {
+    return this.offset;
   }
 }

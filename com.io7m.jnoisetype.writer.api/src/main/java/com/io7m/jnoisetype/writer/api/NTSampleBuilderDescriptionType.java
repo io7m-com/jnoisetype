@@ -17,7 +17,7 @@
 package com.io7m.jnoisetype.writer.api;
 
 import com.io7m.immutables.styles.ImmutablesStyleType;
-import com.io7m.jnoisetype.api.NTRanges;
+import com.io7m.jnoisetype.api.NTPitch;
 import com.io7m.jnoisetype.api.NTSampleKind;
 import com.io7m.jnoisetype.api.NTSampleName;
 import com.io7m.jranges.RangeCheck;
@@ -81,10 +81,10 @@ public interface NTSampleBuilderDescriptionType
   /**
    * @return The current sample original pitch
    *
-   * @see NTSampleBuilderType#setOriginalPitch(int)
+   * @see NTSampleBuilderType#setOriginalPitch(NTPitch)
    */
 
-  int originalPitch();
+  NTPitch originalPitch();
 
   /**
    * @return The current sample pitch correction
@@ -109,12 +109,6 @@ public interface NTSampleBuilderDescriptionType
   @Value.Check
   default void checkPreconditions()
   {
-    RangeCheck.checkIncludedInInteger(
-      this.originalPitch(),
-      "Original pitch",
-      NTRanges.PITCH_RANGE,
-      "Valid pitches");
-
     RangeCheck.checkIncludedInLong(
       this.sampleCount(),
       "Sample count",

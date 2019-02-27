@@ -16,6 +16,7 @@
 
 package com.io7m.jnoisetype.tests;
 
+import com.io7m.jnoisetype.api.NTSampleIndex;
 import com.io7m.jnoisetype.api.NTSampleName;
 import com.io7m.jnoisetype.writer.api.NTBuilderProviderType;
 import org.junit.jupiter.api.Assertions;
@@ -73,7 +74,7 @@ public abstract class NTBuildersContract
     Assertions.assertEquals(
       1, description.samples().size(), "Correct sample count");
 
-    final var sample0 = description.samples().get(Integer.valueOf(0));
+    final var sample0 = description.samples().get(NTSampleIndex.of(0));
     Assertions.assertEquals(
       "000_60",
       sample0.description().name().value(), "Correct name");

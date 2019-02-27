@@ -17,8 +17,7 @@
 package com.io7m.jnoisetype.writer.api;
 
 import com.io7m.immutables.styles.ImmutablesStyleType;
-import com.io7m.jnoisetype.api.NTRanges;
-import com.io7m.jranges.RangeCheck;
+import com.io7m.jnoisetype.api.NTModulatorIndex;
 import org.immutables.value.Value;
 
 /**
@@ -33,19 +32,5 @@ public interface NTPresetWriterZoneModulatorDescriptionType
    * @return The index of the modulator in the zone
    */
 
-  int index();
-
-  /**
-   * Check preconditions for the type.
-   */
-
-  @Value.Check
-  default void checkPreconditions()
-  {
-    RangeCheck.checkIncludedInInteger(
-      this.index(),
-      "Preset zone modulator index",
-      NTRanges.PRESET_BAG_INDEX_RANGE,
-      "Valid preset modulator indices");
-  }
+  NTModulatorIndex index();
 }

@@ -14,23 +14,53 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jnoisetype.writer.api;
+package com.io7m.jnoisetype.api;
 
 import com.io7m.immutables.styles.ImmutablesStyleType;
-import com.io7m.jnoisetype.api.NTModulatorIndex;
+import com.io7m.jranges.RangeCheck;
 import org.immutables.value.Value;
 
 /**
- * The description of an instrument zone modulator consumed by a writer.
+ * The valid values for modulator indices.
  */
 
 @ImmutablesStyleType
 @Value.Immutable
-public interface NTInstrumentWriterZoneModulatorDescriptionType
+public interface NTModulatorIndexType extends Comparable<NTModulatorIndexType>
 {
   /**
-   * @return The index of the modulator in the zone
+   * @return The raw value in the range {@code [0, 0xffff]}
    */
 
-  NTModulatorIndex index();
+  @Value.Parameter
+  int value();
+
+  /**
+   * Check preconditions for the type.
+   */
+
+  @Value.Check
+  default void checkPreconditions()
+  {
+    RangeCheck.checkIncludedInInteger(
+      this.value(),
+      "Modulator index value",
+      NTRanges.UNSIGNED_16_RANGE,
+      "Valid modulator index values");
+  }
+
+  /**
+   * @return The value as an unsigned 16-bit integer
+   */
+
+  default char asUnsigned16()
+  {
+    return (char) this.value();
+  }
+
+  @Override
+  default int compareTo(final NTModulatorIndexType other)
+  {
+    return Integer.compareUnsigned(this.value(), other.value());
+  }
 }

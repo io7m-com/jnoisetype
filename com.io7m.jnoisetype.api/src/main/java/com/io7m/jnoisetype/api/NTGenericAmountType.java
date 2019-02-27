@@ -17,6 +17,7 @@
 package com.io7m.jnoisetype.api;
 
 import com.io7m.immutables.styles.ImmutablesStyleType;
+import com.io7m.jranges.RangeCheck;
 import org.immutables.value.Value;
 
 /**
@@ -66,10 +67,10 @@ public interface NTGenericAmountType
    * @return The unsigned 16-bit value
    */
 
-  default int asUnsigned16()
+  default char asUnsigned16()
   {
     final var x = this.value();
-    return (x & 0xffff);
+    return (char) (x & 0xffff);
   }
 
   /**
@@ -78,10 +79,23 @@ public interface NTGenericAmountType
    * @return The signed 16-bit value
    */
 
-  default int asSigned16()
+  default short asSigned16()
   {
     final var x = this.value();
-    final var sx = (short) x;
-    return (int) sx;
+    return (short) x;
+  }
+
+  /**
+   * Check preconditions for the type.
+   */
+
+  @Value.Check
+  default void checkPreconditions()
+  {
+    RangeCheck.checkIncludedInInteger(
+      this.value(),
+      "Value",
+      NTRanges.UNSIGNED_16_RANGE,
+      "Unsigned 16-bit integer range");
   }
 }

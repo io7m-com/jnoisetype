@@ -51,7 +51,7 @@ public interface NTInstrumentZoneBuilderType
   {
     return this.addGenerator(
       NTGenerator.of(53, "sampleID"),
-      NTGenericAmount.of(sample.sampleIndex()));
+      NTGenericAmount.of(sample.sampleIndex().value()));
   }
 
   /**

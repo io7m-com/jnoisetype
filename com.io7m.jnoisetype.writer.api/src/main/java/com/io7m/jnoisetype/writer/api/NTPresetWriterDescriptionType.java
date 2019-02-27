@@ -17,6 +17,7 @@
 package com.io7m.jnoisetype.writer.api;
 
 import com.io7m.immutables.styles.ImmutablesStyleType;
+import com.io7m.jnoisetype.api.NTPresetIndex;
 import com.io7m.jnoisetype.api.NTPresetName;
 import com.io7m.jnoisetype.api.NTRanges;
 import com.io7m.jranges.RangeCheck;
@@ -36,7 +37,7 @@ public interface NTPresetWriterDescriptionType
    * @return The unique index of the preset, monotonically increasing and starting at {@code 0}
    */
 
-  int presetIndex();
+  NTPresetIndex presetIndex();
 
   /**
    * @return The bank number
@@ -79,13 +80,7 @@ public interface NTPresetWriterDescriptionType
   default void checkPreconditions()
   {
     RangeCheck.checkIncludedInInteger(
-      this.presetIndex(),
-      "Preset index",
-      NTRanges.PRESET_INDEX_RANGE,
-      "Valid preset indices");
-
-    RangeCheck.checkIncludedInInteger(
-      this.presetIndex(),
+      this.presetBagIndex(),
       "Preset bag index",
       NTRanges.PRESET_BAG_INDEX_RANGE,
       "Valid preset bag indices");

@@ -17,11 +17,17 @@
 package com.io7m.jnoisetype.vanilla;
 
 import com.io7m.jnoisetype.api.NTGenerator;
+import com.io7m.jnoisetype.api.NTGeneratorIndex;
 import com.io7m.jnoisetype.api.NTGenericAmount;
 import com.io7m.jnoisetype.api.NTInfo;
+import com.io7m.jnoisetype.api.NTInstrumentIndex;
 import com.io7m.jnoisetype.api.NTInstrumentName;
+import com.io7m.jnoisetype.api.NTModulatorIndex;
+import com.io7m.jnoisetype.api.NTPitch;
+import com.io7m.jnoisetype.api.NTPresetIndex;
 import com.io7m.jnoisetype.api.NTPresetName;
 import com.io7m.jnoisetype.api.NTRanges;
+import com.io7m.jnoisetype.api.NTSampleIndex;
 import com.io7m.jnoisetype.api.NTSampleKind;
 import com.io7m.jnoisetype.api.NTSampleName;
 import com.io7m.jnoisetype.api.NTShortString;
@@ -80,15 +86,15 @@ public final class NTBuilders implements NTBuilderProviderType
   private static final class WriterDescription implements NTWriterDescriptionType
   {
     private final NTInfo info;
-    private final SortedMap<Integer, NTSampleWriterDescription> description_samples;
-    private final SortedMap<Integer, NTInstrumentWriterDescription> description_instruments;
-    private final SortedMap<Integer, NTPresetWriterDescription> description_presets;
+    private final SortedMap<NTSampleIndex, NTSampleWriterDescription> description_samples;
+    private final SortedMap<NTInstrumentIndex, NTInstrumentWriterDescription> description_instruments;
+    private final SortedMap<NTPresetIndex, NTPresetWriterDescription> description_presets;
 
     WriterDescription(
       final NTInfo in_info,
-      final TreeMap<Integer, NTSampleWriterDescription> in_description_samples,
-      final TreeMap<Integer, NTInstrumentWriterDescription> in_description_instruments,
-      final TreeMap<Integer, NTPresetWriterDescription> in_preset_descriptions)
+      final TreeMap<NTSampleIndex, NTSampleWriterDescription> in_description_samples,
+      final TreeMap<NTInstrumentIndex, NTInstrumentWriterDescription> in_description_instruments,
+      final TreeMap<NTPresetIndex, NTPresetWriterDescription> in_preset_descriptions)
     {
       this.info =
         Objects.requireNonNull(in_info, "info");
@@ -111,19 +117,19 @@ public final class NTBuilders implements NTBuilderProviderType
     }
 
     @Override
-    public SortedMap<Integer, NTSampleWriterDescription> samples()
+    public SortedMap<NTSampleIndex, NTSampleWriterDescription> samples()
     {
       return this.description_samples;
     }
 
     @Override
-    public SortedMap<Integer, NTInstrumentWriterDescription> instruments()
+    public SortedMap<NTInstrumentIndex, NTInstrumentWriterDescription> instruments()
     {
       return this.description_instruments;
     }
 
     @Override
-    public SortedMap<Integer, NTPresetWriterDescription> presets()
+    public SortedMap<NTPresetIndex, NTPresetWriterDescription> presets()
     {
       return this.description_presets;
     }
@@ -171,11 +177,11 @@ public final class NTBuilders implements NTBuilderProviderType
       return "com.io7m.jnoisetype 0.0.0";
     }
 
-    private static TreeMap<Integer, NTInstrumentWriterDescription> buildInstrumentDescriptions(
+    private static TreeMap<NTInstrumentIndex, NTInstrumentWriterDescription> buildInstrumentDescriptions(
       final TreeMap<NTInstrumentName, InstrumentBuilder> instruments)
     {
       var bag_index = 0;
-      final var instrument_descriptions = new TreeMap<Integer, NTInstrumentWriterDescription>();
+      final var instrument_descriptions = new TreeMap<NTInstrumentIndex, NTInstrumentWriterDescription>();
       for (final var name : instruments.keySet()) {
         final var instrument = instruments.get(name);
 
@@ -215,17 +221,17 @@ public final class NTBuilders implements NTBuilderProviderType
             .setInstrumentBagIndex(bag_index)
             .build();
 
-        instrument_descriptions.put(Integer.valueOf(instrument.index), description);
+        instrument_descriptions.put(instrument.index, description);
         bag_index = Math.addExact(bag_index, instrument.zones.size());
       }
       return instrument_descriptions;
     }
 
-    private static TreeMap<Integer, NTPresetWriterDescription> buildPresetDescriptions(
+    private static TreeMap<NTPresetIndex, NTPresetWriterDescription> buildPresetDescriptions(
       final TreeMap<NTPresetName, PresetBuilder> presets)
     {
       var bag_index = 0;
-      final var preset_descriptions = new TreeMap<Integer, NTPresetWriterDescription>();
+      final var preset_descriptions = new TreeMap<NTPresetIndex, NTPresetWriterDescription>();
       for (final var name : presets.keySet()) {
         final var preset = presets.get(name);
 
@@ -266,17 +272,17 @@ public final class NTBuilders implements NTBuilderProviderType
             .setPresetBagIndex(bag_index)
             .build();
 
-        preset_descriptions.put(Integer.valueOf(preset.index), description);
+        preset_descriptions.put(preset.index, description);
         bag_index = Math.addExact(bag_index, preset.zones.size());
       }
       return preset_descriptions;
     }
 
-    private static TreeMap<Integer, NTSampleWriterDescription> buildSampleDescriptions(
+    private static TreeMap<NTSampleIndex, NTSampleWriterDescription> buildSampleDescriptions(
       final TreeMap<NTSampleName, SampleBuilder> samples)
     {
       var offset_start = 0L;
-      final var sample_descriptions = new TreeMap<Integer, NTSampleWriterDescription>();
+      final var sample_descriptions = new TreeMap<NTSampleIndex, NTSampleWriterDescription>();
       for (final var name : samples.keySet()) {
         final var sample = samples.get(name);
 
@@ -299,7 +305,7 @@ public final class NTBuilders implements NTBuilderProviderType
             .setSampleAbsoluteLoopEnd(offset_loop_end)
             .build();
 
-        sample_descriptions.put(Integer.valueOf(sample.index), description);
+        sample_descriptions.put(sample.index, description);
         offset_start = Math.addExact(offset_start, samples_padded);
       }
       return sample_descriptions;
@@ -362,12 +368,12 @@ public final class NTBuilders implements NTBuilderProviderType
           .setLoopEnd(0L)
           .setLoopStart(0L)
           .setName(name)
-          .setOriginalPitch(60)
+          .setOriginalPitch(NTPitch.of(60))
           .setPitchCorrection(0)
           .setSampleRate(48000)
           .build();
 
-      final var builder = new SampleBuilder(this.samples.size(), description);
+      final var builder = new SampleBuilder(NTSampleIndex.of(this.samples.size()), description);
       this.samples.put(name, builder);
       return builder;
     }
@@ -392,7 +398,7 @@ public final class NTBuilders implements NTBuilderProviderType
         new InstrumentBuilder(
           this.instrument_generator_indices,
           this.instrument_modulator_indices,
-          this.instruments.size(),
+          NTInstrumentIndex.of(this.instruments.size()),
           name);
 
       this.instruments.put(name, builder);
@@ -419,7 +425,7 @@ public final class NTBuilders implements NTBuilderProviderType
         new PresetBuilder(
           this.preset_generator_indices,
           this.preset_modulator_indices,
-          this.presets.size(),
+          NTPresetIndex.of(this.presets.size()),
           name);
 
       this.presets.put(name, builder);
@@ -433,20 +439,23 @@ public final class NTBuilders implements NTBuilderProviderType
     private final AtomicInteger instrument_modulator_indices;
     private final NTInstrumentName name;
     private final LinkedList<InstrumentZoneBuilder> zones;
-    private final int index;
+    private final NTInstrumentIndex index;
 
     private InstrumentBuilder(
       final AtomicInteger in_instrument_generator_indices,
       final AtomicInteger in_instrument_modulator_indices,
-      final int in_index,
+      final NTInstrumentIndex in_index,
       final NTInstrumentName in_name)
     {
       this.instrument_generator_indices =
         Objects.requireNonNull(in_instrument_generator_indices, "instrument_generator_indices");
       this.instrument_modulator_indices =
         Objects.requireNonNull(in_instrument_modulator_indices, "instrument_modulator_indices");
-      this.index = in_index;
-      this.name = Objects.requireNonNull(in_name, "name");
+      this.index =
+        Objects.requireNonNull(in_index, "index");
+      this.name =
+        Objects.requireNonNull(in_name, "name");
+
       this.zones = new LinkedList<>();
     }
 
@@ -467,7 +476,7 @@ public final class NTBuilders implements NTBuilderProviderType
     }
 
     @Override
-    public int instrumentIndex()
+    public NTInstrumentIndex instrumentIndex()
     {
       return this.index;
     }
@@ -479,21 +488,23 @@ public final class NTBuilders implements NTBuilderProviderType
     private final AtomicInteger preset_modulator_indices;
     private final NTPresetName name;
     private final LinkedList<PresetZoneBuilder> zones;
-    private final int index;
+    private final NTPresetIndex index;
     private int bank;
 
     private PresetBuilder(
       final AtomicInteger in_preset_generator_indices,
       final AtomicInteger in_preset_modulator_indices,
-      final int in_index,
+      final NTPresetIndex in_index,
       final NTPresetName in_name)
     {
       this.preset_generator_indices =
         Objects.requireNonNull(in_preset_generator_indices, "preset_generator_indices");
       this.preset_modulator_indices =
         Objects.requireNonNull(in_preset_modulator_indices, "preset_modulator_indices");
-      this.index = in_index;
-      this.name = Objects.requireNonNull(in_name, "name");
+      this.index =
+        Objects.requireNonNull(in_index, "index");
+      this.name =
+        Objects.requireNonNull(in_name, "name");
       this.zones = new LinkedList<>();
     }
 
@@ -535,29 +546,32 @@ public final class NTBuilders implements NTBuilderProviderType
 
   private static final class Generator
   {
-    private final int index;
+    private final NTGeneratorIndex index;
     private final NTGenerator generator;
     private final NTGenericAmount amount;
 
     private Generator(
-      final int in_index,
+      final NTGeneratorIndex in_index,
       final NTGenerator in_generator,
       final NTGenericAmount in_amount)
     {
-      this.index = in_index;
-      this.generator = Objects.requireNonNull(in_generator, "generator");
-      this.amount = Objects.requireNonNull(in_amount, "amount");
+      this.index =
+        Objects.requireNonNull(in_index, "index");
+      this.generator =
+        Objects.requireNonNull(in_generator, "generator");
+      this.amount =
+        Objects.requireNonNull(in_amount, "amount");
     }
   }
 
   private static final class Modulator
   {
-    private final int index;
+    private final NTModulatorIndex index;
 
     private Modulator(
-      final int in_index)
+      final NTModulatorIndex in_index)
     {
-      this.index = in_index;
+      this.index = Objects.requireNonNull(in_index, "index");
     }
   }
 
@@ -565,8 +579,8 @@ public final class NTBuilders implements NTBuilderProviderType
   {
     private final AtomicInteger instrument_generator_indices;
     private final AtomicInteger instrument_modulator_indices;
-    private final TreeMap<Integer, Generator> generators;
-    private final TreeMap<Integer, Modulator> modulators;
+    private final TreeMap<NTGeneratorIndex, Generator> generators;
+    private final TreeMap<NTModulatorIndex, Modulator> modulators;
 
     private InstrumentZoneBuilder(
       final AtomicInteger in_instrument_generator_indices,
@@ -586,10 +600,10 @@ public final class NTBuilders implements NTBuilderProviderType
       final NTGenericAmount amount)
     {
       final var gen = new Generator(
-        this.instrument_generator_indices.getAndIncrement(),
+        NTGeneratorIndex.of(this.instrument_generator_indices.getAndIncrement()),
         generator,
         amount);
-      this.generators.put(Integer.valueOf(gen.index), gen);
+      this.generators.put(gen.index, gen);
       return this;
     }
   }
@@ -598,8 +612,8 @@ public final class NTBuilders implements NTBuilderProviderType
   {
     private final AtomicInteger preset_generator_indices;
     private final AtomicInteger preset_modulator_indices;
-    private final TreeMap<Integer, Generator> generators;
-    private final TreeMap<Integer, Modulator> modulators;
+    private final TreeMap<NTGeneratorIndex, Generator> generators;
+    private final TreeMap<NTModulatorIndex, Modulator> modulators;
 
     private PresetZoneBuilder(
       final AtomicInteger in_preset_generator_indices,
@@ -619,25 +633,27 @@ public final class NTBuilders implements NTBuilderProviderType
       final NTGenericAmount amount)
     {
       final var gen = new Generator(
-        this.preset_generator_indices.getAndIncrement(),
+        NTGeneratorIndex.of(this.preset_generator_indices.getAndIncrement()),
         generator,
         amount);
-      this.generators.put(Integer.valueOf(gen.index), gen);
+      this.generators.put(gen.index, gen);
       return this;
     }
   }
 
   private static final class SampleBuilder implements NTSampleBuilderType
   {
-    private final int index;
+    private final NTSampleIndex index;
     private NTSampleBuilderDescription description;
 
     private SampleBuilder(
-      final int in_index,
+      final NTSampleIndex in_index,
       final NTSampleBuilderDescription in_description)
     {
-      this.index = in_index;
-      this.description = Objects.requireNonNull(in_description, "description");
+      this.index =
+        Objects.requireNonNull(in_index, "index");
+      this.description =
+        Objects.requireNonNull(in_description, "description");
     }
 
     @Override
@@ -647,7 +663,7 @@ public final class NTBuilders implements NTBuilderProviderType
     }
 
     @Override
-    public int sampleIndex()
+    public NTSampleIndex sampleIndex()
     {
       return this.index;
     }
@@ -723,14 +739,14 @@ public final class NTBuilders implements NTBuilderProviderType
     }
 
     @Override
-    public int originalPitch()
+    public NTPitch originalPitch()
     {
       return this.description.originalPitch();
     }
 
     @Override
     public NTSampleBuilderType setOriginalPitch(
-      final int pitch)
+      final NTPitch pitch)
     {
       this.description = this.description.withOriginalPitch(pitch);
       return this;

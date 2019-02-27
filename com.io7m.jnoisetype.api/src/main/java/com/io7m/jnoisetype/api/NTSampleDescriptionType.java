@@ -86,7 +86,7 @@ public interface NTSampleDescriptionType extends NTNamedType
    * @return The original pitch of the sample
    */
 
-  int originalPitch();
+  NTPitch originalPitch();
 
   /**
    * @return The pitch correction value for the sample
