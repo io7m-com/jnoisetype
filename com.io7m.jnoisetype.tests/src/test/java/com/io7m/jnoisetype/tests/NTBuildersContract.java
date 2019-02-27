@@ -17,7 +17,6 @@
 package com.io7m.jnoisetype.tests;
 
 import com.io7m.jnoisetype.api.NTSampleIndex;
-import com.io7m.jnoisetype.api.NTSampleName;
 import com.io7m.jnoisetype.writer.api.NTBuilderProviderType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

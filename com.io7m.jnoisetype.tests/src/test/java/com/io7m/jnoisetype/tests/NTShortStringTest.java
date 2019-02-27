@@ -25,14 +25,6 @@ import org.junit.jupiter.api.Test;
 public final class NTShortStringTest
 {
   @Test
-  public void testEquals()
-  {
-    EqualsVerifier.forClass(NTShortString.class)
-      .withNonnullFields("value")
-      .verify();
-  }
-
-  @Test
   public void testTooLong()
   {
     final var sb = new StringBuilder(70000);
