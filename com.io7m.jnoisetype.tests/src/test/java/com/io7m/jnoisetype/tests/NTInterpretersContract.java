@@ -68,48 +68,6 @@ public abstract class NTInterpretersContract
     this.builders = new RiffFileBuilders();
   }
 
-  private static final class NamedMap implements Closeable
-  {
-    private final URI name;
-    private final FileChannel channel;
-    private final ByteBuffer map;
-
-    private NamedMap(
-      final URI in_name,
-      final FileChannel in_channel,
-      final ByteBuffer in_map)
-    {
-      this.name = Objects.requireNonNull(in_name, "name");
-      this.channel = Objects.requireNonNull(in_channel, "channel");
-      this.map = Objects.requireNonNull(in_map, "map");
-    }
-
-    public static NamedMap createFromResource(
-      final String name)
-      throws IOException
-    {
-      final var resource_path = "/com/io7m/jnoisetype/tests/" + name;
-      try (var input = NTInterpretersContract.class.getResourceAsStream(resource_path)) {
-        final var path = Files.createTempFile("ntparsers-", ".sf2");
-        try (var output = Files.newOutputStream(path, WRITE, TRUNCATE_EXISTING, CREATE)) {
-          input.transferTo(output);
-          output.flush();
-        }
-
-        final var channel = FileChannel.open(path, READ);
-        final var map = channel.map(READ_ONLY, 0L, channel.size());
-        return new NamedMap(path.toUri(), channel, map);
-      }
-    }
-
-    @Override
-    public void close()
-      throws IOException
-    {
-      this.channel.close();
-    }
-  }
-
   /**
    * Parse the empty soundfont.
    *
@@ -501,6 +459,48 @@ public abstract class NTInterpretersContract
       final var map = channel.map(READ_ONLY, 0L, channel.size());
       final var parser = parsers.createForByteBuffer(path.toUri(), map);
       parser.parse();
+    }
+  }
+
+  private static final class NamedMap implements Closeable
+  {
+    private final URI name;
+    private final FileChannel channel;
+    private final ByteBuffer map;
+
+    private NamedMap(
+      final URI in_name,
+      final FileChannel in_channel,
+      final ByteBuffer in_map)
+    {
+      this.name = Objects.requireNonNull(in_name, "name");
+      this.channel = Objects.requireNonNull(in_channel, "channel");
+      this.map = Objects.requireNonNull(in_map, "map");
+    }
+
+    public static NamedMap createFromResource(
+      final String name)
+      throws IOException
+    {
+      final var resource_path = "/com/io7m/jnoisetype/tests/" + name;
+      try (var input = NTInterpretersContract.class.getResourceAsStream(resource_path)) {
+        final var path = Files.createTempFile("ntparsers-", ".sf2");
+        try (var output = Files.newOutputStream(path, WRITE, TRUNCATE_EXISTING, CREATE)) {
+          input.transferTo(output);
+          output.flush();
+        }
+
+        final var channel = FileChannel.open(path, READ);
+        final var map = channel.map(READ_ONLY, 0L, channel.size());
+        return new NamedMap(path.toUri(), channel, map);
+      }
+    }
+
+    @Override
+    public void close()
+      throws IOException
+    {
+      this.channel.close();
     }
   }
 }

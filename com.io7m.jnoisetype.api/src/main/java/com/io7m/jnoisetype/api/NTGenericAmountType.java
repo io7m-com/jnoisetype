@@ -27,7 +27,7 @@ import org.immutables.value.Value;
 @NTNativeType(name = "genAmountType")
 @ImmutablesStyleType
 @Value.Immutable
-public interface NTGenericAmountType
+public interface NTGenericAmountType extends Comparable<NTGenericAmountType>
 {
   /**
    * @return The raw value in the range {@code [0, 0xffff]}
@@ -83,6 +83,12 @@ public interface NTGenericAmountType
   {
     final var x = this.value();
     return (short) x;
+  }
+
+  @Override
+  default int compareTo(final NTGenericAmountType other)
+  {
+    return Integer.compareUnsigned(this.value(), other.value());
   }
 
   /**

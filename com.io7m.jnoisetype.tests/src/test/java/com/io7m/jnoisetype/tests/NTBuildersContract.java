@@ -33,6 +33,24 @@ public abstract class NTBuildersContract
 {
   private NTBuilderProviderType builders;
 
+  private static void copyWav(
+    final String name,
+    final SeekableByteChannel channel)
+    throws IOException
+  {
+    final var path = "/com/io7m/jnoisetype/tests/" + name;
+    final var url = NTBuildersContract.class.getResource(path);
+    if (url == null) {
+      throw new FileNotFoundException(path);
+    }
+
+    try (var stream = AudioSystem.getAudioInputStream(url)) {
+      stream.transferTo(Channels.newOutputStream(channel));
+    } catch (final UnsupportedAudioFileException e) {
+      throw new IOException(e);
+    }
+  }
+
   protected abstract NTBuilderProviderType builders();
 
   @BeforeEach
@@ -77,23 +95,5 @@ public abstract class NTBuildersContract
     Assertions.assertEquals(
       "000_60",
       sample0.description().name().value(), "Correct name");
-  }
-
-  private static void copyWav(
-    final String name,
-    final SeekableByteChannel channel)
-    throws IOException
-  {
-    final var path = "/com/io7m/jnoisetype/tests/" + name;
-    final var url = NTBuildersContract.class.getResource(path);
-    if (url == null) {
-      throw new FileNotFoundException(path);
-    }
-
-    try (var stream = AudioSystem.getAudioInputStream(url)) {
-      stream.transferTo(Channels.newOutputStream(channel));
-    } catch (final UnsupportedAudioFileException e) {
-      throw new IOException(e);
-    }
   }
 }

@@ -30,7 +30,8 @@ public final class NTCommandLineTest
     throws IOException
   {
     final var temp = Files.createTempFile("nt-cmdline-", ".sf2");
-    try (var stream = NTCommandLineTest.class.getResourceAsStream("/com/io7m/jnoisetype/tests/complex0.sf2")) {
+    try (var stream = NTCommandLineTest.class.getResourceAsStream(
+      "/com/io7m/jnoisetype/tests/complex0.sf2")) {
       try (var output = Files.newOutputStream(temp)) {
         stream.transferTo(output);
         output.flush();
@@ -42,7 +43,7 @@ public final class NTCommandLineTest
   @Test
   public void testMainShowNoArgumentsFails()
   {
-    final var main = new Main(new String[] {
+    final var main = new Main(new String[]{
       "show"
     });
 
@@ -53,7 +54,7 @@ public final class NTCommandLineTest
   @Test
   public void testMainShowNonexistentFails()
   {
-    final var main = new Main(new String[] {
+    final var main = new Main(new String[]{
       "show",
       "--file",
       "/nonexistent"
@@ -69,7 +70,7 @@ public final class NTCommandLineTest
   {
     final var temp = createSF2();
 
-    final var main = new Main(new String[] {
+    final var main = new Main(new String[]{
       "show",
       "--file",
       temp.toString()
@@ -85,7 +86,7 @@ public final class NTCommandLineTest
   {
     final var temp = createSF2();
 
-    final var main = new Main(new String[] {
+    final var main = new Main(new String[]{
       "show",
       "--verbose",
       "trace",
@@ -100,7 +101,7 @@ public final class NTCommandLineTest
   @Test
   public void testMainNoArgumentsOK()
   {
-    final var main = new Main(new String[] {
+    final var main = new Main(new String[]{
 
     });
 

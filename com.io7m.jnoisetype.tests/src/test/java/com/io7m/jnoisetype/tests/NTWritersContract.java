@@ -61,6 +61,133 @@ public abstract class NTWritersContract
   private NTInterpreterProviderType interpreters;
   private NTFileParserProviderType parsers;
 
+  private static void compareFont(
+    final NTFontType expected,
+    final NTFontType received)
+  {
+    Assertions.assertEquals(
+      expected.info(),
+      received.info(),
+      "Parsed info matches");
+
+    final var expected_inst = expected.instruments();
+    final var received_inst = received.instruments();
+
+    Assertions.assertEquals(
+      expected_inst.size(),
+      received_inst.size(),
+      "Parsed instrument counts match");
+
+    for (var instrument_index = 0; instrument_index < expected_inst.size(); ++instrument_index) {
+      final var ei = expected_inst.get(instrument_index);
+      final var ri = received_inst.get(instrument_index);
+
+      Assertions.assertEquals(
+        ei.name(),
+        ri.name(),
+        "Instrument name matches");
+
+      Assertions.assertEquals(
+        ei.zones().size(),
+        ri.zones().size(),
+        "Instrument zone counts match");
+
+      for (var zone_index = 0; zone_index < ei.zones().size(); ++zone_index) {
+        final var ez = ei.zones().get(zone_index);
+        final var rz = ri.zones().get(zone_index);
+        Assertions.assertEquals(ez.generators(), rz.generators(), "Zone generators match");
+        Assertions.assertEquals(ez.modulators(), rz.modulators(), "Zone modulators match");
+      }
+    }
+
+    final var expected_samp = expected.samples();
+    final var received_samp = received.samples();
+    Assertions.assertEquals(
+      expected_samp.size(),
+      received_samp.size(),
+      "Parsed sample counts match");
+
+    for (var sample_index = 0; sample_index < expected_inst.size(); ++sample_index) {
+      final var es = expected_samp.get(sample_index);
+      final var rs = received_samp.get(sample_index);
+      Assertions.assertEquals(es.nameText(), rs.nameText(), "Sample name matches");
+
+      Assertions.assertEquals(
+        es.description(),
+        rs.description(),
+        "Sample description matches");
+    }
+
+    final var expected_pre = expected.presets();
+    final var received_pre = received.presets();
+    Assertions.assertEquals(
+      expected_pre.size(),
+      received_pre.size(),
+      "Parsed preset counts match");
+
+    for (var preset_index = 0; preset_index < expected_pre.size(); ++preset_index) {
+      final var es = expected_pre.get(preset_index);
+      final var rs = received_pre.get(preset_index);
+
+      Assertions.assertEquals(
+        es.nameText(),
+        rs.nameText(),
+        "Preset name matches");
+
+      Assertions.assertEquals(
+        es.zones().size(),
+        rs.zones().size(),
+        "Preset zone counts match");
+
+      for (var zone_index = 0; zone_index < es.zones().size(); ++zone_index) {
+        final var ez = es.zones().get(zone_index);
+        final var rz = rs.zones().get(zone_index);
+        Assertions.assertEquals(ez.generators(), rz.generators(), "Zone generators match");
+        Assertions.assertEquals(ez.modulators(), rz.modulators(), "Zone modulators match");
+      }
+    }
+  }
+
+  private static void copyWav(
+    final String name,
+    final SeekableByteChannel channel)
+    throws IOException
+  {
+    final var url = resourcePath(name);
+
+    try (var stream = AudioSystem.getAudioInputStream(url)) {
+      stream.transferTo(Channels.newOutputStream(channel));
+    } catch (final UnsupportedAudioFileException e) {
+      throw new IOException(e);
+    }
+  }
+
+  private static URL resourcePath(
+    final String name)
+    throws FileNotFoundException
+  {
+    final var path = "/com/io7m/jnoisetype/tests/" + name;
+    final var url = NTWritersContract.class.getResource(path);
+    if (url == null) {
+      throw new FileNotFoundException(path);
+    }
+    return url;
+  }
+
+  private static long sizeOfWav(
+    final String name)
+    throws IOException
+  {
+    try (var stream = AudioSystem.getAudioInputStream(resourcePath(name))) {
+      try (var count = new CountingInputStream(stream)) {
+        count.transferTo(new NullOutputStream());
+        return count.getByteCount() / 2L;
+      }
+    } catch (final UnsupportedAudioFileException e) {
+      throw new IOException(e);
+    }
+  }
+
   protected abstract NTInterpreterProviderType interpreters();
 
   protected abstract NTFileParserProviderType parsers();
@@ -281,93 +408,6 @@ public abstract class NTWritersContract
     compareFont(expected, parsed);
   }
 
-  private static void compareFont(
-    final NTFontType expected,
-    final NTFontType received)
-  {
-    Assertions.assertEquals(
-      expected.info(),
-      received.info(),
-      "Parsed info matches");
-
-    final var expected_inst = expected.instruments();
-    final var received_inst = received.instruments();
-
-    Assertions.assertEquals(
-      expected_inst.size(),
-      received_inst.size(),
-      "Parsed instrument counts match");
-
-    for (var instrument_index = 0; instrument_index < expected_inst.size(); ++instrument_index) {
-      final var ei = expected_inst.get(instrument_index);
-      final var ri = received_inst.get(instrument_index);
-
-      Assertions.assertEquals(
-        ei.name(),
-        ri.name(),
-        "Instrument name matches");
-
-      Assertions.assertEquals(
-        ei.zones().size(),
-        ri.zones().size(),
-        "Instrument zone counts match");
-
-      for (var zone_index = 0; zone_index < ei.zones().size(); ++zone_index) {
-        final var ez = ei.zones().get(zone_index);
-        final var rz = ri.zones().get(zone_index);
-        Assertions.assertEquals(ez.generators(), rz.generators(), "Zone generators match");
-        Assertions.assertEquals(ez.modulators(), rz.modulators(), "Zone modulators match");
-      }
-    }
-
-    final var expected_samp = expected.samples();
-    final var received_samp = received.samples();
-    Assertions.assertEquals(
-      expected_samp.size(),
-      received_samp.size(),
-      "Parsed sample counts match");
-
-    for (var sample_index = 0; sample_index < expected_inst.size(); ++sample_index) {
-      final var es = expected_samp.get(sample_index);
-      final var rs = received_samp.get(sample_index);
-      Assertions.assertEquals(es.nameText(), rs.nameText(), "Sample name matches");
-
-      Assertions.assertEquals(
-        es.description(),
-        rs.description(),
-        "Sample description matches");
-    }
-
-    final var expected_pre = expected.presets();
-    final var received_pre = received.presets();
-    Assertions.assertEquals(
-      expected_pre.size(),
-      received_pre.size(),
-      "Parsed preset counts match");
-
-    for (var preset_index = 0; preset_index < expected_pre.size(); ++preset_index) {
-      final var es = expected_pre.get(preset_index);
-      final var rs = received_pre.get(preset_index);
-
-      Assertions.assertEquals(
-        es.nameText(),
-        rs.nameText(),
-        "Preset name matches");
-
-      Assertions.assertEquals(
-        es.zones().size(),
-        rs.zones().size(),
-        "Preset zone counts match");
-
-      for (var zone_index = 0; zone_index < es.zones().size(); ++zone_index) {
-        final var ez = es.zones().get(zone_index);
-        final var rz = rs.zones().get(zone_index);
-        Assertions.assertEquals(ez.generators(), rz.generators(), "Zone generators match");
-        Assertions.assertEquals(ez.modulators(), rz.modulators(), "Zone modulators match");
-      }
-    }
-  }
-
   private NTFontType parse(final Path path)
     throws IOException, NTParseException
   {
@@ -398,46 +438,6 @@ public abstract class NTWritersContract
       final var parser = this.parsers.createForByteBuffer(fake_uri, map);
       final var interpreter = this.interpreters.createInterpreter(parser.parse());
       return interpreter.interpret();
-    }
-  }
-
-  private static void copyWav(
-    final String name,
-    final SeekableByteChannel channel)
-    throws IOException
-  {
-    final var url = resourcePath(name);
-
-    try (var stream = AudioSystem.getAudioInputStream(url)) {
-      stream.transferTo(Channels.newOutputStream(channel));
-    } catch (final UnsupportedAudioFileException e) {
-      throw new IOException(e);
-    }
-  }
-
-  private static URL resourcePath(
-    final String name)
-    throws FileNotFoundException
-  {
-    final var path = "/com/io7m/jnoisetype/tests/" + name;
-    final var url = NTWritersContract.class.getResource(path);
-    if (url == null) {
-      throw new FileNotFoundException(path);
-    }
-    return url;
-  }
-
-  private static long sizeOfWav(
-    final String name)
-    throws IOException
-  {
-    try (var stream = AudioSystem.getAudioInputStream(resourcePath(name))) {
-      try (var count = new CountingInputStream(stream)) {
-        count.transferTo(new NullOutputStream());
-        return count.getByteCount() / 2L;
-      }
-    } catch (final UnsupportedAudioFileException e) {
-      throw new IOException(e);
     }
   }
 }

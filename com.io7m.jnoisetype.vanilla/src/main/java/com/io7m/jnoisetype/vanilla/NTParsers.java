@@ -16,6 +16,7 @@
 
 package com.io7m.jnoisetype.vanilla;
 
+import com.io7m.jnoisetype.api.NTGenericAmount;
 import com.io7m.jnoisetype.api.NTInfo;
 import com.io7m.jnoisetype.api.NTInstrumentName;
 import com.io7m.jnoisetype.api.NTLongString;
@@ -32,7 +33,6 @@ import com.io7m.jnoisetype.parser.api.NTFileParserProviderType;
 import com.io7m.jnoisetype.parser.api.NTFileParserType;
 import com.io7m.jnoisetype.parser.api.NTParseException;
 import com.io7m.jnoisetype.parser.api.NTParsedFile;
-import com.io7m.jnoisetype.parser.api.NTParsedGenericAmount;
 import com.io7m.jnoisetype.parser.api.NTParsedInstrument;
 import com.io7m.jnoisetype.parser.api.NTParsedInstrumentZone;
 import com.io7m.jnoisetype.parser.api.NTParsedInstrumentZoneGenerator;
@@ -521,7 +521,7 @@ public final class NTParsers implements NTFileParserProviderType
         final var result =
           NTParsedPresetZoneGenerator.builder()
             .setSource(NTSource.of(this.source, Integer.toUnsignedLong(position)))
-            .setAmount(NTParsedGenericAmount.of(amount))
+            .setAmount(NTGenericAmount.of(amount))
             .setGeneratorOperator(operator)
             .build();
 
@@ -692,7 +692,7 @@ public final class NTParsers implements NTFileParserProviderType
         final var result =
           NTParsedInstrumentZoneGenerator.builder()
             .setSource(NTSource.of(this.source, Integer.toUnsignedLong(position)))
-            .setAmount(NTParsedGenericAmount.of(amount))
+            .setAmount(NTGenericAmount.of(amount))
             .setGeneratorOperator(operator)
             .build();
 

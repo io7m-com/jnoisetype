@@ -16,7 +16,7 @@
 
 package com.io7m.jnoisetype.tests;
 
-import com.io7m.jnoisetype.api.NTShortString;
+import com.io7m.jnoisetype.api.NTInstrumentName;
 import com.io7m.jranges.RangeCheckException;
 import net.jqwik.api.ForAll;
 import net.jqwik.api.Property;
@@ -24,7 +24,7 @@ import net.jqwik.api.constraints.StringLength;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public final class NTShortStringTest
+public final class NTInstrumentNameTest
 {
   @Test
   public void testTooLong()
@@ -36,11 +36,11 @@ public final class NTShortStringTest
 
     Assertions.assertThrows(
       RangeCheckException.class,
-      () -> NTShortString.builder().setValue(sb.toString()).build());
+      () -> NTInstrumentName.builder().setValue(sb.toString()).build());
 
     Assertions.assertThrows(
       RangeCheckException.class,
-      () -> NTShortString.of(sb.toString()));
+      () -> NTInstrumentName.of(sb.toString()));
   }
 
   @Test
@@ -48,21 +48,21 @@ public final class NTShortStringTest
   {
     Assertions.assertThrows(
       IllegalArgumentException.class,
-      () -> NTShortString.of("\0"));
+      () -> NTInstrumentName.of("\0"));
   }
 
   @Property
   public void testOrdering(
-    final @ForAll @AlphaNumericType @StringLength(min = 0, max = 253) String s0,
-    final @ForAll @AlphaNumericType @StringLength(min = 0, max = 253) String s1)
+    final @ForAll @AlphaNumericType @StringLength(min = 0, max = 20) String s0,
+    final @ForAll @AlphaNumericType @StringLength(min = 0, max = 20) String s1)
   {
     Assertions.assertEquals(
       s0.compareTo(s1),
-      NTShortString.of(s0).compareTo(NTShortString.of(s1)),
+      NTInstrumentName.of(s0).compareTo(NTInstrumentName.of(s1)),
       "Ordering is correct");
     Assertions.assertEquals(
       s1.compareTo(s0),
-      NTShortString.of(s1).compareTo(NTShortString.of(s0)),
+      NTInstrumentName.of(s1).compareTo(NTInstrumentName.of(s0)),
       "Ordering is correct");
   }
 }

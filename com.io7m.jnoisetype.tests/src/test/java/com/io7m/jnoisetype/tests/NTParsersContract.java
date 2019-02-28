@@ -56,61 +56,6 @@ public abstract class NTParsersContract
   private NTFileParserProviderType parsers;
   private Logger logger;
 
-  protected abstract NTFileParserProviderType parsers();
-
-  protected abstract Logger logger();
-
-  @BeforeEach
-  public final void testSetup()
-  {
-    this.logger = this.logger();
-    this.parsers = this.parsers();
-    this.writers = new RiffWriters();
-    this.builders = new RiffFileBuilders();
-  }
-
-  private static final class NamedMap implements Closeable
-  {
-    private final URI name;
-    private final FileChannel channel;
-    private final ByteBuffer map;
-
-    private NamedMap(
-      final URI in_name,
-      final FileChannel in_channel,
-      final ByteBuffer in_map)
-    {
-      this.name = Objects.requireNonNull(in_name, "name");
-      this.channel = Objects.requireNonNull(in_channel, "channel");
-      this.map = Objects.requireNonNull(in_map, "map");
-    }
-
-    public static NamedMap createFromResource(
-      final String name)
-      throws IOException
-    {
-      final var resource_path = "/com/io7m/jnoisetype/tests/" + name;
-      try (var input = NTParsersContract.class.getResourceAsStream(resource_path)) {
-        final var path = Files.createTempFile("ntparsers-", ".sf2");
-        try (var output = Files.newOutputStream(path, WRITE, TRUNCATE_EXISTING, CREATE)) {
-          input.transferTo(output);
-          output.flush();
-        }
-
-        final var channel = FileChannel.open(path, READ);
-        final var map = channel.map(READ_ONLY, 0L, channel.size());
-        return new NamedMap(path.toUri(), channel, map);
-      }
-    }
-
-    @Override
-    public void close()
-      throws IOException
-    {
-      this.channel.close();
-    }
-  }
-
   private static Executable[] standardInfoChecks(
     final NTParsedFile file,
     final String expected_name)
@@ -155,6 +100,19 @@ public abstract class NTParsersContract
     };
   }
 
+  protected abstract NTFileParserProviderType parsers();
+
+  protected abstract Logger logger();
+
+  @BeforeEach
+  public final void testSetup()
+  {
+    this.logger = this.logger();
+    this.parsers = this.parsers();
+    this.writers = new RiffWriters();
+    this.builders = new RiffFileBuilders();
+  }
+
   /**
    * Parse the empty soundfont.
    *
@@ -183,8 +141,14 @@ public abstract class NTParsersContract
           Assertions.assertEquals(0L, description.loopEnd(), "Correct sample loopEnd");
           Assertions.assertEquals(0L, description.start(), "Correct sample start");
           Assertions.assertEquals(0L, description.end(), "Correct sample end");
-          Assertions.assertEquals(0, description.originalPitch().value(), "Correct sample originalPitch");
-          Assertions.assertEquals(0, description.pitchCorrection(), "Correct sample pitchCorrection");
+          Assertions.assertEquals(
+            0,
+            description.originalPitch().value(),
+            "Correct sample originalPitch");
+          Assertions.assertEquals(
+            0,
+            description.pitchCorrection(),
+            "Correct sample pitchCorrection");
           Assertions.assertEquals(0, description.sampleRate(), "Correct sample sampleRate");
           Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");
         },
@@ -268,7 +232,10 @@ public abstract class NTParsersContract
         () -> {
           final var record = file.sampleRecords().get(0);
           final var description = record.description();
-          Assertions.assertEquals("000_60", description.name().value(), "Correct sample record name");
+          Assertions.assertEquals(
+            "000_60",
+            description.name().value(),
+            "Correct sample record name");
           Assertions.assertEquals(
             NTSampleKind.SAMPLE_KIND_MONO.value(),
             description.kind().value(),
@@ -277,8 +244,14 @@ public abstract class NTParsersContract
           Assertions.assertEquals(8269L, description.loopEnd(), "Correct sample loopEnd");
           Assertions.assertEquals(0L, description.start(), "Correct sample start");
           Assertions.assertEquals(8270L, description.end(), "Correct sample end");
-          Assertions.assertEquals(60, description.originalPitch().value(), "Correct sample originalPitch");
-          Assertions.assertEquals(0, description.pitchCorrection(), "Correct sample pitchCorrection");
+          Assertions.assertEquals(
+            60,
+            description.originalPitch().value(),
+            "Correct sample originalPitch");
+          Assertions.assertEquals(
+            0,
+            description.pitchCorrection(),
+            "Correct sample pitchCorrection");
           Assertions.assertEquals(22050, description.sampleRate(), "Correct sample sampleRate");
           Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");
         },
@@ -292,8 +265,14 @@ public abstract class NTParsersContract
           Assertions.assertEquals(0L, description.loopEnd(), "Correct sample loopEnd");
           Assertions.assertEquals(0L, description.start(), "Correct sample start");
           Assertions.assertEquals(0L, description.end(), "Correct sample end");
-          Assertions.assertEquals(0, description.originalPitch().value(), "Correct sample originalPitch");
-          Assertions.assertEquals(0, description.pitchCorrection(), "Correct sample pitchCorrection");
+          Assertions.assertEquals(
+            0,
+            description.originalPitch().value(),
+            "Correct sample originalPitch");
+          Assertions.assertEquals(
+            0,
+            description.pitchCorrection(),
+            "Correct sample pitchCorrection");
           Assertions.assertEquals(0, description.sampleRate(), "Correct sample sampleRate");
           Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");
         },
@@ -422,7 +401,10 @@ public abstract class NTParsersContract
         () -> {
           final var record = file.sampleRecords().get(0);
           final var description = record.description();
-          Assertions.assertEquals("000_60", description.name().value(), "Correct sample record name");
+          Assertions.assertEquals(
+            "000_60",
+            description.name().value(),
+            "Correct sample record name");
           Assertions.assertEquals(
             NTSampleKind.SAMPLE_KIND_MONO.value(),
             description.kind().value(),
@@ -431,8 +413,14 @@ public abstract class NTParsersContract
           Assertions.assertEquals(8269L, description.loopEnd(), "Correct sample loopEnd");
           Assertions.assertEquals(0L, description.start(), "Correct sample start");
           Assertions.assertEquals(8270L, description.end(), "Correct sample end");
-          Assertions.assertEquals(60, description.originalPitch().value(), "Correct sample originalPitch");
-          Assertions.assertEquals(0, description.pitchCorrection(), "Correct sample pitchCorrection");
+          Assertions.assertEquals(
+            60,
+            description.originalPitch().value(),
+            "Correct sample originalPitch");
+          Assertions.assertEquals(
+            0,
+            description.pitchCorrection(),
+            "Correct sample pitchCorrection");
           Assertions.assertEquals(22050, description.sampleRate(), "Correct sample sampleRate");
           Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");
         },
@@ -446,8 +434,14 @@ public abstract class NTParsersContract
           Assertions.assertEquals(0L, description.loopEnd(), "Correct sample loopEnd");
           Assertions.assertEquals(0L, description.start(), "Correct sample start");
           Assertions.assertEquals(0L, description.end(), "Correct sample end");
-          Assertions.assertEquals(0, description.originalPitch().value(), "Correct sample originalPitch");
-          Assertions.assertEquals(0, description.pitchCorrection(), "Correct sample pitchCorrection");
+          Assertions.assertEquals(
+            0,
+            description.originalPitch().value(),
+            "Correct sample originalPitch");
+          Assertions.assertEquals(
+            0,
+            description.pitchCorrection(),
+            "Correct sample pitchCorrection");
           Assertions.assertEquals(0, description.sampleRate(), "Correct sample sampleRate");
           Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");
         },
@@ -595,7 +589,10 @@ public abstract class NTParsersContract
         () -> {
           final var record = file.sampleRecords().get(0);
           final var description = record.description();
-          Assertions.assertEquals("000_60", description.name().value(), "Correct sample record name");
+          Assertions.assertEquals(
+            "000_60",
+            description.name().value(),
+            "Correct sample record name");
           Assertions.assertEquals(
             NTSampleKind.SAMPLE_KIND_MONO.value(),
             description.kind().value(),
@@ -604,8 +601,14 @@ public abstract class NTParsersContract
           Assertions.assertEquals(8269L, description.loopEnd(), "Correct sample loopEnd");
           Assertions.assertEquals(0L, description.start(), "Correct sample start");
           Assertions.assertEquals(8270L, description.end(), "Correct sample end");
-          Assertions.assertEquals(60, description.originalPitch().value(), "Correct sample originalPitch");
-          Assertions.assertEquals(0, description.pitchCorrection(), "Correct sample pitchCorrection");
+          Assertions.assertEquals(
+            60,
+            description.originalPitch().value(),
+            "Correct sample originalPitch");
+          Assertions.assertEquals(
+            0,
+            description.pitchCorrection(),
+            "Correct sample pitchCorrection");
           Assertions.assertEquals(22050, description.sampleRate(), "Correct sample sampleRate");
           Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");
         },
@@ -613,7 +616,10 @@ public abstract class NTParsersContract
         () -> {
           final var record = file.sampleRecords().get(1);
           final var description = record.description();
-          Assertions.assertEquals("002_60", description.name().value(), "Correct sample record name");
+          Assertions.assertEquals(
+            "002_60",
+            description.name().value(),
+            "Correct sample record name");
           Assertions.assertEquals(
             NTSampleKind.SAMPLE_KIND_MONO.value(),
             description.kind().value(),
@@ -622,8 +628,14 @@ public abstract class NTParsersContract
           Assertions.assertEquals(16585L, description.loopEnd(), "Correct sample loopEnd");
           Assertions.assertEquals(8316L, description.start(), "Correct sample start");
           Assertions.assertEquals(16586L, description.end(), "Correct sample end");
-          Assertions.assertEquals(60, description.originalPitch().value(), "Correct sample originalPitch");
-          Assertions.assertEquals(0, description.pitchCorrection(), "Correct sample pitchCorrection");
+          Assertions.assertEquals(
+            60,
+            description.originalPitch().value(),
+            "Correct sample originalPitch");
+          Assertions.assertEquals(
+            0,
+            description.pitchCorrection(),
+            "Correct sample pitchCorrection");
           Assertions.assertEquals(22050, description.sampleRate(), "Correct sample sampleRate");
           Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");
         },
@@ -637,8 +649,14 @@ public abstract class NTParsersContract
           Assertions.assertEquals(0L, description.loopEnd(), "Correct sample loopEnd");
           Assertions.assertEquals(0L, description.start(), "Correct sample start");
           Assertions.assertEquals(0L, description.end(), "Correct sample end");
-          Assertions.assertEquals(0, description.originalPitch().value(), "Correct sample originalPitch");
-          Assertions.assertEquals(0, description.pitchCorrection(), "Correct sample pitchCorrection");
+          Assertions.assertEquals(
+            0,
+            description.originalPitch().value(),
+            "Correct sample originalPitch");
+          Assertions.assertEquals(
+            0,
+            description.pitchCorrection(),
+            "Correct sample pitchCorrection");
           Assertions.assertEquals(0, description.sampleRate(), "Correct sample sampleRate");
           Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");
         },
@@ -1015,6 +1033,48 @@ public abstract class NTParsersContract
       final var map = channel.map(READ_ONLY, 0L, channel.size());
       final var parser = parsers.createForByteBuffer(path.toUri(), map);
       parser.parse();
+    }
+  }
+
+  private static final class NamedMap implements Closeable
+  {
+    private final URI name;
+    private final FileChannel channel;
+    private final ByteBuffer map;
+
+    private NamedMap(
+      final URI in_name,
+      final FileChannel in_channel,
+      final ByteBuffer in_map)
+    {
+      this.name = Objects.requireNonNull(in_name, "name");
+      this.channel = Objects.requireNonNull(in_channel, "channel");
+      this.map = Objects.requireNonNull(in_map, "map");
+    }
+
+    public static NamedMap createFromResource(
+      final String name)
+      throws IOException
+    {
+      final var resource_path = "/com/io7m/jnoisetype/tests/" + name;
+      try (var input = NTParsersContract.class.getResourceAsStream(resource_path)) {
+        final var path = Files.createTempFile("ntparsers-", ".sf2");
+        try (var output = Files.newOutputStream(path, WRITE, TRUNCATE_EXISTING, CREATE)) {
+          input.transferTo(output);
+          output.flush();
+        }
+
+        final var channel = FileChannel.open(path, READ);
+        final var map = channel.map(READ_ONLY, 0L, channel.size());
+        return new NamedMap(path.toUri(), channel, map);
+      }
+    }
+
+    @Override
+    public void close()
+      throws IOException
+    {
+      this.channel.close();
     }
   }
 }

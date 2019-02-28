@@ -35,7 +35,6 @@ import com.io7m.jnoisetype.api.NTSource;
 import com.io7m.jnoisetype.api.NTTransform;
 import com.io7m.jnoisetype.api.NTVersion;
 import com.io7m.jnoisetype.parser.api.NTParsedFile;
-import com.io7m.jnoisetype.parser.api.NTParsedGenericAmount;
 import com.io7m.jnoisetype.parser.api.NTParsedInstrument;
 import com.io7m.jnoisetype.parser.api.NTParsedInstrumentZone;
 import com.io7m.jnoisetype.parser.api.NTParsedInstrumentZoneGenerator;
@@ -89,7 +88,6 @@ public final class NTBruteForceEqualityTest
 
   private static final Class<?> PARSER_CLASSES[] = {
     NTParsedFile.class,
-    NTParsedGenericAmount.class,
     NTParsedInstrument.class,
     NTParsedInstrumentZone.class,
     NTParsedInstrumentZoneGenerator.class,
@@ -113,25 +111,6 @@ public final class NTBruteForceEqualityTest
     NTSampleBuilderDescription.class,
     NTSampleWriterDescription.class,
   };
-
-  @TestFactory
-  public Stream<DynamicTest> testEquals()
-  {
-    final var api_classes =
-      Stream.of(API_CLASSES);
-    final var parser_classes =
-      Stream.of(PARSER_CLASSES);
-    final var writer_classes =
-      Stream.of(WRITER_CLASSES);
-
-    final var all_classes =
-      Stream.concat(api_classes, Stream.concat(parser_classes, writer_classes));
-
-    return all_classes
-      .map(clazz -> DynamicTest.dynamicTest(
-        "testEquals" + clazz.getSimpleName(),
-        () -> checkClassEquality(clazz)));
-  }
 
   private static void checkClassEquality(
     final Class<?> clazz)
@@ -158,5 +137,24 @@ public final class NTBruteForceEqualityTest
     }
 
     return !field.getType().isPrimitive();
+  }
+
+  @TestFactory
+  public Stream<DynamicTest> testEquals()
+  {
+    final var api_classes =
+      Stream.of(API_CLASSES);
+    final var parser_classes =
+      Stream.of(PARSER_CLASSES);
+    final var writer_classes =
+      Stream.of(WRITER_CLASSES);
+
+    final var all_classes =
+      Stream.concat(api_classes, Stream.concat(parser_classes, writer_classes));
+
+    return all_classes
+      .map(clazz -> DynamicTest.dynamicTest(
+        "testEquals" + clazz.getSimpleName(),
+        () -> checkClassEquality(clazz)));
   }
 }

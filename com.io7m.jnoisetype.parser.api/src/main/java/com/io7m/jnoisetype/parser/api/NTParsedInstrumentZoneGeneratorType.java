@@ -17,6 +17,7 @@
 package com.io7m.jnoisetype.parser.api;
 
 import com.io7m.immutables.styles.ImmutablesStyleType;
+import com.io7m.jnoisetype.api.NTGenericAmount;
 import org.immutables.value.Value;
 
 /**
@@ -37,5 +38,5 @@ public interface NTParsedInstrumentZoneGeneratorType extends NTParsedElementType
    * @return The amount by which to affect the operator
    */
 
-  NTParsedGenericAmountType amount();
+  NTGenericAmount amount();
 }

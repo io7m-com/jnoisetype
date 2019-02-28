@@ -16,53 +16,41 @@
 
 package com.io7m.jnoisetype.tests;
 
-import com.io7m.jnoisetype.api.NTShortString;
+import com.io7m.jnoisetype.api.NTModulatorIndex;
 import com.io7m.jranges.RangeCheckException;
 import net.jqwik.api.ForAll;
 import net.jqwik.api.Property;
-import net.jqwik.api.constraints.StringLength;
+import net.jqwik.api.constraints.IntRange;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public final class NTShortStringTest
+public final class NTModulatorIndexTest
 {
   @Test
-  public void testTooLong()
+  public void testOutOfRange()
   {
-    final var sb = new StringBuilder(70000);
-    for (var index = 0; index < 70000; ++index) {
-      sb.append('x');
-    }
-
-    Assertions.assertThrows(
-      RangeCheckException.class,
-      () -> NTShortString.builder().setValue(sb.toString()).build());
-
-    Assertions.assertThrows(
-      RangeCheckException.class,
-      () -> NTShortString.of(sb.toString()));
+    Assertions.assertThrows(RangeCheckException.class, () -> {
+      NTModulatorIndex.of(70000);
+    });
   }
 
-  @Test
-  public void testNull()
+  @Property
+  public void testCasts(
+    final @ForAll @IntRange(min = 0, max = 0xffff) int s0)
   {
-    Assertions.assertThrows(
-      IllegalArgumentException.class,
-      () -> NTShortString.of("\0"));
+    final var amount = NTModulatorIndex.of(s0);
+    Assertions.assertEquals((char) s0, amount.asUnsigned16());
+    Assertions.assertEquals(s0, amount.value());
   }
 
   @Property
   public void testOrdering(
-    final @ForAll @AlphaNumericType @StringLength(min = 0, max = 253) String s0,
-    final @ForAll @AlphaNumericType @StringLength(min = 0, max = 253) String s1)
+    final @ForAll @IntRange(min = 0, max = 0xffff) int s0,
+    final @ForAll @IntRange(min = 0, max = 0xffff) int s1)
   {
     Assertions.assertEquals(
-      s0.compareTo(s1),
-      NTShortString.of(s0).compareTo(NTShortString.of(s1)),
-      "Ordering is correct");
-    Assertions.assertEquals(
-      s1.compareTo(s0),
-      NTShortString.of(s1).compareTo(NTShortString.of(s0)),
+      Integer.compareUnsigned(s0, s1),
+      NTModulatorIndex.of(s0).compareTo(NTModulatorIndex.of(s1)),
       "Ordering is correct");
   }
 }

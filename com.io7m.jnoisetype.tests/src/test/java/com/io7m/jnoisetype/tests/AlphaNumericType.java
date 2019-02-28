@@ -14,29 +14,23 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jnoisetype.parser.api;
+package com.io7m.jnoisetype.tests;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import com.io7m.jnoisetype.api.NTGenericAmount;
-import org.immutables.value.Value;
+import net.jqwik.api.constraints.AlphaChars;
+import net.jqwik.api.constraints.NumericChars;
+import net.jqwik.api.constraints.Whitespace;
 
-/**
- * @see "SoundFontⓡ Technical Specification 2.04, §7.5 The PGEN subchunk"
- */
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@ImmutablesStyleType
-@Value.Immutable
-public interface NTParsedPresetZoneGeneratorType extends NTParsedElementType
+@Target({ElementType.ANNOTATION_TYPE, ElementType.PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
+@NumericChars
+@AlphaChars
+@Whitespace
+public @interface AlphaNumericType
 {
-  /**
-   * @return The enumeration value of the operator
-   */
 
-  int generatorOperator();
-
-  /**
-   * @return The amount by which to affect the operator
-   */
-
-  NTGenericAmount amount();
 }
