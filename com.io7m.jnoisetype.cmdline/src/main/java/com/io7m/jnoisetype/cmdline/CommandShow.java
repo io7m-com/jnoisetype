@@ -118,7 +118,7 @@ final class CommandShow extends CommandRoot
             Integer.valueOf(index),
             Integer.valueOf(zone_index),
             Integer.valueOf(generator_index),
-            Integer.valueOf(generator.generatorOperator().index()));
+            Integer.valueOf(generator.generatorOperator().index().value()));
 
           System.out.printf(
             "preset %d zone %d generator %d name : %s\n",
@@ -198,7 +198,7 @@ final class CommandShow extends CommandRoot
             Integer.valueOf(index),
             Integer.valueOf(zone_index),
             Integer.valueOf(generator_index),
-            Integer.valueOf(generator.generatorOperator().index()));
+            Integer.valueOf(generator.generatorOperator().index().value()));
 
           System.out.printf(
             "instrument %d zone %d generator %d name : %s\n",

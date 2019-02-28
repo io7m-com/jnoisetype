@@ -36,11 +36,12 @@ module com.io7m.jnoisetype.vanilla
   provides com.io7m.jnoisetype.parser.api.NTFileParserProviderType
     with com.io7m.jnoisetype.vanilla.NTParsersService;
   provides com.io7m.jnoisetype.parser.api.NTInterpreterProviderType
-    with com.io7m.jnoisetype.vanilla.NTInterpreters;
+    with com.io7m.jnoisetype.vanilla.interpreter.NTInterpreters;
   provides com.io7m.jnoisetype.writer.api.NTWriterProviderType
     with com.io7m.jnoisetype.vanilla.NTWritersService;
   provides com.io7m.jnoisetype.writer.api.NTBuilderProviderType
     with com.io7m.jnoisetype.vanilla.NTBuilders;
 
   exports com.io7m.jnoisetype.vanilla;
+  exports com.io7m.jnoisetype.vanilla.interpreter;
 }

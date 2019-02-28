@@ -279,7 +279,7 @@ public final class NTWriters implements NTWriterProviderType
       final ByteBuffer buffer)
     {
       buffer.position(0);
-      buffer.putShort((short) 0);
+      buffer.putChar((char) 0);
       buffer.putChar((char) 0);
 
       checkAndFlipBuffer(buffer);
@@ -290,7 +290,7 @@ public final class NTWriters implements NTWriterProviderType
       final NTInstrumentWriterZoneGeneratorDescription generator)
     {
       buffer.position(0);
-      buffer.putShort((short) (generator.generator().index() & 0xffff));
+      buffer.putChar(generator.generator().index().asUnsigned16());
       buffer.putChar(generator.amount().asUnsigned16());
 
       checkAndFlipBuffer(buffer);
@@ -300,7 +300,7 @@ public final class NTWriters implements NTWriterProviderType
       final ByteBuffer buffer)
     {
       buffer.position(0);
-      buffer.putShort((short) 0);
+      buffer.putChar((char) 0);
       buffer.putChar((char) 0);
 
       checkAndFlipBuffer(buffer);
@@ -311,7 +311,7 @@ public final class NTWriters implements NTWriterProviderType
       final NTPresetWriterZoneGeneratorDescription generator)
     {
       buffer.position(0);
-      buffer.putShort((short) (generator.generator().index() & 0xffff));
+      buffer.putChar(generator.generator().index().asUnsigned16());
       buffer.putChar(generator.amount().asUnsigned16());
 
       checkAndFlipBuffer(buffer);
@@ -600,18 +600,6 @@ public final class NTWriters implements NTWriterProviderType
           w_channel.write(buffer);
         });
       }
-    }
-
-    private static void packPBAGRecord(
-      final ByteBuffer buffer,
-      final int gen_index,
-      final int mod_index)
-    {
-      buffer.position(0);
-      buffer.putShort((short) (gen_index & 0xffff));
-      buffer.putShort((short) (mod_index & 0xffff));
-
-      checkAndFlipBuffer(buffer);
     }
 
     private static void writeSHDR(

@@ -22,12 +22,15 @@ import com.io7m.jnoisetype.parser.api.NTInterpreterProviderType;
 import com.io7m.jnoisetype.parser.api.NTParseException;
 import com.io7m.jspiel.api.RiffFileBuilderType;
 import com.io7m.jspiel.api.RiffFileWriterDescriptionType;
+import com.io7m.jspiel.api.RiffParseException;
 import com.io7m.jspiel.api.RiffWriteException;
 import com.io7m.jspiel.vanilla.RiffFileBuilders;
 import com.io7m.jspiel.vanilla.RiffWriters;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.slf4j.Logger;
 
 import java.io.Closeable;
@@ -36,7 +39,11 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.Objects;
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 import static java.nio.channels.FileChannel.MapMode.READ_ONLY;
 import static java.nio.file.StandardOpenOption.CREATE;
@@ -431,6 +438,59 @@ public abstract class NTInterpretersContract
         }
       );
     }
+  }
+
+  /**
+   * Try various corrupted soundfonts.
+   *
+   * @return A list of tests
+   */
+
+  @TestFactory
+  public final List<DynamicTest> testCorruption()
+  {
+    return LongStream.range(0L, 10_000L)
+      .mapToObj(seed -> DynamicTest.dynamicTest("testCorruptionWithSeed" + seed, () -> {
+        try {
+          final var map = NamedMap.createFromResource("complex0.sf2");
+          final var corrupted_map = corruptMap(this.logger, map, seed);
+          final var parser = this.parsers.createForByteBuffer(map.name, corrupted_map);
+          final var file = parser.parse();
+          this.interpreters.createInterpreter(file).interpret();
+        } catch (NTParseException e) {
+          this.logger.debug("parsing: ", e);
+        } catch (RuntimeException e) {
+          Assertions.fail(e);
+        }
+      }))
+      .collect(Collectors.toList());
+  }
+
+  private static ByteBuffer corruptMap(
+    final Logger logger,
+    final NamedMap map,
+    final long seed)
+  {
+    final var corrupted_map = ByteBuffer.allocate(map.map.capacity());
+    corrupted_map.put(map.map);
+    corrupted_map.position(0);
+
+    final var rng = new Random(seed);
+    final var corruption = rng.nextDouble() * 0.01;
+
+    logger.debug(
+      "seed {}: corrupting {}% of the input bytes",
+      Long.valueOf(seed),
+      String.format("%.2f", Double.valueOf(corruption * 100.0)));
+
+    final var bytes = new byte[1];
+    for (var index = 0; index < corrupted_map.capacity(); ++index) {
+      if (rng.nextDouble() < corruption) {
+        rng.nextBytes(bytes);
+        corrupted_map.put(index, bytes[0]);
+      }
+    }
+    return corrupted_map;
   }
 
   private void expectThrows(

@@ -18,6 +18,7 @@ package com.io7m.jnoisetype.tests;
 
 import com.io7m.jnoisetype.api.NTFontType;
 import com.io7m.jnoisetype.api.NTGenerator;
+import com.io7m.jnoisetype.api.NTGeneratorOperatorIndex;
 import com.io7m.jnoisetype.api.NTGenericAmount;
 import com.io7m.jnoisetype.api.NTInfo;
 import com.io7m.jnoisetype.api.NTLongString;
@@ -331,7 +332,7 @@ public abstract class NTWritersContract
     final var zone0 = instrument0.addZone();
     final var zone1 =
       instrument0.addZone()
-        .addGenerator(NTGenerator.of(17, "pan"), NTGenericAmount.of(0))
+        .addGenerator(NTGenerator.of(NTGeneratorOperatorIndex.of(17), "pan"), NTGenericAmount.of(0))
         .addSampleGenerator(sample0);
 
     final var description = builder.build();
@@ -386,7 +387,7 @@ public abstract class NTWritersContract
     final var zone1 =
       instrument0.addZone()
         .addKeyRangeGenerator(0, 127)
-        .addGenerator(NTGenerator.of(17, "pan"), NTGenericAmount.of(0))
+        .addGenerator(NTGenerator.of(NTGeneratorOperatorIndex.of(17), "pan"), NTGenericAmount.of(0))
         .addSampleGenerator(sample0);
 
     final var preset0 = builder.addPreset("preset0");

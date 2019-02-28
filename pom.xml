@@ -37,7 +37,7 @@
     <io7m.api.previousVersion>0.0.1</io7m.api.previousVersion>
     <com.io7m.immutables.style.version>0.0.1</com.io7m.immutables.style.version>
     <org.immutables.value.version>2.7.5</org.immutables.value.version>
-    <com.io7m.jspiel.version>0.0.2</com.io7m.jspiel.version>
+    <com.io7m.jspiel.version>0.0.3</com.io7m.jspiel.version>
   </properties>
 
   <licenses>

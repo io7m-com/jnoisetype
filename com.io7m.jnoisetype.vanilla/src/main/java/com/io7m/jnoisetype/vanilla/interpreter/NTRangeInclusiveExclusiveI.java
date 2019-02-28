@@ -14,33 +14,45 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jnoisetype.tests;
+package com.io7m.jnoisetype.vanilla.interpreter;
 
-import com.io7m.jnoisetype.parser.api.NTFileParserProviderType;
-import com.io7m.jnoisetype.parser.api.NTInterpreterProviderType;
-import com.io7m.jnoisetype.vanilla.interpreter.NTInterpreters;
-import com.io7m.jnoisetype.vanilla.NTParsers;
-import com.io7m.jspiel.vanilla.RiffParsers;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.io7m.jranges.RangeCheck;
 
-public final class NTInterpretersTest extends NTInterpretersContract
+/**
+ * A range with an inclusive lower bound and an exclusive upper bound.
+ */
+
+final class NTRangeInclusiveExclusiveI
 {
-  @Override
-  protected NTInterpreterProviderType interpreters()
+  private final int lo;
+  private final int hi;
+
+  NTRangeInclusiveExclusiveI(
+    final int in_lower,
+    final int in_upper)
   {
-    return new NTInterpreters();
+    RangeCheck.checkLessEqualInteger(
+      in_lower,
+      "Lower range",
+      in_upper,
+      "Upper range");
+
+    this.lo = in_lower;
+    this.hi = in_upper;
   }
 
-  @Override
-  protected NTFileParserProviderType parsers()
+  int lower()
   {
-    return NTParsers.create(new RiffParsers());
+    return this.lo;
   }
 
-  @Override
-  protected Logger logger()
+  int upper()
   {
-    return LoggerFactory.getLogger(NTInterpretersTest.class);
+    return this.hi;
+  }
+
+  int interval()
+  {
+    return this.hi - this.lo;
   }
 }

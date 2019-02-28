@@ -19,7 +19,7 @@ package com.io7m.jnoisetype.tests;
 import com.io7m.jnoisetype.parser.api.NTFileParserProviderType;
 import com.io7m.jnoisetype.parser.api.NTInterpreterProviderType;
 import com.io7m.jnoisetype.vanilla.NTBuilders;
-import com.io7m.jnoisetype.vanilla.NTInterpreters;
+import com.io7m.jnoisetype.vanilla.interpreter.NTInterpreters;
 import com.io7m.jnoisetype.vanilla.NTParsers;
 import com.io7m.jnoisetype.vanilla.NTWriters;
 import com.io7m.jnoisetype.writer.api.NTBuilderProviderType;

@@ -31,14 +31,14 @@ import java.util.stream.Collectors;
 
 public final class NTTransforms
 {
-  private static final Map<Integer, NTTransform> TRANSFORMS = loadGenerators();
+  private static final Map<NTTransformIndex, NTTransform> TRANSFORMS = loadGenerators();
 
   private NTTransforms()
   {
 
   }
 
-  private static Map<Integer, NTTransform> loadGenerators()
+  private static Map<NTTransformIndex, NTTransform> loadGenerators()
   {
     try (var stream = NTTransforms.class.getResourceAsStream(
       "/com/io7m/jnoisetype/api/transforms.properties")) {
@@ -49,10 +49,10 @@ public final class NTTransforms
       return properties.entrySet()
         .stream()
         .map(entry -> {
-          final var index = Integer.parseInt(entry.getKey().toString());
+          final var index = NTTransformIndex.of(Integer.parseInt(entry.getKey().toString()));
           final var name = entry.getValue().toString();
           final var generator = NTTransform.of(index, name);
-          return new AbstractMap.SimpleImmutableEntry<>(Integer.valueOf(index), generator);
+          return new AbstractMap.SimpleImmutableEntry<>(index, generator);
         })
         .collect(Collectors.toUnmodifiableMap(
           AbstractMap.SimpleImmutableEntry::getKey,
@@ -64,10 +64,25 @@ public final class NTTransforms
   }
 
   /**
+   * Find a transform with the given index.
+   *
+   * @param value The index
+   *
+   * @return The located transform, or a value with "unknown" as the name
+   */
+
+  public static NTTransform find(final int value)
+  {
+    return TRANSFORMS.getOrDefault(
+      NTTransformIndex.of(value),
+      NTTransform.of(NTTransformIndex.of(value), "unknown"));
+  }
+
+  /**
    * @return A read-only map of the known specified transforms
    */
 
-  public static Map<Integer, NTTransform> transforms()
+  public static Map<NTTransformIndex, NTTransform> transforms()
   {
     return TRANSFORMS;
   }

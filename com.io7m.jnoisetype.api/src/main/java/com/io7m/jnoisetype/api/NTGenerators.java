@@ -51,7 +51,7 @@ public final class NTGenerators
         .map(entry -> {
           final var index = Integer.parseInt(entry.getKey().toString());
           final var name = entry.getValue().toString();
-          final var generator = NTGenerator.of(index, name);
+          final var generator = NTGenerator.of(NTGeneratorOperatorIndex.of(index), name);
           return new AbstractMap.SimpleImmutableEntry<>(Integer.valueOf(index), generator);
         })
         .collect(Collectors.toUnmodifiableMap(
@@ -61,6 +61,21 @@ public final class NTGenerators
     } catch (final IOException e) {
       throw new UncheckedIOException(e);
     }
+  }
+
+  /**
+   * Find an operator with the given index.
+   *
+   * @param value The index
+   *
+   * @return The located operator, or a value with "unknown" as the operator name
+   */
+
+  public static NTGenerator find(final int value)
+  {
+    return GENERATORS.getOrDefault(
+      Integer.valueOf(value),
+      NTGenerator.of(NTGeneratorOperatorIndex.of(value), "unknown"));
   }
 
   /**

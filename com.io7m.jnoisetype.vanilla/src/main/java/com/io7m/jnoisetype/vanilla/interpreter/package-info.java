@@ -14,33 +14,9 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jnoisetype.tests;
+/**
+ * SoundFont manipulation (Vanilla implementation - Interpreter)
+ */
 
-import com.io7m.jnoisetype.parser.api.NTFileParserProviderType;
-import com.io7m.jnoisetype.parser.api.NTInterpreterProviderType;
-import com.io7m.jnoisetype.vanilla.interpreter.NTInterpreters;
-import com.io7m.jnoisetype.vanilla.NTParsers;
-import com.io7m.jspiel.vanilla.RiffParsers;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-public final class NTInterpretersTest extends NTInterpretersContract
-{
-  @Override
-  protected NTInterpreterProviderType interpreters()
-  {
-    return new NTInterpreters();
-  }
-
-  @Override
-  protected NTFileParserProviderType parsers()
-  {
-    return NTParsers.create(new RiffParsers());
-  }
-
-  @Override
-  protected Logger logger()
-  {
-    return LoggerFactory.getLogger(NTInterpretersTest.class);
-  }
-}
+@org.osgi.annotation.bundle.Export
+package com.io7m.jnoisetype.vanilla.interpreter;

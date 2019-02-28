@@ -1,7 +1,7 @@
 package com.io7m.jnoisetype.tests;
 
 import com.io7m.jnoisetype.parser.api.NTParseException;
-import com.io7m.jnoisetype.vanilla.NTInterpreters;
+import com.io7m.jnoisetype.vanilla.interpreter.NTInterpreters;
 import com.io7m.jnoisetype.vanilla.NTParsers;
 import com.io7m.jspiel.vanilla.RiffParsers;
 import org.slf4j.Logger;

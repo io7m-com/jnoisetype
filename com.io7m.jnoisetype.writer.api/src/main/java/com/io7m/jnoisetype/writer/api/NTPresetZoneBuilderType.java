@@ -17,6 +17,7 @@
 package com.io7m.jnoisetype.writer.api;
 
 import com.io7m.jnoisetype.api.NTGenerator;
+import com.io7m.jnoisetype.api.NTGeneratorOperatorIndex;
 import com.io7m.jnoisetype.api.NTGenericAmount;
 
 /**
@@ -54,7 +55,7 @@ public interface NTPresetZoneBuilderType
     final var msb = (high << 8);
     final var lsb = low & 0xff;
     return this.addGenerator(
-      NTGenerator.of(43, "keyRange"),
+      NTGenerator.of(NTGeneratorOperatorIndex.of(43), "keyRange"),
       NTGenericAmount.of(msb | lsb));
   }
 
@@ -70,7 +71,7 @@ public interface NTPresetZoneBuilderType
     final NTInstrumentBuilderType instrument)
   {
     return this.addGenerator(
-      NTGenerator.of(41, "instrument"),
+      NTGenerator.of(NTGeneratorOperatorIndex.of(41), "instrument"),
       NTGenericAmount.of(instrument.instrumentIndex().value()));
   }
 }

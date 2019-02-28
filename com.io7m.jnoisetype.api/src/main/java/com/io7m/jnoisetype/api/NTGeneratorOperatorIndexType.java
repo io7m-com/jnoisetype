@@ -17,27 +17,50 @@
 package com.io7m.jnoisetype.api;
 
 import com.io7m.immutables.styles.ImmutablesStyleType;
+import com.io7m.jranges.RangeCheck;
 import org.immutables.value.Value;
 
 /**
- * @see "SoundFontⓡ Technical Specification 2.04, §8.3 Modulator Transform Enumerators"
+ * The valid values for generator operator values.
  */
 
 @ImmutablesStyleType
 @Value.Immutable
-public interface NTTransformType
+public interface NTGeneratorOperatorIndexType extends Comparable<NTGeneratorOperatorIndexType>
 {
   /**
-   * @return The transform index
+   * @return The raw value in the range {@code [0, 0xffff]}
    */
 
   @Value.Parameter
-  NTTransformIndex index();
+  int value();
 
   /**
-   * @return The transform name
+   * Check preconditions for the type.
    */
 
-  @Value.Parameter
-  String name();
+  @Value.Check
+  default void checkPreconditions()
+  {
+    RangeCheck.checkIncludedInInteger(
+      this.value(),
+      "Generator operator index value",
+      NTRanges.UNSIGNED_16_RANGE,
+      "Valid generator operator index values");
+  }
+
+  /**
+   * @return The value as an unsigned 16-bit integer
+   */
+
+  default char asUnsigned16()
+  {
+    return (char) this.value();
+  }
+
+  @Override
+  default int compareTo(final NTGeneratorOperatorIndexType other)
+  {
+    return Integer.compareUnsigned(this.value(), other.value());
+  }
 }

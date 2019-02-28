@@ -18,6 +18,7 @@ package com.io7m.jnoisetype.tests;
 
 import com.io7m.jnoisetype.api.NTGenerator;
 import com.io7m.jnoisetype.api.NTGeneratorIndex;
+import com.io7m.jnoisetype.api.NTGeneratorOperatorIndex;
 import com.io7m.jnoisetype.api.NTGenericAmount;
 import com.io7m.jnoisetype.api.NTInfo;
 import com.io7m.jnoisetype.api.NTInstrumentIndex;
@@ -33,6 +34,7 @@ import com.io7m.jnoisetype.api.NTSampleName;
 import com.io7m.jnoisetype.api.NTShortString;
 import com.io7m.jnoisetype.api.NTSource;
 import com.io7m.jnoisetype.api.NTTransform;
+import com.io7m.jnoisetype.api.NTTransformIndex;
 import com.io7m.jnoisetype.api.NTVersion;
 import com.io7m.jnoisetype.parser.api.NTParsedFile;
 import com.io7m.jnoisetype.parser.api.NTParsedInstrument;
@@ -67,6 +69,7 @@ public final class NTBruteForceEqualityTest
 {
   private static final Class<?> API_CLASSES[] = {
     NTGenerator.class,
+    NTGeneratorOperatorIndex.class,
     NTGeneratorIndex.class,
     NTGenericAmount.class,
     NTInfo.class,
@@ -82,6 +85,7 @@ public final class NTBruteForceEqualityTest
     NTSampleName.class,
     NTShortString.class,
     NTSource.class,
+    NTTransformIndex.class,
     NTTransform.class,
     NTVersion.class
   };

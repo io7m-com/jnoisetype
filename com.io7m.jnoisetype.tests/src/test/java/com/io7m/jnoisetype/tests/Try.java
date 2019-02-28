@@ -8,7 +8,7 @@ import com.io7m.jnoisetype.parser.api.NTParsedInstrument;
 import com.io7m.jnoisetype.parser.api.NTParsedInstrumentZone;
 import com.io7m.jnoisetype.parser.api.NTParsedPreset;
 import com.io7m.jnoisetype.parser.api.NTParsedPresetZone;
-import com.io7m.jnoisetype.vanilla.NTInterpreters;
+import com.io7m.jnoisetype.vanilla.interpreter.NTInterpreters;
 import com.io7m.jnoisetype.vanilla.NTParsers;
 import com.io7m.jranges.RangeInclusiveI;
 import com.io7m.jspiel.vanilla.RiffParsers;
