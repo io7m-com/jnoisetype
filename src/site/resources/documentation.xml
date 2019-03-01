@@ -10,8 +10,7 @@
     a useful model of the data:
   </p>
 
-  <pre class="code"><![CDATA[
-final var parsers =
+  <pre class="code"><![CDATA[final var parsers =
   ServiceLoader.load(NTFileParserProviderType.class)
     .findFirst()
     .orElseThrow(() -> new IllegalStateException(
@@ -54,8 +53,7 @@ try (var channel = FileChannel.open(this.path, READ)) {
     the description into the required binary SoundFontⓡ form:
   </p>
 
-  <pre class="code"><![CDATA[
-final var builders =
+  <pre class="code"><![CDATA[final var builders =
   ServiceLoader.load(NTBuilderProviderType.class)
     .findFirst()
     .orElseThrow(() -> new IllegalStateException(
@@ -72,6 +70,7 @@ final var builder =
 
 // Set the various metadata used to describe the font.
 // Most fields are optional (see the JavaDoc and SoundFont specification).
+
 builder.setInfo(
   NTInfo.builder()
     .setName(NTShortString.of("Preset1"))
@@ -150,6 +149,34 @@ try (var channel = FileChannel.open(path, CREATE, WRITE, TRUNCATE_EXISTING)) {
   final var writer = this.writers.createForChannel(path.toUri(), description, channel);
   writer.write();
 }]]></pre>
+
+  <h4>Command-line Tools</h4>
+  <p>
+    See the <tt>com.io7m.jnoisetype.cmdline-*-main.jar</tt>:
+  </p>
+
+  <pre class="code"><![CDATA[Usage: jnoisetype [options] [command] [command options]
+  Options:
+    --verbose
+      Set the minimum logging verbosity level
+      Default: info
+      Possible Values: [trace, debug, info, warn, error]
+  Commands:
+    show      Display the contents of a SoundFontⓡ file
+      Usage: show [options]
+        Options:
+        * --file
+            The SoundFontⓡ file to display
+          --verbose
+            Set the minimum logging verbosity level
+            Default: info
+            Possible Values: [trace, debug, info, warn, error]
+]]></pre>
+
+  <p>
+    Currently, the command-line tool only supports parsing and displaying a given
+    SoundFontⓡ file as text. It is primarily useful as a validation tool.
+  </p>
 
   <h4>JavaDoc</h4>
   <p>

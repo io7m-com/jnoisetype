@@ -10,8 +10,8 @@
     <li>Example code included</li>
     <li><a href="http://www.osgi.org">OSGi</a>-ready</li>
     <li><a href="https://en.wikipedia.org/wiki/Java_Platform_Module_System">JPMS</a>-ready</li>
-    <li>ISC license.</li>
-    <li>High-coverage automated test suite.</li>
-    <li>Hostile test suite that subjects parsers to randomly corrupted data to test robustness.</li>
+    <li>ISC license</li>
+    <li>High-coverage automated test suite</li>
+    <li>Hostile test suite that subjects parsers to randomly corrupted data to test robustness</li>
   </ul>
 </div>
