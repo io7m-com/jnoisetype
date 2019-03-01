@@ -14,45 +14,29 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jnoisetype.vanilla.interpreter;
+package com.io7m.jnoisetype.tests;
 
-import com.io7m.jranges.RangeCheck;
+import com.io7m.jnoisetype.parser.api.NTFileParserProviderType;
+import com.io7m.jnoisetype.vanilla.NTParsers;
+import com.io7m.jnoisetype.vanilla.NTParsersComponent;
+import com.io7m.jspiel.vanilla.RiffParsers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/**
- * A range with an inclusive lower bound and an exclusive upper bound.
- */
-
-final class NTRangeInclusiveExclusiveI
+public final class NTParsersComponentTest extends NTParsersContract
 {
-  private final int lo;
-  private final int hi;
-
-  NTRangeInclusiveExclusiveI(
-    final int in_lower,
-    final int in_upper)
+  @Override
+  protected NTFileParserProviderType parsers()
   {
-    RangeCheck.checkLessEqualInteger(
-      in_lower,
-      "Lower range",
-      in_upper,
-      "Upper range");
-
-    this.lo = in_lower;
-    this.hi = in_upper;
+    final var parsers = new NTParsersComponent();
+    parsers.onRIFFFileParsersAvailable(new RiffParsers());
+    parsers.onActivate();
+    return parsers;
   }
 
-  int lower()
+  @Override
+  protected Logger logger()
   {
-    return this.lo;
-  }
-
-  int upper()
-  {
-    return this.hi;
-  }
-
-  int interval()
-  {
-    return this.hi - this.lo;
+    return LoggerFactory.getLogger(NTParsersComponentTest.class);
   }
 }

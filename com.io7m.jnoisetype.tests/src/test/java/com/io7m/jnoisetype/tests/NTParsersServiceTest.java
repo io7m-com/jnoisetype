@@ -14,41 +14,26 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.jnoisetype.api;
+package com.io7m.jnoisetype.tests;
 
-import com.io7m.jranges.RangeHalfOpenL;
+import com.io7m.jnoisetype.parser.api.NTFileParserProviderType;
+import com.io7m.jnoisetype.vanilla.NTParsersComponent;
+import com.io7m.jnoisetype.vanilla.NTParsersService;
+import com.io7m.jspiel.vanilla.RiffParsers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/**
- * The type of samples.
- */
-
-public interface NTSampleType extends NTFontMemberType, NTNamedType
+public final class NTParsersServiceTest extends NTParsersContract
 {
-  /**
-   * @return The sample description
-   */
-
-  NTSampleDescription description();
-
-  /**
-   * @return The byte range of the sample data within the parsed file
-   */
-
-  RangeHalfOpenL dataByteRange();
-
-  /**
-   * @return The byte range of the sample data within the parsed file including the specification-mandated zero values
-   */
-
-  default RangeHalfOpenL dataByteRangeIncludingPadding()
+  @Override
+  protected NTFileParserProviderType parsers()
   {
-    final var range = this.dataByteRange();
-    return RangeHalfOpenL.of(range.lower(), Math.addExact(range.upper(), 46L * 2L));
+    return new NTParsersService();
   }
 
   @Override
-  default String nameText()
+  protected Logger logger()
   {
-    return this.description().nameText();
+    return LoggerFactory.getLogger(NTParsersServiceTest.class);
   }
 }

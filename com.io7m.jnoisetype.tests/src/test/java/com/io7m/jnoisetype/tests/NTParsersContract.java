@@ -254,6 +254,9 @@ public abstract class NTParsersContract
             "Correct sample pitchCorrection");
           Assertions.assertEquals(22050, description.sampleRate(), "Correct sample sampleRate");
           Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");
+
+          Assertions.assertEquals(0xC2L, record.dataByteRange().lower());
+          Assertions.assertEquals(0x415EL, record.dataByteRange().upper());
         },
 
         () -> {
@@ -275,6 +278,9 @@ public abstract class NTParsersContract
             "Correct sample pitchCorrection");
           Assertions.assertEquals(0, description.sampleRate(), "Correct sample sampleRate");
           Assertions.assertEquals(0, description.sampleLink(), "Correct sample sampleLink");
+
+          Assertions.assertEquals(0L, record.dataByteRange().lower());
+          Assertions.assertEquals(0L, record.dataByteRange().upper());
         },
 
         () -> {
@@ -980,7 +986,7 @@ public abstract class NTParsersContract
       }
       try (var sc = root.addSubChunk(RiffChunkID.of("LIST"))) {
         sc.setForm("sdta");
-        sc.addSubChunk(RiffChunkID.of("zzzz"));
+        sc.addSubChunk(RiffChunkID.of("smpl"));
       }
     }
     this.expectThrows(builder, "Chunk name: phdr");
@@ -1001,7 +1007,7 @@ public abstract class NTParsersContract
       }
       try (var sc = root.addSubChunk(RiffChunkID.of("LIST"))) {
         sc.setForm("sdta");
-        sc.addSubChunk(RiffChunkID.of("zzzz"));
+        sc.addSubChunk(RiffChunkID.of("smpl"));
       }
     }
     this.expectThrows(builder, "A terminal record is required but was not present");

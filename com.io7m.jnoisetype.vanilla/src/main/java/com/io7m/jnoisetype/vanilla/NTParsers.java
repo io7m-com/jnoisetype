@@ -16,6 +16,7 @@
 
 package com.io7m.jnoisetype.vanilla;
 
+import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jnoisetype.api.NTGenericAmount;
 import com.io7m.jnoisetype.api.NTInfo;
 import com.io7m.jnoisetype.api.NTInstrumentName;
@@ -42,6 +43,8 @@ import com.io7m.jnoisetype.parser.api.NTParsedPresetZone;
 import com.io7m.jnoisetype.parser.api.NTParsedPresetZoneGenerator;
 import com.io7m.jnoisetype.parser.api.NTParsedPresetZoneModulator;
 import com.io7m.jnoisetype.parser.api.NTParsedSample;
+import com.io7m.jranges.RangeCheckException;
+import com.io7m.jranges.RangeHalfOpenL;
 import com.io7m.jspiel.api.RiffChunkType;
 import com.io7m.jspiel.api.RiffFileParserProviderType;
 import com.io7m.jspiel.api.RiffFileParserType;
@@ -235,9 +238,11 @@ public final class NTParsers implements NTFileParserProviderType
           root.findRequiredSubChunkWithForm("LIST", "pdta");
         final var sdta_list =
           root.findRequiredSubChunkWithForm("LIST", "sdta");
+        final var smpl =
+          sdta_list.findRequiredSubChunk("smpl");
 
         final var builder = NTParsedFile.builder();
-        this.parsePData(pdta_list, builder);
+        this.parsePData(smpl, pdta_list, builder);
 
         return builder
           .setInfo(this.parseInfo(info_list))
@@ -317,6 +322,7 @@ public final class NTParsers implements NTFileParserProviderType
     }
 
     private void parsePData(
+      final RiffChunkType smpl,
       final RiffChunkType pdta_list,
       final NTParsedFile.Builder builder)
       throws NTParseException
@@ -353,7 +359,7 @@ public final class NTParsers implements NTFileParserProviderType
       builder.setInstrumentZoneGeneratorRecords(instrument_zone_gen_records.data);
       builder.setInstrumentZoneGeneratorRecordsSource(instrument_zone_gen_records.source);
 
-      final var sample_records = this.parsePDataSHDR(pdta_list);
+      final var sample_records = this.parsePDataSHDR(smpl, pdta_list);
       builder.setSampleRecords(sample_records.data);
       builder.setSampleRecordsSource(sample_records.source);
     }
@@ -711,9 +717,15 @@ public final class NTParsers implements NTFileParserProviderType
     }
 
     private SourceAndData<ArrayList<NTParsedSample>> parsePDataSHDR(
+      final RiffChunkType smpl,
       final RiffChunkType pdta_list)
       throws NTParseException
     {
+      Preconditions.checkPrecondition(
+        smpl.name().value(),
+        Objects.equals(smpl.name().value(), "smpl"),
+        x -> "Expected smpl chunk");
+
       final var shdr =
         this.requireChunkIsDivisible(
           this.requireChunk(pdta_list, "7.10", "shdr"),
@@ -737,6 +749,7 @@ public final class NTParsers implements NTFileParserProviderType
         final var pitch_correct = view.get();
         final var sample_link = view.getShort() & 0xffff;
         final var sample_kind = view.getShort() & 0xffff;
+        final var byte_range = this.parseSampleByteRange(smpl, position, start, end);
 
         final var description =
           NTSampleDescription.builder()
@@ -756,6 +769,7 @@ public final class NTParsers implements NTFileParserProviderType
           NTParsedSample.builder()
             .setSource(NTSource.of(this.source, Integer.toUnsignedLong(position)))
             .setDescription(description)
+            .setDataByteRange(byte_range)
             .build();
 
         LOG.trace("[shdr][{}] {}", Integer.valueOf(index), result);
@@ -771,6 +785,41 @@ public final class NTParsers implements NTFileParserProviderType
         message -> describeChunk(shdr, message));
 
       return new SourceAndData<>(NTSource.of(this.source, shdr.offset()), results);
+    }
+
+    private RangeHalfOpenL parseSampleByteRange(
+      final RiffChunkType smpl,
+      final int position,
+      final int start,
+      final int end)
+      throws NTParseException
+    {
+      try {
+        if (start == 0 && end == 0) {
+          return RangeHalfOpenL.of(0L, 0L);
+        }
+
+        final var data_relative_start = Math.multiplyExact(start, 2L);
+        final var data_relative_end = Math.multiplyExact(end, 2L);
+        final var data_absolute_start = Math.addExact(smpl.dataOffset(), data_relative_start);
+        final var data_absolute_end = Math.addExact(smpl.dataOffset(), data_relative_end);
+        return RangeHalfOpenL.of(data_absolute_start, data_absolute_end);
+      } catch (final ArithmeticException | RangeCheckException e) {
+        final var separator = System.lineSeparator();
+        throw new NTParseException(
+          new StringBuilder("Unusable sample range")
+            .append(separator)
+            .append("  Sample start: ")
+            .append(separator)
+            .append(start)
+            .append("  Sample end: ")
+            .append(end)
+            .append(separator)
+            .toString(),
+          e,
+          this.source,
+          position);
+      }
     }
 
     private NTSampleKind sampleKindOf(

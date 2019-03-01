@@ -22,7 +22,6 @@ import com.io7m.jnoisetype.parser.api.NTInterpreterProviderType;
 import com.io7m.jnoisetype.parser.api.NTParseException;
 import com.io7m.jspiel.api.RiffFileBuilderType;
 import com.io7m.jspiel.api.RiffFileWriterDescriptionType;
-import com.io7m.jspiel.api.RiffParseException;
 import com.io7m.jspiel.api.RiffWriteException;
 import com.io7m.jspiel.vanilla.RiffFileBuilders;
 import com.io7m.jspiel.vanilla.RiffWriters;
@@ -35,10 +34,10 @@ import org.slf4j.Logger;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -86,7 +85,7 @@ public abstract class NTInterpretersContract
     throws Exception
   {
     try (var map = NamedMap.createFromResource("empty.sf2")) {
-      final var parser = this.parsers.createForByteBuffer(map.name, map.map);
+      final var parser = this.parsers.createForByteBuffer(map.name.toUri(), map.map);
       final var file = parser.parse();
       final var interpreted = this.interpreters.createInterpreter(file).interpret();
 
@@ -121,7 +120,7 @@ public abstract class NTInterpretersContract
     throws Exception
   {
     try (var map = NamedMap.createFromResource("inst1.sf2")) {
-      final var parser = this.parsers.createForByteBuffer(map.name, map.map);
+      final var parser = this.parsers.createForByteBuffer(map.name.toUri(), map.map);
       final var file = parser.parse();
       final var interpreted = this.interpreters.createInterpreter(file).interpret();
 
@@ -187,7 +186,7 @@ public abstract class NTInterpretersContract
     throws Exception
   {
     try (var map = NamedMap.createFromResource("preset1.sf2")) {
-      final var parser = this.parsers.createForByteBuffer(map.name, map.map);
+      final var parser = this.parsers.createForByteBuffer(map.name.toUri(), map.map);
       final var file = parser.parse();
       final var interpreted = this.interpreters.createInterpreter(file).interpret();
 
@@ -255,7 +254,7 @@ public abstract class NTInterpretersContract
     throws Exception
   {
     try (var map = NamedMap.createFromResource("complex0.sf2")) {
-      final var parser = this.parsers.createForByteBuffer(map.name, map.map);
+      final var parser = this.parsers.createForByteBuffer(map.name.toUri(), map.map);
       final var file = parser.parse();
       final var interpreted = this.interpreters.createInterpreter(file).interpret();
 
@@ -451,16 +450,19 @@ public abstract class NTInterpretersContract
   {
     return LongStream.range(0L, 10_000L)
       .mapToObj(seed -> DynamicTest.dynamicTest("testCorruptionWithSeed" + seed, () -> {
+        final var map = NamedMap.createFromResource("complex0.sf2");
+
         try {
-          final var map = NamedMap.createFromResource("complex0.sf2");
           final var corrupted_map = corruptMap(this.logger, map, seed);
-          final var parser = this.parsers.createForByteBuffer(map.name, corrupted_map);
+          final var parser = this.parsers.createForByteBuffer(map.name.toUri(), corrupted_map);
           final var file = parser.parse();
           this.interpreters.createInterpreter(file).interpret();
         } catch (NTParseException e) {
           this.logger.debug("parsing: ", e);
         } catch (RuntimeException e) {
           Assertions.fail(e);
+        } finally {
+          Files.delete(map.name);
         }
       }))
       .collect(Collectors.toList());
@@ -524,12 +526,12 @@ public abstract class NTInterpretersContract
 
   private static final class NamedMap implements Closeable
   {
-    private final URI name;
+    private final Path name;
     private final FileChannel channel;
     private final ByteBuffer map;
 
     private NamedMap(
-      final URI in_name,
+      final Path in_name,
       final FileChannel in_channel,
       final ByteBuffer in_map)
     {
@@ -549,10 +551,9 @@ public abstract class NTInterpretersContract
           input.transferTo(output);
           output.flush();
         }
-
         final var channel = FileChannel.open(path, READ);
         final var map = channel.map(READ_ONLY, 0L, channel.size());
-        return new NamedMap(path.toUri(), channel, map);
+        return new NamedMap(path, channel, map);
       }
     }
 

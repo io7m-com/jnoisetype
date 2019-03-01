@@ -19,6 +19,7 @@ package com.io7m.jnoisetype.parser.api;
 import com.io7m.immutables.styles.ImmutablesStyleType;
 import com.io7m.jnoisetype.api.NTNamedType;
 import com.io7m.jnoisetype.api.NTSampleDescription;
+import com.io7m.jranges.RangeHalfOpenL;
 import org.immutables.value.Value;
 
 /**
@@ -34,6 +35,22 @@ public interface NTParsedSampleType extends NTNamedType, NTParsedElementType
    */
 
   NTSampleDescription description();
+
+  /**
+   * @return The byte range of the sample data within the parsed file
+   */
+
+  RangeHalfOpenL dataByteRange();
+
+  /**
+   * @return The byte range of the sample data within the parsed file including the specification-mandated zero values
+   */
+
+  default RangeHalfOpenL dataByteRangeIncludingPadding()
+  {
+    final var range = this.dataByteRange();
+    return RangeHalfOpenL.of(range.lower(), Math.addExact(range.upper(), 46L * 2L));
+  }
 
   @Override
   default String nameText()

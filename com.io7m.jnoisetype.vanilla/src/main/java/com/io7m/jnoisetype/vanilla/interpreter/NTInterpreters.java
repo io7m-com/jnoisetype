@@ -40,6 +40,7 @@ import com.io7m.jnoisetype.parser.api.NTParsedSample;
 import com.io7m.jnoisetype.vanilla.NTInvariants;
 import com.io7m.jranges.RangeCheck;
 import com.io7m.jranges.RangeCheckException;
+import com.io7m.jranges.RangeHalfOpenI;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,10 +124,10 @@ public final class NTInterpreters implements NTInterpreterProviderType
           description.kind());
       }
 
-      return new NTISample(font, sample);
+      return new NTISample(font, sample, sample.dataByteRange());
     }
 
-    private static NTRangeInclusiveExclusiveI makeRange(
+    private static RangeHalfOpenI makeRange(
       final String container_name,
       final String container,
       final String range_name,
@@ -135,7 +136,7 @@ public final class NTInterpreters implements NTInterpreterProviderType
       final NTSource source)
       throws NTParseException
     {
-      final NTRangeInclusiveExclusiveI mod_range;
+      final RangeHalfOpenI mod_range;
       final var range_lo = curr.getAsInt();
       final var range_hi = next.getAsInt();
 
@@ -151,7 +152,7 @@ public final class NTInterpreters implements NTInterpreterProviderType
           NTRanges.UNSIGNED_16_RANGE,
           "Valid " + range_name);
 
-        mod_range = new NTRangeInclusiveExclusiveI(range_lo, range_hi);
+        mod_range = RangeHalfOpenI.of(range_lo, range_hi);
       } catch (final RangeCheckException e) {
         final var separator = System.lineSeparator();
         throw new NTParseException(
@@ -335,7 +336,7 @@ public final class NTInterpreters implements NTInterpreterProviderType
         gen_index);
     }
 
-    private static NTRangeInclusiveExclusiveI makePresetZoneModulatorRange(
+    private static RangeHalfOpenI makePresetZoneModulatorRange(
       final NTIPreset preset,
       final NTParsedPresetZone zone_curr,
       final NTParsedPresetZone zone_next,
@@ -351,7 +352,7 @@ public final class NTInterpreters implements NTInterpreterProviderType
         pmod_source);
     }
 
-    private static NTRangeInclusiveExclusiveI makePresetZoneGeneratorRange(
+    private static RangeHalfOpenI makePresetZoneGeneratorRange(
       final NTIPreset preset,
       final NTParsedPresetZone zone_curr,
       final NTParsedPresetZone zone_next,
@@ -367,7 +368,7 @@ public final class NTInterpreters implements NTInterpreterProviderType
         pgen_source);
     }
 
-    private static NTRangeInclusiveExclusiveI makeInstrumentZoneModulatorRange(
+    private static RangeHalfOpenI makeInstrumentZoneModulatorRange(
       final NTIIInstrument preset,
       final NTParsedInstrumentZone zone_curr,
       final NTParsedInstrumentZone zone_next,
@@ -383,7 +384,7 @@ public final class NTInterpreters implements NTInterpreterProviderType
         pmod_source);
     }
 
-    private static NTRangeInclusiveExclusiveI makeInstrumentZoneGeneratorRange(
+    private static RangeHalfOpenI makeInstrumentZoneGeneratorRange(
       final NTIIInstrument preset,
       final NTParsedInstrumentZone zone_curr,
       final NTParsedInstrumentZone zone_next,
