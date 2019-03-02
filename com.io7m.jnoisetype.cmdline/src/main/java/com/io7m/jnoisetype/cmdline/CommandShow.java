@@ -149,12 +149,44 @@ final class CommandShow extends CommandRoot
           final var modulator = zone.modulators().get(modulator_index);
 
           System.out.printf(
-            "preset %d zone %d modulator %d %s : %s\n",
+            "preset %d zone %d modulator %d source-operator : %d (0x%s)\n",
             Integer.valueOf(index),
             Integer.valueOf(zone_index),
             Integer.valueOf(modulator_index),
-            "z",
-            "z");
+            Integer.valueOf(modulator.sourceOperator()),
+            Integer.toUnsignedString(modulator.sourceOperator(), 16));
+
+          System.out.printf(
+            "preset %d zone %d modulator %d target-operator : %d (0x%s)\n",
+            Integer.valueOf(index),
+            Integer.valueOf(zone_index),
+            Integer.valueOf(modulator_index),
+            Integer.valueOf(modulator.targetOperator().index().value()),
+            Integer.toUnsignedString(modulator.targetOperator().index().value(), 16));
+
+          System.out.printf(
+            "preset %d zone %d modulator %d amount : %d (0x%s)\n",
+            Integer.valueOf(index),
+            Integer.valueOf(zone_index),
+            Integer.valueOf(modulator_index),
+            Integer.valueOf(modulator.modulationAmount()),
+            Integer.toUnsignedString(modulator.modulationAmount(), 16));
+
+          System.out.printf(
+            "preset %d zone %d modulator %d amount-source-operator : %d (0x%s)\n",
+            Integer.valueOf(index),
+            Integer.valueOf(zone_index),
+            Integer.valueOf(modulator_index),
+            Integer.valueOf(modulator.modulationAmountSourceOperator()),
+            Integer.toUnsignedString(modulator.modulationAmountSourceOperator(), 16));
+
+          System.out.printf(
+            "preset %d zone %d modulator %d transform-operator : %d (0x%s)\n",
+            Integer.valueOf(index),
+            Integer.valueOf(zone_index),
+            Integer.valueOf(modulator_index),
+            Integer.valueOf(modulator.modulationTransformOperator().index().value()),
+            Integer.toUnsignedString(modulator.modulationTransformOperator().index().value(), 16));
         }
       }
 
@@ -229,12 +261,44 @@ final class CommandShow extends CommandRoot
           final var modulator = zone.modulators().get(modulator_index);
 
           System.out.printf(
-            "instrument %d zone %d modulator %d %s : %s\n",
+            "instrument %d zone %d modulator %d source-operator : %d (0x%s)\n",
             Integer.valueOf(index),
             Integer.valueOf(zone_index),
             Integer.valueOf(modulator_index),
-            "z", 
-            "z");
+            Integer.valueOf(modulator.sourceOperator()),
+            Integer.toUnsignedString(modulator.sourceOperator(), 16));
+
+          System.out.printf(
+            "instrument %d zone %d modulator %d target-operator : %d (0x%s)\n",
+            Integer.valueOf(index),
+            Integer.valueOf(zone_index),
+            Integer.valueOf(modulator_index),
+            Integer.valueOf(modulator.targetOperator().index().value()),
+            Integer.toUnsignedString(modulator.targetOperator().index().value(), 16));
+
+          System.out.printf(
+            "instrument %d zone %d modulator %d amount : %d (0x%s)\n",
+            Integer.valueOf(index),
+            Integer.valueOf(zone_index),
+            Integer.valueOf(modulator_index),
+            Integer.valueOf(modulator.modulationAmount()),
+            Integer.toUnsignedString(modulator.modulationAmount(), 16));
+
+          System.out.printf(
+            "instrument %d zone %d modulator %d amount-source-operator : %d (0x%s)\n",
+            Integer.valueOf(index),
+            Integer.valueOf(zone_index),
+            Integer.valueOf(modulator_index),
+            Integer.valueOf(modulator.modulationAmountSourceOperator()),
+            Integer.toUnsignedString(modulator.modulationAmountSourceOperator(), 16));
+
+          System.out.printf(
+            "instrument %d zone %d modulator %d transform-operator : %d (0x%s)\n",
+            Integer.valueOf(index),
+            Integer.valueOf(zone_index),
+            Integer.valueOf(modulator_index),
+            Integer.valueOf(modulator.modulationTransformOperator().index().value()),
+            Integer.toUnsignedString(modulator.modulationTransformOperator().index().value(), 16));
         }
       }
 
