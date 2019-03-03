@@ -18,10 +18,13 @@ package com.io7m.jnoisetype.api;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.AbstractMap;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
-import java.util.stream.Collectors;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * Standard generators.
@@ -31,14 +34,30 @@ import java.util.stream.Collectors;
 
 public final class NTGenerators
 {
-  private static final Map<Integer, NTGenerator> GENERATORS = loadGenerators();
+  private static final GeneratorSet GENERATORS = loadGenerators();
 
   private NTGenerators()
   {
 
   }
 
-  private static Map<Integer, NTGenerator> loadGenerators()
+  private static final class GeneratorSet
+  {
+    private final SortedMap<Integer, NTGenerator> generators_by_id;
+    private final SortedMap<String, NTGenerator> generators_by_name;
+
+    private GeneratorSet(
+      final SortedMap<Integer, NTGenerator> in_generators_by_id,
+      final SortedMap<String, NTGenerator> in_generators_by_name)
+    {
+      this.generators_by_id =
+        Objects.requireNonNull(in_generators_by_id, "generators_by_id");
+      this.generators_by_name =
+        Objects.requireNonNull(in_generators_by_name, "generators_by_name");
+    }
+  }
+
+  private static GeneratorSet loadGenerators()
   {
     try (var stream = NTGenerators.class.getResourceAsStream(
       "/com/io7m/jnoisetype/api/generators.properties")) {
@@ -46,18 +65,19 @@ public final class NTGenerators
       final var properties = new Properties();
       properties.load(stream);
 
-      return properties.entrySet()
-        .stream()
-        .map(entry -> {
-          final var index = Integer.parseInt(entry.getKey().toString());
-          final var name = entry.getValue().toString();
-          final var generator = NTGenerator.of(NTGeneratorOperatorIndex.of(index), name);
-          return new AbstractMap.SimpleImmutableEntry<>(Integer.valueOf(index), generator);
-        })
-        .collect(Collectors.toUnmodifiableMap(
-          AbstractMap.SimpleImmutableEntry::getKey,
-          AbstractMap.SimpleImmutableEntry::getValue));
+      final var generators_by_id = new TreeMap<Integer, NTGenerator>();
+      final var generators_by_name = new TreeMap<String, NTGenerator>();
+      for (final var entry : properties.entrySet()) {
+        final var index = Integer.parseInt(entry.getKey().toString());
+        final var name = entry.getValue().toString().trim();
+        final var generator = NTGenerator.of(NTGeneratorOperatorIndex.of(index), name);
+        generators_by_id.put(Integer.valueOf(index), generator);
+        generators_by_name.put(name, generator);
+      }
 
+      return new GeneratorSet(
+        Collections.unmodifiableSortedMap(generators_by_id),
+        Collections.unmodifiableSortedMap(generators_by_name));
     } catch (final IOException e) {
       throw new UncheckedIOException(e);
     }
@@ -73,9 +93,23 @@ public final class NTGenerators
 
   public static NTGenerator find(final int value)
   {
-    return GENERATORS.getOrDefault(
+    return GENERATORS.generators_by_id.getOrDefault(
       Integer.valueOf(value),
       NTGenerator.of(NTGeneratorOperatorIndex.of(value), "unknown"));
+  }
+
+  /**
+   * Find an operator with the given name.
+   *
+   * @param name The name
+   *
+   * @return The located operator
+   */
+
+  public static Optional<NTGenerator> findForName(final String name)
+  {
+    return Optional.ofNullable(
+      GENERATORS.generators_by_name.get(Objects.requireNonNull(name, "name")));
   }
 
   /**
@@ -84,6 +118,6 @@ public final class NTGenerators
 
   public static Map<Integer, NTGenerator> generators()
   {
-    return GENERATORS;
+    return GENERATORS.generators_by_id;
   }
 }
