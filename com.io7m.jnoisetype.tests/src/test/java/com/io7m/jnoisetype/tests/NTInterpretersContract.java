@@ -440,6 +440,57 @@ public abstract class NTInterpretersContract
   }
 
   /**
+   * @see "https://github.com/io7m/jnoisetype/issues/5"
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public final void testBug5()
+    throws Exception
+  {
+    try (var map = NamedMap.createFromResource("unbolted_min.sf2")) {
+      final var parser = this.parsers.createForByteBuffer(map.name.toUri(), map.map);
+      final var file = parser.parse();
+      final var interpreted = this.interpreters.createInterpreter(file).interpret();
+
+      Assertions.assertAll(
+        () -> {
+          Assertions.assertEquals(file.info(), interpreted.info(), "Correct info");
+        },
+
+        () -> {
+          Assertions.assertEquals(1, interpreted.instruments().size(), "Correct instruments");
+        },
+
+        () -> {
+          final var instrument = interpreted.instruments().get(0);
+          Assertions.assertEquals(17L, instrument.zones().size());
+
+          final var zone0 = instrument.zones().get(0);
+          Assertions.assertTrue(zone0.isGlobal());
+          Assertions.assertEquals(1, zone0.modulators().size());
+
+          final var modulator0 = zone0.modulators().get(0);
+          Assertions.assertEquals(20, modulator0.modulationAmount());
+          Assertions.assertEquals(0, modulator0.modulationAmountSourceOperator());
+          Assertions.assertEquals(14, modulator0.sourceOperator());
+          Assertions.assertEquals(51, modulator0.targetOperator().index().value());
+          Assertions.assertEquals(0, modulator0.modulationTransformOperator().index().value());
+        },
+
+        () -> {
+          Assertions.assertEquals(1, interpreted.presets().size(), "Correct presets");
+        },
+
+        () -> {
+          Assertions.assertEquals(16, interpreted.samples().size(), "Correct samples");
+        }
+      );
+    }
+  }
+
+  /**
    * Try various corrupted soundfonts.
    *
    * @return A list of tests

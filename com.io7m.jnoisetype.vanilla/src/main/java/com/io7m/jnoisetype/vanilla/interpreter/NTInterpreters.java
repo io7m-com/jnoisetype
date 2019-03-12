@@ -531,11 +531,9 @@ public final class NTInterpreters implements NTInterpreterProviderType
           Integer.valueOf(gen_range.interval()));
       }
 
-      if (gen_range.interval() >= 2) {
-        for (var gen_index = gen_range.lower(); gen_index < gen_range.upper(); ++gen_index) {
-          checkPresetZoneGeneratorIndex(preset, pgen, pgen_source, gen_index);
-          zone.addGenerator(interpretPresetZoneGenerator(zone, pgen.get(gen_index)));
-        }
+      for (var gen_index = gen_range.lower(); gen_index < gen_range.upper(); ++gen_index) {
+        checkPresetZoneGeneratorIndex(preset, pgen, pgen_source, gen_index);
+        zone.addGenerator(interpretPresetZoneGenerator(zone, pgen.get(gen_index)));
       }
 
       if (LOG.isTraceEnabled()) {
@@ -549,11 +547,9 @@ public final class NTInterpreters implements NTInterpreterProviderType
           Integer.valueOf(mod_range.interval()));
       }
 
-      if (mod_range.interval() >= 2) {
-        for (var mod_index = mod_range.lower(); mod_index < mod_range.upper(); ++mod_index) {
-          checkPresetZoneModulatorIndex(preset, pmod, pmod_source, mod_index);
-          zone.addModulator(interpretPresetZoneModulator(zone, pmod.get(mod_index)));
-        }
+      for (var mod_index = mod_range.lower(); mod_index < mod_range.upper(); ++mod_index) {
+        checkPresetZoneModulatorIndex(preset, pmod, pmod_source, mod_index);
+        zone.addModulator(interpretPresetZoneModulator(zone, pmod.get(mod_index)));
       }
 
       if (LOG.isTraceEnabled()) {
@@ -719,11 +715,9 @@ public final class NTInterpreters implements NTInterpreterProviderType
           Integer.valueOf(gen_range.interval()));
       }
 
-      if (gen_range.interval() >= 2) {
-        for (var gen_index = gen_range.lower(); gen_index < gen_range.upper(); ++gen_index) {
-          checkInstrumentZoneGeneratorIndex(instrument, igen, igen_source, gen_index);
-          zone.addGenerator(interpretInstrumentZoneGenerator(zone, igen.get(gen_index)));
-        }
+      for (var gen_index = gen_range.lower(); gen_index < gen_range.upper(); ++gen_index) {
+        checkInstrumentZoneGeneratorIndex(instrument, igen, igen_source, gen_index);
+        zone.addGenerator(interpretInstrumentZoneGenerator(zone, igen.get(gen_index)));
       }
 
       if (LOG.isTraceEnabled()) {
@@ -737,11 +731,9 @@ public final class NTInterpreters implements NTInterpreterProviderType
           Integer.valueOf(mod_range.interval()));
       }
 
-      if (mod_range.interval() >= 2) {
-        for (var mod_index = mod_range.lower(); mod_index < mod_range.upper(); ++mod_index) {
-          checkInstrumentZoneModulatorIndex(instrument, imod, imod_source, mod_index);
-          zone.addModulator(this.interpretInstrumentZoneModulator(zone, imod.get(mod_index)));
-        }
+      for (var mod_index = mod_range.lower(); mod_index < mod_range.upper(); ++mod_index) {
+        checkInstrumentZoneModulatorIndex(instrument, imod, imod_source, mod_index);
+        zone.addModulator(this.interpretInstrumentZoneModulator(zone, imod.get(mod_index)));
       }
 
       if (LOG.isTraceEnabled()) {
