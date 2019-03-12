@@ -17,7 +17,10 @@
 package com.io7m.jnoisetype.writer.api;
 
 import com.io7m.immutables.styles.ImmutablesStyleType;
+import com.io7m.jnoisetype.api.NTGenerator;
 import com.io7m.jnoisetype.api.NTModulatorIndex;
+import com.io7m.jnoisetype.api.NTNativeType;
+import com.io7m.jnoisetype.api.NTTransform;
 import org.immutables.value.Value;
 
 /**
@@ -33,4 +36,42 @@ public interface NTInstrumentWriterZoneModulatorDescriptionType
    */
 
   NTModulatorIndex index();
+
+  /**
+   * @return The source data for the modulator
+   */
+
+  @NTNativeType(name = "SFModulator")
+  int sourceOperator();
+
+  /**
+   * @return The destination of the modulator
+   */
+
+  @NTNativeType(name = "SFGenerator")
+  NTGenerator targetOperator();
+
+  /**
+   * @return The degree to which the source modulates the destination. A zero value indicates there
+   * is no fixed amount.
+   */
+
+  @NTNativeType(name = "short")
+  short modulationAmount();
+
+  /**
+   * @return The degree to which the source modulates the destination is to be controlled by the
+   * specified modulation source
+   */
+
+  @NTNativeType(name = "SFModulator")
+  int modulationAmountSourceOperator();
+
+  /**
+   * @return A value that indicates that a transform of the specified type will be applied to the
+   * modulation source before application to the modulator
+   */
+
+  @NTNativeType(name = "SFTransform")
+  NTTransform modulationTransformOperator();
 }

@@ -19,10 +19,12 @@ package com.io7m.jnoisetype.tests;
 import com.io7m.jnoisetype.api.NTFontType;
 import com.io7m.jnoisetype.api.NTGenerator;
 import com.io7m.jnoisetype.api.NTGeneratorOperatorIndex;
+import com.io7m.jnoisetype.api.NTGenerators;
 import com.io7m.jnoisetype.api.NTGenericAmount;
 import com.io7m.jnoisetype.api.NTInfo;
 import com.io7m.jnoisetype.api.NTLongString;
 import com.io7m.jnoisetype.api.NTShortString;
+import com.io7m.jnoisetype.api.NTTransforms;
 import com.io7m.jnoisetype.api.NTVersion;
 import com.io7m.jnoisetype.parser.api.NTFileParserProviderType;
 import com.io7m.jnoisetype.parser.api.NTInterpreterProviderType;
@@ -392,6 +394,144 @@ public abstract class NTWritersContract
 
     final var preset0 = builder.addPreset("preset0");
     final var preset_zone0 = preset0.addZone();
+
+    final var preset_zone1 =
+      preset0.addZone()
+        .addKeyRangeGenerator(0, 127)
+        .addInstrumentGenerator(instrument0);
+
+    final var description = builder.build();
+
+    try (var channel = FileChannel.open(path, CREATE, WRITE, TRUNCATE_EXISTING)) {
+      final var writer = this.writers.createForChannel(path.toUri(), description, channel);
+      writer.write();
+    }
+
+    final var parsed = this.parse(path);
+    compareFont(expected, parsed);
+  }
+
+  /**
+   * Attempt to reproduce the inst1_with_modulator specimen file.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public final void testInst1WithModulator()
+    throws Exception
+  {
+    final var path = Files.createTempFile("nt-writer-", ".sf2");
+    this.logger.debug("output: {}", path);
+    final var expected = this.parseResource("inst1_with_modulator.sf2", path.toUri());
+
+    final var builder = this.builders.createBuilder();
+
+    builder.setInfo(
+      NTInfo.builder()
+        .setName(NTShortString.of("Preset1"))
+        .setSoundEngine(NTShortString.of("EMU8000"))
+        .setVersion(NTVersion.of(2, 1))
+        .setEngineers(NTShortString.of("jnoisetype"))
+        .setProduct(NTShortString.of("jnoisetype product"))
+        .setCopyright(NTShortString.of("Public Domain"))
+        .setComment(NTLongString.of("A comment."))
+        .setSoftware(NTShortString.of("Polyphone"))
+        .build());
+
+    final var sample0 =
+      builder.addSample("000_60")
+        .setSampleCount(sizeOfWav("000_60.wav"))
+        .setSampleRate(22050)
+        .setLoopEnd(8269L)
+        .setDataWriter(channel -> copyWav("000_60.wav", channel));
+
+    final var instrument0 = builder.addInstrument("instrument0");
+    final var zone0 = instrument0.addZone();
+    zone0.addModulator(
+      14,
+      NTGenerators.findForName("coarseTune").get(),
+      (short) 20,
+      0,
+      NTTransforms.find(0));
+
+    final var zone1 =
+      instrument0.addZone()
+        .addKeyRangeGenerator(0, 127)
+        .addGenerator(NTGenerator.of(NTGeneratorOperatorIndex.of(17), "pan"), NTGenericAmount.of(0))
+        .addSampleGenerator(sample0);
+
+    final var preset0 = builder.addPreset("preset0");
+    final var preset_zone0 = preset0.addZone();
+
+    final var preset_zone1 =
+      preset0.addZone()
+        .addKeyRangeGenerator(0, 127)
+        .addInstrumentGenerator(instrument0);
+
+    final var description = builder.build();
+
+    try (var channel = FileChannel.open(path, CREATE, WRITE, TRUNCATE_EXISTING)) {
+      final var writer = this.writers.createForChannel(path.toUri(), description, channel);
+      writer.write();
+    }
+
+    final var parsed = this.parse(path);
+    compareFont(expected, parsed);
+  }
+
+  /**
+   * Attempt to reproduce the preset1_with_modulator specimen file.
+   *
+   * @throws Exception On errors
+   */
+
+  @Test
+  public final void testPreset1WithModulator()
+    throws Exception
+  {
+    final var path = Files.createTempFile("nt-writer-", ".sf2");
+    this.logger.debug("output: {}", path);
+    final var expected = this.parseResource("preset1_with_modulator.sf2", path.toUri());
+
+    final var builder = this.builders.createBuilder();
+
+    builder.setInfo(
+      NTInfo.builder()
+        .setName(NTShortString.of("Preset1"))
+        .setSoundEngine(NTShortString.of("EMU8000"))
+        .setVersion(NTVersion.of(2, 1))
+        .setEngineers(NTShortString.of("jnoisetype"))
+        .setProduct(NTShortString.of("jnoisetype product"))
+        .setCopyright(NTShortString.of("Public Domain"))
+        .setComment(NTLongString.of("A comment."))
+        .setSoftware(NTShortString.of("Polyphone"))
+        .build());
+
+    final var sample0 =
+      builder.addSample("000_60")
+        .setSampleCount(sizeOfWav("000_60.wav"))
+        .setSampleRate(22050)
+        .setLoopEnd(8269L)
+        .setDataWriter(channel -> copyWav("000_60.wav", channel));
+
+    final var instrument0 = builder.addInstrument("instrument0");
+    final var zone0 = instrument0.addZone();
+
+    final var zone1 =
+      instrument0.addZone()
+        .addKeyRangeGenerator(0, 127)
+        .addGenerator(NTGenerator.of(NTGeneratorOperatorIndex.of(17), "pan"), NTGenericAmount.of(0))
+        .addSampleGenerator(sample0);
+
+    final var preset0 = builder.addPreset("preset0");
+    final var preset_zone0 = preset0.addZone();
+    preset_zone0.addModulator(
+      14,
+      NTGenerators.findForName("coarseTune").get(),
+      (short) 20,
+      0,
+      NTTransforms.find(0));
 
     final var preset_zone1 =
       preset0.addZone()

@@ -31,6 +31,7 @@ import com.io7m.jnoisetype.api.NTSampleIndex;
 import com.io7m.jnoisetype.api.NTSampleKind;
 import com.io7m.jnoisetype.api.NTSampleName;
 import com.io7m.jnoisetype.api.NTShortString;
+import com.io7m.jnoisetype.api.NTTransform;
 import com.io7m.jnoisetype.api.NTVersion;
 import com.io7m.jnoisetype.writer.api.NTBuilderProviderType;
 import com.io7m.jnoisetype.writer.api.NTBuilderType;
@@ -208,6 +209,11 @@ public final class NTBuilders implements NTBuilderProviderType
             zone_builder.addModulators(
               NTInstrumentWriterZoneModulatorDescription.builder()
                 .setIndex(modulator.index)
+                .setModulationAmount(modulator.modulation_amount)
+                .setModulationAmountSourceOperator(modulator.modulation_amount_source_operator)
+                .setModulationTransformOperator(modulator.modulation_transform_operator)
+                .setSourceOperator(modulator.source_operator)
+                .setTargetOperator(modulator.target_operator)
                 .build());
           }
 
@@ -259,6 +265,11 @@ public final class NTBuilders implements NTBuilderProviderType
             zone_builder.addModulators(
               NTPresetWriterZoneModulatorDescription.builder()
                 .setIndex(modulator.index)
+                .setModulationAmount(modulator.modulation_amount)
+                .setModulationAmountSourceOperator(modulator.modulation_amount_source_operator)
+                .setModulationTransformOperator(modulator.modulation_transform_operator)
+                .setSourceOperator(modulator.source_operator)
+                .setTargetOperator(modulator.target_operator)
                 .build());
           }
 
@@ -567,11 +578,32 @@ public final class NTBuilders implements NTBuilderProviderType
   private static final class Modulator
   {
     private final NTModulatorIndex index;
+    private final int source_operator;
+    private final NTGenerator target_operator;
+    private final short modulation_amount;
+    private final int modulation_amount_source_operator;
+    private final NTTransform modulation_transform_operator;
 
     private Modulator(
-      final NTModulatorIndex in_index)
+      final NTModulatorIndex in_index,
+      final int in_source_operator,
+      final NTGenerator in_target_operator,
+      final short in_modulation_amount,
+      final int in_modulation_amount_source_operator,
+      final NTTransform in_modulation_transform_operator)
     {
-      this.index = Objects.requireNonNull(in_index, "index");
+      this.index =
+        Objects.requireNonNull(in_index, "index");
+      this.source_operator =
+        in_source_operator;
+      this.target_operator =
+        Objects.requireNonNull(in_target_operator, "target_operator");
+      this.modulation_amount =
+        in_modulation_amount;
+      this.modulation_amount_source_operator =
+        in_modulation_amount_source_operator;
+      this.modulation_transform_operator =
+        Objects.requireNonNull(in_modulation_transform_operator, "modulation_transform_operator");
     }
   }
 
@@ -606,6 +638,30 @@ public final class NTBuilders implements NTBuilderProviderType
       this.generators.put(gen.index, gen);
       return this;
     }
+
+    @Override
+    public NTInstrumentZoneBuilderType addModulator(
+      final int source_operator,
+      final NTGenerator target_operator,
+      final short modulation_amount,
+      final int modulation_amount_source_operator,
+      final NTTransform modulation_transform_operator)
+    {
+      Objects.requireNonNull(target_operator, "target_operator");
+      Objects.requireNonNull(modulation_transform_operator, "modulation_transform_operator");
+
+      final var mod =
+        new Modulator(
+          NTModulatorIndex.of(this.instrument_modulator_indices.getAndIncrement()),
+          source_operator,
+          target_operator,
+          modulation_amount,
+          modulation_amount_source_operator,
+          modulation_transform_operator);
+
+      this.modulators.put(mod.index, mod);
+      return this;
+    }
   }
 
   private static final class PresetZoneBuilder implements NTPresetZoneBuilderType
@@ -637,6 +693,30 @@ public final class NTBuilders implements NTBuilderProviderType
         generator,
         amount);
       this.generators.put(gen.index, gen);
+      return this;
+    }
+
+    @Override
+    public NTPresetZoneBuilderType addModulator(
+      final int source_operator,
+      final NTGenerator target_operator,
+      final short modulation_amount,
+      final int modulation_amount_source_operator,
+      final NTTransform modulation_transform_operator)
+    {
+      Objects.requireNonNull(target_operator, "target_operator");
+      Objects.requireNonNull(modulation_transform_operator, "modulation_transform_operator");
+
+      final var mod =
+        new Modulator(
+          NTModulatorIndex.of(this.preset_modulator_indices.getAndIncrement()),
+          source_operator,
+          target_operator,
+          modulation_amount,
+          modulation_amount_source_operator,
+          modulation_transform_operator);
+
+      this.modulators.put(mod.index, mod);
       return this;
     }
   }

@@ -19,6 +19,7 @@ package com.io7m.jnoisetype.writer.api;
 import com.io7m.jnoisetype.api.NTGenerator;
 import com.io7m.jnoisetype.api.NTGeneratorOperatorIndex;
 import com.io7m.jnoisetype.api.NTGenericAmount;
+import com.io7m.jnoisetype.api.NTTransform;
 
 /**
  * The type of instrument zone builders.
@@ -38,6 +39,25 @@ public interface NTInstrumentZoneBuilderType
   NTInstrumentZoneBuilderType addGenerator(
     NTGenerator generator,
     NTGenericAmount amount);
+
+  /**
+   * Add a modulator to the zone.
+   *
+   * @param source_operator                   The source operator
+   * @param target_operator                   The target operator
+   * @param modulation_amount                 The modulation amount
+   * @param modulation_amount_source_operator The source operator for the modulation amount
+   * @param modulation_transform_operator     The modulation transform operator
+   *
+   * @return The current zone builder
+   */
+
+  NTInstrumentZoneBuilderType addModulator(
+    int source_operator,
+    NTGenerator target_operator,
+    short modulation_amount,
+    int modulation_amount_source_operator,
+    NTTransform modulation_transform_operator);
 
   /**
    * Add a sample generator to the zone.

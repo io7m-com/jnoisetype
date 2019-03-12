@@ -214,6 +214,9 @@ public final class NTBruteForceEqualityTest
       if (return_type.equals(NTGenerator.class)) {
         return NTGenerator.of(NTGeneratorOperatorIndex.of(32), "what?");
       }
+      if (return_type.equals(NTTransform.class)) {
+        return NTTransform.of(NTTransformIndex.of(23), "something");
+      }
       if (return_type.equals(NTSampleDescription.class)) {
         return NTSampleDescription.builder()
           .setName(NTSampleName.of("xyz"))

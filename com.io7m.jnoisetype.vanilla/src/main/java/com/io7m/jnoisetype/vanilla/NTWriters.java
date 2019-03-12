@@ -27,8 +27,10 @@ import com.io7m.jnoisetype.api.NTShortString;
 import com.io7m.jnoisetype.api.NTVersion;
 import com.io7m.jnoisetype.writer.api.NTInstrumentWriterDescription;
 import com.io7m.jnoisetype.writer.api.NTInstrumentWriterZoneGeneratorDescription;
+import com.io7m.jnoisetype.writer.api.NTInstrumentWriterZoneModulatorDescription;
 import com.io7m.jnoisetype.writer.api.NTPresetWriterDescription;
 import com.io7m.jnoisetype.writer.api.NTPresetWriterZoneGeneratorDescription;
+import com.io7m.jnoisetype.writer.api.NTPresetWriterZoneModulatorDescription;
 import com.io7m.jnoisetype.writer.api.NTSampleWriterDescription;
 import com.io7m.jnoisetype.writer.api.NTWriteException;
 import com.io7m.jnoisetype.writer.api.NTWriterDescriptionType;
@@ -296,6 +298,60 @@ public final class NTWriters implements NTWriterProviderType
       checkAndFlipBuffer(buffer);
     }
 
+    private static void packPMODTerminalRecord(
+      final ByteBuffer buffer)
+    {
+      buffer.position(0);
+      buffer.putChar((char) 0);
+      buffer.putChar((char) 0);
+      buffer.putShort((short) 0);
+      buffer.putChar((char) 0);
+      buffer.putChar((char) 0);
+
+      checkAndFlipBuffer(buffer);
+    }
+
+    private static void packPMODRecord(
+      final ByteBuffer buffer,
+      final NTPresetWriterZoneModulatorDescription modulator)
+    {
+      buffer.position(0);
+      buffer.putChar((char) (modulator.sourceOperator() & 0xffff));
+      buffer.putChar(modulator.targetOperator().index().asUnsigned16());
+      buffer.putShort(modulator.modulationAmount());
+      buffer.putChar((char) (modulator.modulationAmountSourceOperator() & 0xffff));
+      buffer.putChar(modulator.modulationTransformOperator().index().asUnsigned16());
+
+      checkAndFlipBuffer(buffer);
+    }
+
+    private static void packIMODTerminalRecord(
+      final ByteBuffer buffer)
+    {
+      buffer.position(0);
+      buffer.putChar((char) 0);
+      buffer.putChar((char) 0);
+      buffer.putShort((short) 0);
+      buffer.putChar((char) 0);
+      buffer.putChar((char) 0);
+
+      checkAndFlipBuffer(buffer);
+    }
+
+    private static void packIMODRecord(
+      final ByteBuffer buffer,
+      final NTInstrumentWriterZoneModulatorDescription modulator)
+    {
+      buffer.position(0);
+      buffer.putChar((char) (modulator.sourceOperator() & 0xffff));
+      buffer.putChar(modulator.targetOperator().index().asUnsigned16());
+      buffer.putShort(modulator.modulationAmount());
+      buffer.putChar((char) (modulator.modulationAmountSourceOperator() & 0xffff));
+      buffer.putChar(modulator.modulationTransformOperator().index().asUnsigned16());
+
+      checkAndFlipBuffer(buffer);
+    }
+
     private static void packPGENTerminalRecord(
       final ByteBuffer buffer)
     {
@@ -345,6 +401,20 @@ public final class NTWriters implements NTWriterProviderType
       return generators;
     }
 
+    private static long countRequiredPresetModulatorRecords(
+      final SortedMap<NTPresetIndex, NTPresetWriterDescription> presets)
+    {
+      var modulators = 1L;
+      for (final var preset : presets.values()) {
+        for (final var zone : preset.zones()) {
+          for (final var ignored : zone.modulators()) {
+            ++modulators;
+          }
+        }
+      }
+      return modulators;
+    }
+
     private static long countRequiredInstrumentModulatorRecords(
       final SortedMap<NTInstrumentIndex, NTInstrumentWriterDescription> instruments)
     {
@@ -376,15 +446,13 @@ public final class NTWriters implements NTWriterProviderType
 
             for (final var zone : instrument.zones()) {
               for (final var modulator : zone.modulators()) {
-                buffer.position(0);
-                buffer.flip();
+                packIMODRecord(buffer, modulator);
                 w_channel.write(buffer);
               }
             }
           }
 
-          buffer.position(0);
-          buffer.flip();
+          packIMODTerminalRecord(buffer);
           w_channel.write(buffer);
         });
       }
@@ -550,13 +618,26 @@ public final class NTWriters implements NTWriterProviderType
       final NTWriterDescriptionType description,
       final RiffChunkBuilderType chunk)
     {
-      final var buffer =
-        ByteBuffer.allocate(10).order(LITTLE_ENDIAN);
+      final var buffer = ByteBuffer.allocate(10).order(LITTLE_ENDIAN);
+      final var presets = description.presets();
+      final var generators = countRequiredPresetModulatorRecords(presets);
 
       try (var pmod = chunk.addSubChunk(RiffChunkID.of("pmod"))) {
+        pmod.setSize(Math.multiplyExact(generators, 10));
         pmod.setDataWriter(w_channel -> {
 
-          buffer.position(0);
+          for (final var preset_index : presets.keySet()) {
+            final var preset = presets.get(preset_index);
+
+            for (final var zone : preset.zones()) {
+              for (final var modulator : zone.modulators()) {
+                packPMODRecord(buffer, modulator);
+                w_channel.write(buffer);
+              }
+            }
+          }
+
+          packPMODTerminalRecord(buffer);
           w_channel.write(buffer);
         });
       }
