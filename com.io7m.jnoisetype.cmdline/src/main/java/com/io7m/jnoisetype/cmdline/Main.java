@@ -50,13 +50,16 @@ public final class Main implements Runnable
 
     final var r = new CommandRoot();
     final var cmd_show = new CommandShow();
+    final var cmd_extract_samples = new CommandExtractSamples();
 
     this.commands = new HashMap<>(8);
     this.commands.put("show", cmd_show);
+    this.commands.put("extract-samples", cmd_extract_samples);
 
     this.commander = new JCommander(r);
     this.commander.setProgramName("jnoisetype");
     this.commander.addCommand("show", cmd_show);
+    this.commander.addCommand("extract-samples", cmd_extract_samples);
   }
 
   /**

@@ -26,6 +26,7 @@ module com.io7m.jnoisetype.cmdline
   requires com.io7m.junreachable.core;
   requires jcommander;
   requires org.slf4j;
+  requires java.desktop;
 
   opens com.io7m.jnoisetype.cmdline to jcommander;
 

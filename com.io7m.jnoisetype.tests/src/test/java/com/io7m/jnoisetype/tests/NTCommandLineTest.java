@@ -108,4 +108,144 @@ public final class NTCommandLineTest
     main.run();
     Assertions.assertEquals(0L, (long) main.exitCode(), "Succeeds");
   }
+
+  @Test
+  public void testMainExtractAll()
+    throws IOException
+  {
+    final var temp = createSF2();
+    final var output = Files.createTempDirectory("nt-extract-samples-");
+
+    final var main = new Main(new String[]{
+      "extract-samples",
+      "--file",
+      temp.toString(),
+      "--output-directory",
+      output.toString()
+    });
+
+    main.run();
+    Assertions.assertEquals(0L, (long) main.exitCode(), "Succeeds");
+
+    final var path0 = output.resolve("000_60.wav");
+    Assertions.assertTrue(Files.isRegularFile(path0));
+    Assertions.assertEquals(16584L, Files.size(path0));
+    Assertions.assertEquals("audio/x-wav", Files.probeContentType(path0));
+
+    final var path1 = output.resolve("002_60.wav");
+    Assertions.assertTrue(Files.isRegularFile(path1));
+    Assertions.assertEquals(16584L, Files.size(path1));
+    Assertions.assertEquals("audio/x-wav", Files.probeContentType(path1));
+  }
+
+  @Test
+  public void testMainExtractIncludeSome()
+    throws IOException
+  {
+    final var temp = createSF2();
+    final var output = Files.createTempDirectory("nt-extract-samples-");
+
+    final var main = new Main(new String[]{
+      "extract-samples",
+      "--pattern-include",
+      "^000_60$",
+      "--file",
+      temp.toString(),
+      "--output-directory",
+      output.toString()
+    });
+
+    main.run();
+    Assertions.assertEquals(0L, (long) main.exitCode(), "Succeeds");
+
+    final var path0 = output.resolve("000_60.wav");
+    Assertions.assertTrue(Files.isRegularFile(path0));
+    Assertions.assertEquals(16584L, Files.size(path0));
+    Assertions.assertEquals("audio/x-wav", Files.probeContentType(path0));
+
+    final var path1 = output.resolve("002_60.wav");
+    Assertions.assertFalse(Files.exists(path1));
+  }
+
+  @Test
+  public void testMainExtractIncludeNone()
+    throws IOException
+  {
+    final var temp = createSF2();
+    final var output = Files.createTempDirectory("nt-extract-samples-");
+
+    final var main = new Main(new String[]{
+      "extract-samples",
+      "--pattern-include",
+      "",
+      "--file",
+      temp.toString(),
+      "--output-directory",
+      output.toString()
+    });
+
+    main.run();
+    Assertions.assertEquals(0L, (long) main.exitCode(), "Succeeds");
+
+    final var path0 = output.resolve("000_60.wav");
+    Assertions.assertFalse(Files.exists(path0));
+    final var path1 = output.resolve("002_60.wav");
+    Assertions.assertFalse(Files.exists(path1));
+  }
+
+  @Test
+  public void testMainExtractExcludeSome()
+    throws IOException
+  {
+    final var temp = createSF2();
+    final var output = Files.createTempDirectory("nt-extract-samples-");
+
+    final var main = new Main(new String[]{
+      "extract-samples",
+      "--pattern-exclude",
+      "^000_60$",
+      "--file",
+      temp.toString(),
+      "--output-directory",
+      output.toString()
+    });
+
+    main.run();
+    Assertions.assertEquals(0L, (long) main.exitCode(), "Succeeds");
+
+    final var path0 = output.resolve("000_60.wav");
+    Assertions.assertFalse(Files.exists(path0));
+
+    final var path1 = output.resolve("002_60.wav");
+    Assertions.assertTrue(Files.isRegularFile(path1));
+    Assertions.assertEquals(16584L, Files.size(path1));
+    Assertions.assertEquals("audio/x-wav", Files.probeContentType(path1));
+  }
+
+  @Test
+  public void testMainExtractExcludeAll()
+    throws IOException
+  {
+    final var temp = createSF2();
+    final var output = Files.createTempDirectory("nt-extract-samples-");
+
+    final var main = new Main(new String[]{
+      "extract-samples",
+      "--pattern-exclude",
+      ".*",
+      "--file",
+      temp.toString(),
+      "--output-directory",
+      output.toString()
+    });
+
+    main.run();
+    Assertions.assertEquals(0L, (long) main.exitCode(), "Succeeds");
+
+    final var path0 = output.resolve("000_60.wav");
+    Assertions.assertFalse(Files.exists(path0));
+
+    final var path1 = output.resolve("002_60.wav");
+    Assertions.assertFalse(Files.exists(path1));
+  }
 }

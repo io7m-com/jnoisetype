@@ -171,11 +171,31 @@ try (var channel = FileChannel.open(path, CREATE, WRITE, TRUNCATE_EXISTING)) {
             Set the minimum logging verbosity level
             Default: info
             Possible Values: [trace, debug, info, warn, error]
+
+    extract-samples      Extract samples from a SoundFontⓡ file
+      Usage: extract-samples [options]
+        Options:
+        * --file
+            The SoundFontⓡ file to extract
+        * --output-directory
+            The directory that will contain extracted samples
+          --pattern-exclude
+            A regular expression matched against sample names. Matching names
+            will NOT be extracted. Exclusions are checked after inclusions.
+            Default: <empty string>
+          --pattern-include
+            A regular expression matched against sample names. Matching names
+            will be extracted if they are not subsequently excluded.
+            Default: .*
+          --verbose
+            Set the minimum logging verbosity level
+            Default: info
+            Possible Values: [trace, debug, info, warn, error]
 ]]></pre>
 
   <p>
-    Currently, the command-line tool only supports parsing and displaying a given
-    SoundFontⓡ file as text. It is primarily useful as a validation tool.
+    Currently, the command-line tool supports parsing and displaying a given
+    SoundFontⓡ file as text, and extracting samples from SoundFontⓡ files.
   </p>
 
   <h4>JavaDoc</h4>
