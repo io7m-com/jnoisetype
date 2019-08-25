@@ -9,7 +9,7 @@
   <parent>
     <groupId>com.io7m.primogenitor</groupId>
     <artifactId>com.io7m.primogenitor.full</artifactId>
-    <version>3.1.0</version>
+    <version>3.3.0</version>
   </parent>
 
   <groupId>com.io7m.jnoisetype</groupId>
@@ -189,6 +189,11 @@
         <groupId>net.jqwik</groupId>
         <artifactId>jqwik</artifactId>
         <version>1.1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.primogenitor</groupId>
+        <artifactId>com.io7m.primogenitor.support</artifactId>
+        <version>3.3.0</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
