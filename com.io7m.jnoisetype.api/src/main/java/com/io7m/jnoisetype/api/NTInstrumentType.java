@@ -25,6 +25,12 @@ import java.util.List;
 public interface NTInstrumentType extends NTFontMemberType, NTNamedType
 {
   /**
+   * @return The index of the instrument
+   */
+
+  NTInstrumentIndex index();
+
+  /**
    * @return The name of the instrument
    */
 

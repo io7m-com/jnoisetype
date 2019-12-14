@@ -16,12 +16,12 @@
 
 package com.io7m.jnoisetype.vanilla.interpreter;
 
-import com.io7m.jaffirm.core.Preconditions;
+import com.io7m.jnoisetype.api.NTBankIndex;
 import com.io7m.jnoisetype.api.NTFontType;
+import com.io7m.jnoisetype.api.NTPresetIndex;
 import com.io7m.jnoisetype.api.NTPresetName;
 import com.io7m.jnoisetype.api.NTPresetType;
 import com.io7m.jnoisetype.api.NTPresetZoneType;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,22 +31,20 @@ final class NTIPreset implements NTPresetType
 {
   private final NTPresetName name;
   private final NTFontType font;
-  private final int index;
+  private final NTBankIndex bank;
+  private final NTPresetIndex index;
   private final List<NTPresetZoneType> zones_read;
   private final List<NTIPresetZone> zones;
 
   NTIPreset(
     final NTFontType in_font,
-    final int preset_index,
+    final NTBankIndex in_bank,
+    final NTPresetIndex preset_index,
     final NTPresetName in_name)
   {
-    Preconditions.checkPreconditionI(
-      preset_index,
-      preset_index >= 0,
-      i -> "Index must be non-negative");
-
     this.font = Objects.requireNonNull(in_font, "font");
-    this.index = preset_index;
+    this.bank = Objects.requireNonNull(in_bank, "bank");
+    this.index = Objects.requireNonNull(preset_index, "preset_index");
     this.name = Objects.requireNonNull(in_name, "name");
     this.zones = new ArrayList<>();
     this.zones_read = Collections.unmodifiableList(this.zones);
@@ -61,16 +59,16 @@ final class NTIPreset implements NTPresetType
     if (o == null || !Objects.equals(this.getClass(), o.getClass())) {
       return false;
     }
-    final var preset = (NTIPreset) o;
-    return this.index == preset.index
-      && Objects.equals(this.name, preset.name)
-      && Objects.equals(this.zones, preset.zones);
+    final NTIPreset ntiPreset = (NTIPreset) o;
+    return this.name.equals(ntiPreset.name)
+      && this.bank.equals(ntiPreset.bank)
+      && this.index.equals(ntiPreset.index);
   }
 
   @Override
   public int hashCode()
   {
-    return Objects.hash(this.name, Integer.valueOf(this.index), this.zones);
+    return Objects.hash(this.name, this.bank, this.index);
   }
 
   @Override
@@ -78,12 +76,26 @@ final class NTIPreset implements NTPresetType
   {
     return new StringBuilder(64)
       .append("[Preset ")
-      .append(this.index)
+      .append(this.bank.value())
+      .append(' ')
+      .append(this.index.value())
       .append('\'')
       .append(this.name.value())
       .append('\'')
       .append("']")
       .toString();
+  }
+
+  @Override
+  public NTBankIndex bank()
+  {
+    return this.bank;
+  }
+
+  @Override
+  public NTPresetIndex index()
+  {
+    return this.index;
   }
 
   @Override

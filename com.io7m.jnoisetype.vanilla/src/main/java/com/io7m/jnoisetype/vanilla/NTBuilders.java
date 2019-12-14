@@ -16,6 +16,7 @@
 
 package com.io7m.jnoisetype.vanilla;
 
+import com.io7m.jnoisetype.api.NTBankIndex;
 import com.io7m.jnoisetype.api.NTGenerator;
 import com.io7m.jnoisetype.api.NTGeneratorIndex;
 import com.io7m.jnoisetype.api.NTGenericAmount;
@@ -26,7 +27,6 @@ import com.io7m.jnoisetype.api.NTModulatorIndex;
 import com.io7m.jnoisetype.api.NTPitch;
 import com.io7m.jnoisetype.api.NTPresetIndex;
 import com.io7m.jnoisetype.api.NTPresetName;
-import com.io7m.jnoisetype.api.NTRanges;
 import com.io7m.jnoisetype.api.NTSampleIndex;
 import com.io7m.jnoisetype.api.NTSampleKind;
 import com.io7m.jnoisetype.api.NTSampleName;
@@ -52,8 +52,6 @@ import com.io7m.jnoisetype.writer.api.NTSampleBuilderType;
 import com.io7m.jnoisetype.writer.api.NTSampleDataWriterType;
 import com.io7m.jnoisetype.writer.api.NTSampleWriterDescription;
 import com.io7m.jnoisetype.writer.api.NTWriterDescriptionType;
-import com.io7m.jranges.RangeCheck;
-
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Objects;
@@ -418,8 +416,10 @@ public final class NTBuilders implements NTBuilderProviderType
 
     @Override
     public NTPresetBuilderType addPreset(
+      final NTBankIndex bank,
       final NTPresetName name)
     {
+      Objects.requireNonNull(bank, "bank");
       Objects.requireNonNull(name, "name");
 
       if (this.presets.containsKey(name)) {
@@ -434,6 +434,7 @@ public final class NTBuilders implements NTBuilderProviderType
 
       final var builder =
         new PresetBuilder(
+          bank,
           this.preset_generator_indices,
           this.preset_modulator_indices,
           NTPresetIndex.of(this.presets.size()),
@@ -500,14 +501,17 @@ public final class NTBuilders implements NTBuilderProviderType
     private final NTPresetName name;
     private final LinkedList<PresetZoneBuilder> zones;
     private final NTPresetIndex index;
-    private int bank;
+    private NTBankIndex bank;
 
     private PresetBuilder(
+      final NTBankIndex inBank,
       final AtomicInteger in_preset_generator_indices,
       final AtomicInteger in_preset_modulator_indices,
       final NTPresetIndex in_index,
       final NTPresetName in_name)
     {
+      this.bank =
+        Objects.requireNonNull(inBank, "inBank");
       this.preset_generator_indices =
         Objects.requireNonNull(in_preset_generator_indices, "preset_generator_indices");
       this.preset_modulator_indices =
@@ -536,7 +540,7 @@ public final class NTBuilders implements NTBuilderProviderType
     }
 
     @Override
-    public int bank()
+    public NTBankIndex bank()
     {
       return this.bank;
     }
@@ -545,12 +549,7 @@ public final class NTBuilders implements NTBuilderProviderType
     public NTPresetBuilderType setBank(
       final int in_bank)
     {
-      this.bank =
-        RangeCheck.checkIncludedInInteger(
-          in_bank,
-          "Bank",
-          NTRanges.PRESET_INDEX_RANGE,
-          "Valid bank index ranges");
+      this.bank = NTBankIndex.of(in_bank);
       return this;
     }
   }

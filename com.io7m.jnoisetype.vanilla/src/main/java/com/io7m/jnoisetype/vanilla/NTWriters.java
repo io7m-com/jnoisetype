@@ -806,7 +806,7 @@ public final class NTWriters implements NTWriterProviderType
       buffer.position(0);
       buffer.put(buffer_name);
       buffer.putChar(preset.presetIndex().asUnsigned16());
-      buffer.putShort((short) preset.bank());
+      buffer.putChar(preset.bank().asUnsigned16());
       buffer.putShort((short) preset.presetBagIndex());
       buffer.putInt(0);
       buffer.putInt(0);

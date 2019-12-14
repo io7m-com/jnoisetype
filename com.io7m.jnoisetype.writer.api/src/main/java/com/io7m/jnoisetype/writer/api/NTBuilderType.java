@@ -16,6 +16,7 @@
 
 package com.io7m.jnoisetype.writer.api;
 
+import com.io7m.jnoisetype.api.NTBankIndex;
 import com.io7m.jnoisetype.api.NTInfo;
 import com.io7m.jnoisetype.api.NTInstrumentName;
 import com.io7m.jnoisetype.api.NTPresetName;
@@ -81,7 +82,8 @@ public interface NTBuilderType
    * @return A new instrument builder
    */
 
-  NTInstrumentBuilderType addInstrument(NTInstrumentName name);
+  NTInstrumentBuilderType addInstrument(
+    NTInstrumentName name);
 
   /**
    * Add a new instrument.
@@ -94,30 +96,36 @@ public interface NTBuilderType
   default NTInstrumentBuilderType addInstrument(
     final String name)
   {
-    return this.addInstrument(NTInstrumentName.of(name));
+    return this.addInstrument(
+      NTInstrumentName.of(name));
   }
 
   /**
    * Add a new preset.
    *
+   * @param bank The bank to which the preset belongs
    * @param name The preset name
    *
    * @return A new preset builder
    */
 
-  NTPresetBuilderType addPreset(NTPresetName name);
+  NTPresetBuilderType addPreset(
+    NTBankIndex bank,
+    NTPresetName name);
 
   /**
    * Add a new preset.
    *
+   * @param bank The bank to which the preset belongs
    * @param name The preset name
    *
    * @return A new preset builder
    */
 
   default NTPresetBuilderType addPreset(
+    final NTBankIndex bank,
     final String name)
   {
-    return this.addPreset(NTPresetName.of(name));
+    return this.addPreset(bank, NTPresetName.of(name));
   }
 }

@@ -16,35 +16,51 @@
 
 package com.io7m.jnoisetype.api;
 
-import java.util.List;
+import com.io7m.immutables.styles.ImmutablesStyleType;
+import com.io7m.jranges.RangeCheck;
+import org.immutables.value.Value;
 
 /**
- * The type of presets.
+ * The valid values for bank indices.
  */
 
-public interface NTPresetType extends NTFontMemberType, NTNamedType
+@ImmutablesStyleType
+@Value.Immutable
+public interface NTBankIndexType extends Comparable<NTBankIndexType>
 {
   /**
-   * @return The bank containing the preset
+   * @return The raw value in the range {@code [0, 0xffff]}
    */
 
-  NTBankIndex bank();
+  @Value.Parameter
+  int value();
 
   /**
-   * @return The index of the preset
+   * Check preconditions for the type.
    */
 
-  NTPresetIndex index();
+  @Value.Check
+  default void checkPreconditions()
+  {
+    RangeCheck.checkIncludedInInteger(
+      this.value(),
+      "Bank    index   value",
+      NTRanges.BANK_INDEX_RANGE,
+      "Valid bank index values");
+  }
 
   /**
-   * @return The name of the preset
+   * @return The value as an unsigned 16-bit integer
    */
 
-  NTPresetName name();
+  default char asUnsigned16()
+  {
+    return (char) this.value();
+  }
 
-  /**
-   * @return The preset zones
-   */
-
-  List<NTPresetZoneType> zones();
+  @Override
+  default int compareTo(final NTBankIndexType other)
+  {
+    return Integer.compareUnsigned(this.value(), other.value());
+  }
 }
