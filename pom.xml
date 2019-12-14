@@ -9,12 +9,12 @@
   <parent>
     <groupId>com.io7m.primogenitor</groupId>
     <artifactId>com.io7m.primogenitor.full</artifactId>
-    <version>3.3.0</version>
+    <version>3.5.0</version>
   </parent>
 
   <groupId>com.io7m.jnoisetype</groupId>
   <artifactId>com.io7m.jnoisetype</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>com.io7m.jnoisetype</name>
@@ -183,7 +183,7 @@
       <dependency>
         <groupId>nl.jqno.equalsverifier</groupId>
         <artifactId>equalsverifier</artifactId>
-        <version>3.1.4</version>
+        <version>3.1.10</version>
       </dependency>
       <dependency>
         <groupId>net.jqwik</groupId>
@@ -193,7 +193,7 @@
       <dependency>
         <groupId>com.io7m.primogenitor</groupId>
         <artifactId>com.io7m.primogenitor.support</artifactId>
-        <version>3.3.0</version>
+        <version>3.5.0</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

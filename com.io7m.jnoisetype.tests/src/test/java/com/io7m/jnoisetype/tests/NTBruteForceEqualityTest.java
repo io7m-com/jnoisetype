@@ -16,6 +16,7 @@
 
 package com.io7m.jnoisetype.tests;
 
+import com.io7m.jnoisetype.api.NTBankIndex;
 import com.io7m.jnoisetype.api.NTGenerator;
 import com.io7m.jnoisetype.api.NTGeneratorIndex;
 import com.io7m.jnoisetype.api.NTGeneratorOperatorIndex;
@@ -162,6 +163,9 @@ public final class NTBruteForceEqualityTest
       }
       if (return_type.equals(NTTransformIndex.class)) {
         return NTTransformIndex.of(23);
+      }
+      if (return_type.equals(NTBankIndex.class)) {
+        return NTBankIndex.of(67);
       }
       if (return_type.equals(NTSampleIndex.class)) {
         return NTSampleIndex.of(23);

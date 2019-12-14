@@ -17,6 +17,7 @@
 package com.io7m.jnoisetype.writer.api;
 
 import com.io7m.immutables.styles.ImmutablesStyleType;
+import com.io7m.jnoisetype.api.NTBankIndex;
 import com.io7m.jnoisetype.api.NTPresetIndex;
 import com.io7m.jnoisetype.api.NTPresetName;
 import com.io7m.jnoisetype.api.NTRanges;
@@ -43,7 +44,7 @@ public interface NTPresetWriterDescriptionType
    * @return The bank number
    */
 
-  int bank();
+  NTBankIndex bank();
 
   /**
    * @return The name of the preset

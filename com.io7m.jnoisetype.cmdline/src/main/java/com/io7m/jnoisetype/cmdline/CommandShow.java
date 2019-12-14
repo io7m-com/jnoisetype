@@ -88,25 +88,36 @@ final class CommandShow extends CommandRoot
     for (var index = 0; index < presets.size(); ++index) {
       final var preset = presets.get(index);
 
+      final var presetIndex =
+        Integer.toUnsignedString(preset.index().value());
+      final var bankIndex =
+        Integer.toUnsignedString(preset.bank().value());
+
       System.out.printf(
-        "preset %d %s : %s\n",
-        Integer.valueOf(index),
+        "preset %s %s %s : %s\n",
+        bankIndex,
+        presetIndex,
         "name",
         preset.name().value());
 
       System.out.printf(
-        "preset %d %s : %d\n",
-        Integer.valueOf(index),
+        "preset %s %s %s : %d\n",
+        bankIndex,
+        presetIndex,
         "zones",
         Integer.valueOf(preset.zones().size()));
 
       for (var zone_index = 0; zone_index < preset.zones().size(); ++zone_index) {
         final var zone = preset.zones().get(zone_index);
 
+        final String zoneIndex =
+          Integer.toUnsignedString(zone_index);
+
         System.out.printf(
-          "preset %d zone %d %s : %s\n",
-          Integer.valueOf(index),
-          Integer.valueOf(zone_index),
+          "preset %s %s zone %s %s : %s\n",
+          bankIndex,
+          presetIndex,
+          zoneIndex,
           "generators",
           Integer.valueOf(zone.generators().size()));
 
@@ -114,23 +125,26 @@ final class CommandShow extends CommandRoot
           final var generator = zone.generators().get(generator_index);
 
           System.out.printf(
-            "preset %d zone %d generator %d index : %d\n",
-            Integer.valueOf(index),
-            Integer.valueOf(zone_index),
+            "preset %s %s zone %s generator %d index : %d\n",
+            bankIndex,
+            presetIndex,
+            zoneIndex,
             Integer.valueOf(generator_index),
             Integer.valueOf(generator.generatorOperator().index().value()));
 
           System.out.printf(
-            "preset %d zone %d generator %d name : %s\n",
-            Integer.valueOf(index),
-            Integer.valueOf(zone_index),
+            "preset %s %s zone %s generator %d name : %s\n",
+            bankIndex,
+            presetIndex,
+            zoneIndex,
             Integer.valueOf(generator_index),
             generator.generatorOperator().name());
 
           System.out.printf(
-            "preset %d zone %d generator %d amount : %d | 0x%s | (0x%x, 0x%x)\n",
-            Integer.valueOf(index),
-            Integer.valueOf(zone_index),
+            "preset %s %s zone %s generator %d amount : %d | 0x%s | (0x%x, 0x%x)\n",
+            bankIndex,
+            presetIndex,
+            zoneIndex,
             Integer.valueOf(generator_index),
             Integer.valueOf(generator.amount().value()),
             Integer.toUnsignedString(generator.amount().asUnsigned16(), 16),
@@ -139,9 +153,10 @@ final class CommandShow extends CommandRoot
         }
 
         System.out.printf(
-          "preset %d zone %d %s : %s\n",
-          Integer.valueOf(index),
-          Integer.valueOf(zone_index),
+          "preset %s %s zone %s %s : %s\n",
+          bankIndex,
+          presetIndex,
+          zoneIndex,
           "modulators",
           Integer.valueOf(zone.modulators().size()));
 
@@ -149,41 +164,46 @@ final class CommandShow extends CommandRoot
           final var modulator = zone.modulators().get(modulator_index);
 
           System.out.printf(
-            "preset %d zone %d modulator %d source-operator : %d (0x%s)\n",
-            Integer.valueOf(index),
-            Integer.valueOf(zone_index),
+            "preset %s %s zone %s modulator %d source-operator : %d (0x%s)\n",
+            bankIndex,
+            presetIndex,
+            zoneIndex,
             Integer.valueOf(modulator_index),
             Integer.valueOf(modulator.sourceOperator()),
             Integer.toUnsignedString(modulator.sourceOperator(), 16));
 
           System.out.printf(
-            "preset %d zone %d modulator %d target-operator : %d (0x%s)\n",
-            Integer.valueOf(index),
-            Integer.valueOf(zone_index),
+            "preset %s %s zone %s modulator %d target-operator : %d (0x%s)\n",
+            bankIndex,
+            presetIndex,
+            zoneIndex,
             Integer.valueOf(modulator_index),
             Integer.valueOf(modulator.targetOperator().index().value()),
             Integer.toUnsignedString(modulator.targetOperator().index().value(), 16));
 
           System.out.printf(
-            "preset %d zone %d modulator %d amount : %d (0x%s)\n",
-            Integer.valueOf(index),
-            Integer.valueOf(zone_index),
+            "preset %s %s zone %s modulator %d amount : %d (0x%s)\n",
+            bankIndex,
+            presetIndex,
+            zoneIndex,
             Integer.valueOf(modulator_index),
             Integer.valueOf(modulator.modulationAmount()),
             Integer.toUnsignedString(modulator.modulationAmount(), 16));
 
           System.out.printf(
-            "preset %d zone %d modulator %d amount-source-operator : %d (0x%s)\n",
-            Integer.valueOf(index),
-            Integer.valueOf(zone_index),
+            "preset %s %s zone %s modulator %d amount-source-operator : %d (0x%s)\n",
+            bankIndex,
+            presetIndex,
+            zoneIndex,
             Integer.valueOf(modulator_index),
             Integer.valueOf(modulator.modulationAmountSourceOperator()),
             Integer.toUnsignedString(modulator.modulationAmountSourceOperator(), 16));
 
           System.out.printf(
-            "preset %d zone %d modulator %d transform-operator : %d (0x%s)\n",
-            Integer.valueOf(index),
-            Integer.valueOf(zone_index),
+            "preset %s %s zone %s modulator %d transform-operator : %d (0x%s)\n",
+            bankIndex,
+            presetIndex,
+            zoneIndex,
             Integer.valueOf(modulator_index),
             Integer.valueOf(modulator.modulationTransformOperator().index().value()),
             Integer.toUnsignedString(modulator.modulationTransformOperator().index().value(), 16));

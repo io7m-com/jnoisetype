@@ -16,10 +16,13 @@
 
 package com.io7m.jnoisetype.vanilla.interpreter;
 
+import com.io7m.jnoisetype.api.NTBankIndex;
 import com.io7m.jnoisetype.api.NTFontType;
 import com.io7m.jnoisetype.api.NTGenerators;
 import com.io7m.jnoisetype.api.NTGenericAmount;
+import com.io7m.jnoisetype.api.NTInstrumentIndex;
 import com.io7m.jnoisetype.api.NTNamedType;
+import com.io7m.jnoisetype.api.NTPresetIndex;
 import com.io7m.jnoisetype.api.NTPresetType;
 import com.io7m.jnoisetype.api.NTRanges;
 import com.io7m.jnoisetype.api.NTSource;
@@ -446,8 +449,16 @@ public final class NTInterpreters implements NTInterpreterProviderType
       final NTParsedPreset input_preset_next)
       throws NTParseException
     {
+      final var bankIndex =
+        NTBankIndex.of((int) (char) input_preset_curr.bank());
+      final NTPresetIndex presetIndex =
+        NTPresetIndex.of(preset_index);
+
       final var preset =
-        new NTIPreset(font, preset_index, input_preset_curr.name());
+        new NTIPreset(font,
+                      bankIndex,
+                      presetIndex,
+                      input_preset_curr.name());
 
       final var pbag = this.file.pbag();
       final var pbag_source = this.file.presetZoneRecordsSource();
@@ -631,7 +642,10 @@ public final class NTInterpreters implements NTInterpreterProviderType
       throws NTParseException
     {
       final var instrument =
-        new NTIIInstrument(font, instrument_index, input_instrument_curr.name());
+        new NTIIInstrument(
+          font,
+          NTInstrumentIndex.of(instrument_index),
+          input_instrument_curr.name());
 
       final var ibag = this.file.ibag();
       final var ibag_source = this.file.instrumentZoneRecordsSource();

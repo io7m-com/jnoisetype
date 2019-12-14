@@ -16,12 +16,11 @@
 
 package com.io7m.jnoisetype.vanilla.interpreter;
 
-import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.jnoisetype.api.NTFontType;
+import com.io7m.jnoisetype.api.NTInstrumentIndex;
 import com.io7m.jnoisetype.api.NTInstrumentName;
 import com.io7m.jnoisetype.api.NTInstrumentType;
 import com.io7m.jnoisetype.api.NTInstrumentZoneType;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,17 +32,15 @@ final class NTIIInstrument implements NTInstrumentType
   private final NTInstrumentName name;
   private final List<NTInstrumentZoneType> zones_read;
   private final List<NTIInstrumentZone> zones;
-  private final int index;
+  private final NTInstrumentIndex index;
 
   NTIIInstrument(
     final NTIFont in_font,
-    final int in_index,
+    final NTInstrumentIndex in_index,
     final NTInstrumentName in_name)
   {
-    Preconditions.checkPreconditionI(in_index, in_index >= 0, i -> "Index must be non-negative");
-
     this.font = Objects.requireNonNull(in_font, "font");
-    this.index = in_index;
+    this.index = Objects.requireNonNull(in_index, "index");
     this.name = Objects.requireNonNull(in_name, "name");
     this.zones = new ArrayList<>();
     this.zones_read = Collections.unmodifiableList(this.zones);
@@ -58,16 +55,14 @@ final class NTIIInstrument implements NTInstrumentType
     if (o == null || !Objects.equals(this.getClass(), o.getClass())) {
       return false;
     }
-    final var that = (NTIIInstrument) o;
-    return this.index == that.index
-      && Objects.equals(this.name, that.name)
-      && Objects.equals(this.zones, that.zones);
+    final NTIIInstrument that = (NTIIInstrument) o;
+    return this.name.equals(that.name) && this.index.equals(that.index);
   }
 
   @Override
   public int hashCode()
   {
-    return Objects.hash(this.name, this.zones, Integer.valueOf(this.index));
+    return Objects.hash(this.name, this.index);
   }
 
   @Override
@@ -87,6 +82,12 @@ final class NTIIInstrument implements NTInstrumentType
   public NTFontType font()
   {
     return this.font;
+  }
+
+  @Override
+  public NTInstrumentIndex index()
+  {
+    return this.index;
   }
 
   @Override

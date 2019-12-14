@@ -103,6 +103,13 @@ public final class NTRanges
     UNSIGNED_16_RANGE;
 
   /**
+   * The range of valid values for bank indices. Numbers are encoded as 16-bit unsigned integers.
+   */
+
+  public static final RangeInclusiveI BANK_INDEX_RANGE =
+    UNSIGNED_16_RANGE;
+
+  /**
    * The range of valid values for preset bag indices. Numbers are encoded as 16-bit unsigned
    * integers.
    */

@@ -16,6 +16,7 @@
 
 package com.io7m.jnoisetype.tests;
 
+import com.io7m.jnoisetype.api.NTBankIndex;
 import com.io7m.jnoisetype.api.NTFontType;
 import com.io7m.jnoisetype.api.NTGenerator;
 import com.io7m.jnoisetype.api.NTGeneratorOperatorIndex;
@@ -392,7 +393,7 @@ public abstract class NTWritersContract
         .addGenerator(NTGenerator.of(NTGeneratorOperatorIndex.of(17), "pan"), NTGenericAmount.of(0))
         .addSampleGenerator(sample0);
 
-    final var preset0 = builder.addPreset("preset0");
+    final var preset0 = builder.addPreset(NTBankIndex.of(0), "preset0");
     final var preset_zone0 = preset0.addZone();
 
     final var preset_zone1 =
@@ -461,7 +462,7 @@ public abstract class NTWritersContract
         .addGenerator(NTGenerator.of(NTGeneratorOperatorIndex.of(17), "pan"), NTGenericAmount.of(0))
         .addSampleGenerator(sample0);
 
-    final var preset0 = builder.addPreset("preset0");
+    final var preset0 = builder.addPreset(NTBankIndex.of(0), "preset0");
     final var preset_zone0 = preset0.addZone();
 
     final var preset_zone1 =
@@ -524,7 +525,7 @@ public abstract class NTWritersContract
         .addGenerator(NTGenerator.of(NTGeneratorOperatorIndex.of(17), "pan"), NTGenericAmount.of(0))
         .addSampleGenerator(sample0);
 
-    final var preset0 = builder.addPreset("preset0");
+    final var preset0 = builder.addPreset(NTBankIndex.of(0), "preset0");
     final var preset_zone0 = preset0.addZone();
     preset_zone0.addModulator(
       14,

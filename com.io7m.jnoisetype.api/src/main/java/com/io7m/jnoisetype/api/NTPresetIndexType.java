@@ -44,7 +44,7 @@ public interface NTPresetIndexType extends Comparable<NTPresetIndexType>
   {
     RangeCheck.checkIncludedInInteger(
       this.value(),
-      "Preset index value",
+      "Preset    index   value",
       NTRanges.PRESET_INDEX_RANGE,
       "Valid preset index values");
   }

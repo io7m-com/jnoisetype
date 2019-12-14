@@ -16,6 +16,7 @@
 
 package com.io7m.jnoisetype.writer.api;
 
+import com.io7m.jnoisetype.api.NTBankIndex;
 import com.io7m.jnoisetype.api.NTPresetName;
 
 /**
@@ -40,7 +41,7 @@ public interface NTPresetBuilderType
    * @return The bank of the preset being built
    */
 
-  int bank();
+  NTBankIndex bank();
 
   /**
    * Set the current bank.
