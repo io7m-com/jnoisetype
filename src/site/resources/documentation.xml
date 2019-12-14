@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<div xmlns="http://www.w3.org/1999/xhtml">
+  <h3>User documentation</h3>
+
+  <h4>Reading</h4>
+  <p>
+    Memory-map a SoundFontⓡ file and use a <i>parser</i> to
+    extract data from the file, and an <i>interpreter</i> to build
+    a useful model of the data:
+  </p>
+
+  <pre class="code"><![CDATA[final var parsers =
+  ServiceLoader.load(NTFileParserProviderType.class)
+    .findFirst()
+    .orElseThrow(() -> new IllegalStateException(
+      "No SoundFontⓡ file parser service available"));
+
+final var interpreters =
+  ServiceLoader.load(NTInterpreterProviderType.class)
+    .findFirst()
+    .orElseThrow(() -> new IllegalStateException(
+      "No SoundFontⓡ file interpreter service available"));
+
+try (var channel = FileChannel.open(this.path, READ)) {
+  final var map = channel.map(READ_ONLY, 0L, channel.size());
+  final var parser = parsers.createForByteBuffer(this.path.toUri(), map);
+  final var file_raw = parser.parse();
+  final var file = interpreters.createInterpreter(file_raw).interpret();
+  // Examine file.samples(), file.instruments(), and file.presets()
+}]]></pre>
+
+  <p>
+    The <tt>jnoisetype</tt> package is designed to be extremely
+    strict: Broken and invalid SoundFontⓡ files will be rejected
+    with detailed diagnostic messages (typically, the name of
+    the RIFF chunk containing the invalid data, the offset in
+    bytes of the error, and possibly a link to the section of
+    the specification that the input violated).
+  </p>
+
+  <p>
+    Using <tt>ServiceLoader</tt> is <i>not</i> required: The
+    various providers in the <tt>jnoisetype</tt> package can
+    be used via <tt>ServiceLoader</tt>, via OSGi declarative
+    services, or simply instantiated manually. See the JavaDoc.
+  </p>
+
+  <h4>Writing</h4>
+  <p>
+    Use a <i>builder</i> to construct a description of the file
+    to be written, and a <i>writer</i> to efficiently serialize
+    the description into the required binary SoundFontⓡ form:
+  </p>
+
+  <pre class="code"><![CDATA[final var builders =
+  ServiceLoader.load(NTBuilderProviderType.class)
+    .findFirst()
+    .orElseThrow(() -> new IllegalStateException(
+      "No SoundFontⓡ file builder service available"));
+
+final var writers =
+  ServiceLoader.load(NTWriterProviderType.class)
+    .findFirst()
+    .orElseThrow(() -> new IllegalStateException(
+      "No SoundFontⓡ file interpreter service available"));
+
+final var builder =
+  builders.createBuilder();
+
+// Set the various metadata used to describe the font.
+// Most fields are optional (see the JavaDoc and SoundFont specification).
+
+builder.setInfo(
+  NTInfo.builder()
+    .setName(NTShortString.of("Preset1"))
+    .setSoundEngine(NTShortString.of("EMU8000"))
+    .setVersion(NTVersion.of(2, 1))
+    .setEngineers(NTShortString.of("jnoisetype"))
+    .setProduct(NTShortString.of("jnoisetype product"))
+    .setCopyright(NTShortString.of("Public Domain"))
+    .setComment(NTLongString.of("A comment."))
+    .setSoftware(NTShortString.of("Polyphone"))
+    .build());
+
+// Add a sample to the font.
+// The sizeOfWav method is assumed to return the size of the audio file in samples.
+// The copyWav method is assumed to copy data from the audio file to the given SeekableByteChannel.
+//
+// The writer function is presented with an NIO seekable byte channel interface where position 0
+// on the channel represents the start of the data section in the audio. The jnoisetype package
+// will transparently add any zero-padding required by the SoundFontⓡ specification.
+
+final var sample0 =
+  builder.addSample("000_60")
+    .setSampleCount(sizeOfWav("000_60.wav"))
+    .setSampleRate(22050)
+    .setLoopEnd(8269L)
+    .setDataWriter(channel -> copyWav("000_60.wav", channel));
+
+// Create a new instrument.
+
+final var instrument0 =
+  builder.addInstrument("instrument0");
+
+// Create a zone for the instrument. As this is the first zone and contains
+// no generators or modulators, it is considered to be a "global" zone by
+// SoundFontⓡ interpreters.
+
+final var zone0 =
+  instrument0.addZone();
+
+// Create a zone containing a key range generator, a pan generator (panned to center),
+// and a sample generator that points to the audio file imported earlier.
+
+final var zone1 =
+  instrument0.addZone()
+    .addKeyRangeGenerator(0, 127)
+    .addGenerator(NTGenerator.of(NTGeneratorOperatorIndex.of(17), "pan"), NTGenericAmount.of(0))
+    .addSampleGenerator(sample0);
+
+// Create a new preset.
+
+final var preset0 =
+  builder.addPreset("preset0");
+
+// Create a new "global" zone for the preset, as with the instrument created earlier.
+
+final var preset_zone0 =
+  preset0.addZone();
+
+// Create a new zone with a key range generator and a link to the instrument created earlier.
+
+final var preset_zone1 =
+  preset0.addZone()
+    .addKeyRangeGenerator(0, 127)
+    .addInstrumentGenerator(instrument0);
+
+// Build an immutable description based on all of the information given above.
+
+final var description =
+  builder.build();
+
+// Create a new file and use a writer to serialize the builder description.
+// The writer functions specified in the description are called as the
+// file is serialized.
+
+try (var channel = FileChannel.open(path, CREATE, WRITE, TRUNCATE_EXISTING)) {
+  final var writer = this.writers.createForChannel(path.toUri(), description, channel);
+  writer.write();
+}]]></pre>
+
+  <h4>Command-line Tools</h4>
+  <p>
+    See the <tt>com.io7m.jnoisetype.cmdline-*-main.jar</tt>:
+  </p>
+
+  <pre class="code"><![CDATA[Usage: jnoisetype [options] [command] [command options]
+  Options:
+    --verbose
+      Set the minimum logging verbosity level
+      Default: info
+      Possible Values: [trace, debug, info, warn, error]
+  Commands:
+    show      Display the contents of a SoundFontⓡ file
+      Usage: show [options]
+        Options:
+        * --file
+            The SoundFontⓡ file to display
+          --verbose
+            Set the minimum logging verbosity level
+            Default: info
+            Possible Values: [trace, debug, info, warn, error]
+
+    extract-samples      Extract samples from a SoundFontⓡ file
+      Usage: extract-samples [options]
+        Options:
+        * --file
+            The SoundFontⓡ file to extract
+        * --output-directory
+            The directory that will contain extracted samples
+          --pattern-exclude
+            A regular expression matched against sample names. Matching names
+            will NOT be extracted. Exclusions are checked after inclusions.
+            Default: <empty string>
+          --pattern-include
+            A regular expression matched against sample names. Matching names
+            will be extracted if they are not subsequently excluded.
+            Default: .*
+          --verbose
+            Set the minimum logging verbosity level
+            Default: info
+            Possible Values: [trace, debug, info, warn, error]
+]]></pre>
+
+  <p>
+    Currently, the command-line tool supports parsing and displaying a given
+    SoundFontⓡ file as text, and extracting samples from SoundFontⓡ files.
+  </p>
+
+  <h4>JavaDoc</h4>
+  <p>
+    <a href="documentation/apidocs/index.html">API documentation</a>
+  </p>
+</div>
