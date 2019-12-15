@@ -40,6 +40,17 @@ public interface NTSampleDescriptionType extends NTNamedType
   }
 
   /**
+   * @return The sample to which this sample is linked
+   *
+   * @see "SoundFontⓡ Technical Specification 2.04, §7.10 The SHDR sub-chunk"
+   */
+
+  default NTSampleIndex linked()
+  {
+    return NTSampleIndex.of(0);
+  }
+
+  /**
    * @return The kind of the sample
    */
 

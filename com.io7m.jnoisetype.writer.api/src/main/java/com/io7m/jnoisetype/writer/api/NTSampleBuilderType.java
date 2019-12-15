@@ -88,6 +88,29 @@ public interface NTSampleBuilderType
   NTSampleBuilderType setKind(NTSampleKind kind);
 
   /**
+   * @return The sample to which this sample is linked
+   *
+   * @see "SoundFontⓡ Technical Specification 2.04, §7.10 The SHDR sub-chunk"
+   */
+
+  default NTSampleIndex linked()
+  {
+    return NTSampleIndex.of(0);
+  }
+
+  /**
+   * Set the sample to which this sample is linked
+   *
+   * @param index The sample index
+   *
+   * @return The current builder
+   *
+   * @see "SoundFontⓡ Technical Specification 2.04, §7.10 The SHDR sub-chunk"
+   */
+
+  NTSampleBuilderType setLinked(NTSampleIndex index);
+
+  /**
    * @return The current start point of the loop
    */
 

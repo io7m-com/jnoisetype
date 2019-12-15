@@ -18,6 +18,7 @@ package com.io7m.jnoisetype.writer.api;
 
 import com.io7m.immutables.styles.ImmutablesStyleType;
 import com.io7m.jnoisetype.api.NTPitch;
+import com.io7m.jnoisetype.api.NTSampleIndex;
 import com.io7m.jnoisetype.api.NTSampleKind;
 import com.io7m.jnoisetype.api.NTSampleName;
 import com.io7m.jranges.RangeCheck;
@@ -61,6 +62,18 @@ public interface NTSampleBuilderDescriptionType
    */
 
   NTSampleKind kind();
+
+  /**
+   * @return The sample to which this sample is linked
+   *
+   * @see "SoundFontⓡ Technical Specification 2.04, §7.10 The SHDR sub-chunk"
+   */
+
+  @Value.Default
+  default NTSampleIndex linked()
+  {
+    return NTSampleIndex.of(0);
+  }
 
   /**
    * @return The current start point of the loop

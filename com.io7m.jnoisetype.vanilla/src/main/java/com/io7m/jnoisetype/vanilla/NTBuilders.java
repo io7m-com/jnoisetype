@@ -724,6 +724,7 @@ public final class NTBuilders implements NTBuilderProviderType
   {
     private final NTSampleIndex index;
     private NTSampleBuilderDescription description;
+    private NTSampleIndex linked;
 
     private SampleBuilder(
       final NTSampleIndex in_index,
@@ -786,6 +787,13 @@ public final class NTBuilders implements NTBuilderProviderType
       final NTSampleKind in_kind)
     {
       this.description = this.description.withKind(in_kind);
+      return this;
+    }
+
+    @Override
+    public NTSampleBuilderType setLinked(final NTSampleIndex inIndex)
+    {
+      this.description = this.description.withLinked(inIndex);
       return this;
     }
 
