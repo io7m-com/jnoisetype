@@ -68,13 +68,15 @@ final class CommandExtractSamples extends CommandRoot
   @Parameter(
     names = "--pattern-include",
     required = false,
-    description = "A regular expression matched against sample names. Matching names will be extracted if they are not subsequently excluded.")
+    description = "A regular expression matched against sample names. " +
+      "Matching names will be extracted if they are not subsequently excluded.")
   String regex_include = ".*";
 
   @Parameter(
     names = "--pattern-exclude",
     required = false,
-    description = "A regular expression matched against sample names. Matching names will NOT be extracted. Exclusions are checked after inclusions.")
+    description = "A regular expression matched against sample names. " +
+      "Matching names will NOT be extracted. Exclusions are checked after inclusions.")
   String regex_exclude = "";
 
   // CHECKSTYLE:ON
