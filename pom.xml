@@ -34,10 +34,11 @@
   </modules>
 
   <properties>
-    <io7m.api.previousVersion>0.0.1</io7m.api.previousVersion>
+    <com.codacy.id>08f7f97bf2fa436086ce35b9a1a5a5b2</com.codacy.id>
     <com.io7m.immutables.style.version>0.0.1</com.io7m.immutables.style.version>
-    <org.immutables.value.version>2.7.5</org.immutables.value.version>
     <com.io7m.jspiel.version>0.0.3</com.io7m.jspiel.version>
+    <io7m.api.previousVersion>0.0.1</io7m.api.previousVersion>
+    <org.immutables.value.version>2.7.5</org.immutables.value.version>
   </properties>
 
   <licenses>

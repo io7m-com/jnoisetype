@@ -7,6 +7,5 @@ jnoisetype
 [![Codacy grade](https://img.shields.io/codacy/grade/08f7f97bf2fa436086ce35b9a1a5a5b2.png?style=flat-square)](https://www.codacy.com/app/github_79/jnoisetype)
 [![Codecov](https://img.shields.io/codecov/c/github/io7m/jnoisetype.png?style=flat-square)](https://codecov.io/gh/io7m/jnoisetype)
 
-See https://www.io7m.com/software/jnoisetype/ for more information.
-
 ![jnoisetype](./src/site/resources/jnoisetype.jpg?raw=true)
+
