@@ -8,10 +8,6 @@
          <img src="https://img.shields.io/maven-central/v/com.io7m.jnoisetype/com.io7m.jnoisetype.png?style=flat-square"
               alt="Maven Central"/>
       </a>
-      <a href="https://www.codacy.com/app/github_79/jnoisetype">
-         <img src="https://img.shields.io/codacy/grade/08f7f97bf2fa436086ce35b9a1a5a5b2.png?style=flat-square"
-              alt="Codacy"/>
-      </a>
       <a href="https://codecov.io/gh/io7m/jnoisetype">
          <img src="https://img.shields.io/codecov/c/github/io7m/jnoisetype.png?style=flat-square"
               alt="Codecov"/>
