@@ -564,7 +564,7 @@ public abstract class NTInterpretersContract
     final RiffFileWriterDescriptionType built)
     throws IOException, RiffWriteException, NTParseException
   {
-    final var path = Files.createTempFile("ntparsers-", ".sf2");
+    final var path = NTTestDirectories.createTempFile("ntparsers-", ".sf2");
     try (final var channel = FileChannel.open(path, READ, WRITE, CREATE, TRUNCATE_EXISTING)) {
       final var writer = writers.createForChannel(path.toUri(), built, channel);
       writer.write();
@@ -597,7 +597,7 @@ public abstract class NTInterpretersContract
     {
       final var resource_path = "/com/io7m/jnoisetype/tests/" + name;
       try (var input = NTInterpretersContract.class.getResourceAsStream(resource_path)) {
-        final var path = Files.createTempFile("ntparsers-", ".sf2");
+        final var path = NTTestDirectories.createTempFile("ntparsers-", ".sf2");
         try (var output = Files.newOutputStream(path, WRITE, TRUNCATE_EXISTING, CREATE)) {
           input.transferTo(output);
           output.flush();
