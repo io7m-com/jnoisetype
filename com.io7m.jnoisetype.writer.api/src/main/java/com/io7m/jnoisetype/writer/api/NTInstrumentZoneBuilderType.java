@@ -94,4 +94,24 @@ public interface NTInstrumentZoneBuilderType
       NTGenerator.of(NTGeneratorOperatorIndex.of(43), "keyRange"),
       NTGenericAmount.of(msb | lsb));
   }
+
+  /**
+   * Add a velocity range generator to the zone.
+   *
+   * @param low  The lower bound of the velocity range
+   * @param high The upper bound of the velocity range
+   *
+   * @return The current zone builder
+   */
+
+  default NTInstrumentZoneBuilderType addVelocityRangeGenerator(
+    final int low,
+    final int high)
+  {
+    final var msb = (high << 8);
+    final var lsb = low & 0xff;
+    return this.addGenerator(
+      NTGenerator.of(NTGeneratorOperatorIndex.of(44), "velRange"),
+      NTGenericAmount.of(msb | lsb));
+  }
 }
