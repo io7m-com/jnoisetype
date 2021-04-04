@@ -29,7 +29,7 @@ public final class NTCommandLineTest
   private static Path createSF2()
     throws IOException
   {
-    final var temp = Files.createTempFile("nt-cmdline-", ".sf2");
+    final var temp = NTTestDirectories.createTempFile("nt-cmdline-", ".sf2");
     try (var stream = NTCommandLineTest.class.getResourceAsStream(
       "/com/io7m/jnoisetype/tests/complex0.sf2")) {
       try (var output = Files.newOutputStream(temp)) {
@@ -114,7 +114,7 @@ public final class NTCommandLineTest
     throws IOException
   {
     final var temp = createSF2();
-    final var output = Files.createTempDirectory("nt-extract-samples-");
+    final var output = NTTestDirectories.createTempDirectory();
 
     final var main = new Main(new String[]{
       "extract-samples",
@@ -130,12 +130,14 @@ public final class NTCommandLineTest
     final var path0 = output.resolve("000_60.wav");
     Assertions.assertTrue(Files.isRegularFile(path0));
     Assertions.assertEquals(16584L, Files.size(path0));
-    Assertions.assertEquals("audio/x-wav", Files.probeContentType(path0));
+    Assertions.assertTrue(Files.probeContentType(path0).contains("audio"));
+    Assertions.assertTrue(Files.probeContentType(path0).contains("wav"));
 
     final var path1 = output.resolve("002_60.wav");
     Assertions.assertTrue(Files.isRegularFile(path1));
     Assertions.assertEquals(16584L, Files.size(path1));
-    Assertions.assertEquals("audio/x-wav", Files.probeContentType(path1));
+    Assertions.assertTrue(Files.probeContentType(path1).contains("audio"));
+    Assertions.assertTrue(Files.probeContentType(path1).contains("wav"));
   }
 
   @Test
@@ -143,7 +145,7 @@ public final class NTCommandLineTest
     throws IOException
   {
     final var temp = createSF2();
-    final var output = Files.createTempDirectory("nt-extract-samples-");
+    final var output = NTTestDirectories.createTempDirectory();
 
     final var main = new Main(new String[]{
       "extract-samples",
@@ -161,7 +163,8 @@ public final class NTCommandLineTest
     final var path0 = output.resolve("000_60.wav");
     Assertions.assertTrue(Files.isRegularFile(path0));
     Assertions.assertEquals(16584L, Files.size(path0));
-    Assertions.assertEquals("audio/x-wav", Files.probeContentType(path0));
+    Assertions.assertTrue(Files.probeContentType(path0).contains("audio"));
+    Assertions.assertTrue(Files.probeContentType(path0).contains("wav"));
 
     final var path1 = output.resolve("002_60.wav");
     Assertions.assertFalse(Files.exists(path1));
@@ -172,7 +175,7 @@ public final class NTCommandLineTest
     throws IOException
   {
     final var temp = createSF2();
-    final var output = Files.createTempDirectory("nt-extract-samples-");
+    final var output = NTTestDirectories.createTempDirectory();
 
     final var main = new Main(new String[]{
       "extract-samples",
@@ -198,7 +201,7 @@ public final class NTCommandLineTest
     throws IOException
   {
     final var temp = createSF2();
-    final var output = Files.createTempDirectory("nt-extract-samples-");
+    final var output = NTTestDirectories.createTempDirectory();
 
     final var main = new Main(new String[]{
       "extract-samples",
@@ -219,7 +222,8 @@ public final class NTCommandLineTest
     final var path1 = output.resolve("002_60.wav");
     Assertions.assertTrue(Files.isRegularFile(path1));
     Assertions.assertEquals(16584L, Files.size(path1));
-    Assertions.assertEquals("audio/x-wav", Files.probeContentType(path1));
+    Assertions.assertTrue(Files.probeContentType(path1).contains("audio"));
+    Assertions.assertTrue(Files.probeContentType(path1).contains("wav"));
   }
 
   @Test
@@ -227,7 +231,7 @@ public final class NTCommandLineTest
     throws IOException
   {
     final var temp = createSF2();
-    final var output = Files.createTempDirectory("nt-extract-samples-");
+    final var output = NTTestDirectories.createTempDirectory();
 
     final var main = new Main(new String[]{
       "extract-samples",

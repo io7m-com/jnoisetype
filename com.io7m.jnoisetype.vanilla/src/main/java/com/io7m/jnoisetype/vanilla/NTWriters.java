@@ -728,7 +728,7 @@ public final class NTWriters implements NTWriterProviderType
       buffer.putInt(description.sampleRate());
       buffer.put((byte) description.originalPitch().value());
       buffer.put((byte) description.pitchCorrection());
-      buffer.putShort((short) 0);
+      buffer.putChar(description.linked().asUnsigned16());
       buffer.putShort((short) description.kind().value());
 
       checkAndFlipBuffer(buffer);

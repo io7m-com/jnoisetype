@@ -222,7 +222,7 @@ public abstract class NTWritersContract
   public final void testEmpty()
     throws Exception
   {
-    final var path = Files.createTempFile("nt-writer-", ".sf2");
+    final var path = NTTestDirectories.createTempFile("nt-writer-", ".sf2");
     this.logger.debug("output: {}", path);
     final var expected = this.parseResource("empty.sf2", path.toUri());
 
@@ -262,7 +262,7 @@ public abstract class NTWritersContract
   public final void testSample0()
     throws Exception
   {
-    final var path = Files.createTempFile("nt-writer-", ".sf2");
+    final var path = NTTestDirectories.createTempFile("nt-writer-", ".sf2");
     this.logger.debug("output: {}", path);
     final var expected = this.parseResource("sample0.sf2", path.toUri());
 
@@ -306,7 +306,7 @@ public abstract class NTWritersContract
   public final void testInst1()
     throws Exception
   {
-    final var path = Files.createTempFile("nt-writer-", ".sf2");
+    final var path = NTTestDirectories.createTempFile("nt-writer-", ".sf2");
     this.logger.debug("output: {}", path);
     final var expected = this.parseResource("inst1.sf2", path.toUri());
 
@@ -359,7 +359,7 @@ public abstract class NTWritersContract
   public final void testPreset1()
     throws Exception
   {
-    final var path = Files.createTempFile("nt-writer-", ".sf2");
+    final var path = NTTestDirectories.createTempFile("nt-writer-", ".sf2");
     this.logger.debug("output: {}", path);
     final var expected = this.parseResource("preset1.sf2", path.toUri());
 
@@ -422,7 +422,7 @@ public abstract class NTWritersContract
   public final void testInst1WithModulator()
     throws Exception
   {
-    final var path = Files.createTempFile("nt-writer-", ".sf2");
+    final var path = NTTestDirectories.createTempFile("nt-writer-", ".sf2");
     this.logger.debug("output: {}", path);
     final var expected = this.parseResource("inst1_with_modulator.sf2", path.toUri());
 
@@ -491,7 +491,7 @@ public abstract class NTWritersContract
   public final void testPreset1WithModulator()
     throws Exception
   {
-    final var path = Files.createTempFile("nt-writer-", ".sf2");
+    final var path = NTTestDirectories.createTempFile("nt-writer-", ".sf2");
     this.logger.debug("output: {}", path);
     final var expected = this.parseResource("preset1_with_modulator.sf2", path.toUri());
 
@@ -569,7 +569,7 @@ public abstract class NTWritersContract
     final var url = resourcePath(name);
 
     try (var input = url.openStream()) {
-      final var path = Files.createTempFile("ntparsers-", ".sf2");
+      final var path = NTTestDirectories.createTempFile("ntparsers-", ".sf2");
       try (var output = Files.newOutputStream(path, WRITE, TRUNCATE_EXISTING, CREATE)) {
         input.transferTo(output);
         output.flush();
