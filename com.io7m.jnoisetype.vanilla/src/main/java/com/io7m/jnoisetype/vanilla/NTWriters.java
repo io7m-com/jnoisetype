@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.SortedMap;
 
@@ -148,12 +149,20 @@ public final class NTWriters implements NTWriterProviderType
       final var padding = ByteBuffer.allocate(46 * 2);
 
       try (var smpl = chunk.addSubChunk(RiffChunkID.of("smpl"))) {
-        final var samples = description.samples();
+        final var sampleDescriptions =
+          new ArrayList<>(description.samples().values());
+
+        sampleDescriptions.sort((o1, o2) -> {
+          return Long.compareUnsigned(
+            o1.sampleAbsoluteStart(),
+            o2.sampleAbsoluteStart());
+        });
 
         smpl.setDataWriter(w_channel -> {
-          for (final var sample_index : samples.keySet()) {
-            final var sample = samples.get(sample_index);
-            sample.description().dataWriter().write(w_channel);
+          for (final var sampleDescription : sampleDescriptions) {
+            sampleDescription.description()
+              .dataWriter()
+              .write(w_channel);
 
             padding.position(0);
             w_channel.write(padding);
