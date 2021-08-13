@@ -793,9 +793,8 @@ public abstract class NTInterpretersContract
 
     try {
       final var corrupted_map = corruptMap(this.logger, map, seed);
-      final var parser = this.parsers.createForByteBuffer(
-        map.name.toUri(),
-        corrupted_map);
+      final var parser =
+        this.parsers.createForByteBuffer(map.name.toUri(), corrupted_map);
       final var file = parser.parse();
       this.interpreters.createInterpreter(file).interpret();
     } catch (final NTParseException e) {
@@ -803,7 +802,17 @@ public abstract class NTInterpretersContract
     } catch (final RuntimeException e) {
       Assertions.fail(e);
     } finally {
-      Files.delete(map.name);
+      try {
+        try {
+          map.close();
+        } catch (final IOException e) {
+          // This can happen on Windows
+        }
+
+        Files.delete(map.name);
+      } catch (final IOException e) {
+        // This can happen on Windows
+      }
     }
   }
 
