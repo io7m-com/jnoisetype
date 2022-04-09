@@ -8,7 +8,7 @@
   <parent>
     <artifactId>com.io7m.jnoisetype</artifactId>
     <groupId>com.io7m.jnoisetype</groupId>
-    <version>0.0.4</version>
+    <version>0.0.5</version>
   </parent>
 
   <artifactId>com.io7m.jnoisetype.cmdline</artifactId>
@@ -16,7 +16,7 @@
 
   <name>com.io7m.jnoisetype.cmdline</name>
   <description>Soundfont manipulation (Command-line tools)</description>
-  <url>http://github.com/io7m/jnoisetype</url>
+  <url>https://www.io7m.com/software/jnoisetype</url>
 
   <dependencies>
     <dependency>

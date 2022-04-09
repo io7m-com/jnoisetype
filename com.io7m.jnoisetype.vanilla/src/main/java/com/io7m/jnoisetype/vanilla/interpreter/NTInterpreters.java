@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019 Mark Raynsford <code@io7m.com> http://io7m.com
+ * Copyright © 2019 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -94,6 +94,15 @@ public final class NTInterpreters implements NTInterpreterProviderType
     return new Interpreter(Objects.requireNonNull(file, "file"));
   }
 
+  private static boolean isNamedTerminalRecord(
+    final int index,
+    final int count,
+    final NTNamedType named,
+    final String name)
+  {
+    return index + 1 == count && Objects.equals(named.nameText(), name);
+  }
+
   private static final class Interpreter implements NTInterpreterType
   {
     private final NTParsedFile file;
@@ -102,15 +111,6 @@ public final class NTInterpreters implements NTInterpreterProviderType
       final NTParsedFile in_file)
     {
       this.file = Objects.requireNonNull(in_file, "file");
-    }
-
-    private static boolean isNamedTerminalRecord(
-      final int index,
-      final int count,
-      final NTNamedType record,
-      final String name)
-    {
-      return index + 1 == count && Objects.equals(record.nameText(), name);
     }
 
     private static NTISample interpretSample(
@@ -433,12 +433,20 @@ public final class NTInterpreters implements NTInterpreterProviderType
 
       for (var preset_index = 0; preset_index < phdr.size(); ++preset_index) {
         final var input_curr = phdr.get(preset_index);
-        if (isNamedTerminalRecord(preset_index, phdr.size(), input_curr, "EOP")) {
+        if (isNamedTerminalRecord(
+          preset_index,
+          phdr.size(),
+          input_curr,
+          "EOP")) {
           break;
         }
 
         final var input_next = phdr.get(preset_index + 1);
-        font.addPreset(this.interpretPreset(font, preset_index, input_curr, input_next));
+        font.addPreset(this.interpretPreset(
+          font,
+          preset_index,
+          input_curr,
+          input_next));
       }
     }
 
@@ -455,10 +463,11 @@ public final class NTInterpreters implements NTInterpreterProviderType
         NTPresetIndex.of(preset_index);
 
       final var preset =
-        new NTIPreset(font,
-                      bankIndex,
-                      presetIndex,
-                      input_preset_curr.name());
+        new NTIPreset(
+          font,
+          bankIndex,
+          presetIndex,
+          input_preset_curr.name());
 
       final var pbag = this.file.pbag();
       final var pbag_source = this.file.presetZoneRecordsSource();
@@ -544,7 +553,9 @@ public final class NTInterpreters implements NTInterpreterProviderType
 
       for (var gen_index = gen_range.lower(); gen_index < gen_range.upper(); ++gen_index) {
         checkPresetZoneGeneratorIndex(preset, pgen, pgen_source, gen_index);
-        zone.addGenerator(interpretPresetZoneGenerator(zone, pgen.get(gen_index)));
+        zone.addGenerator(interpretPresetZoneGenerator(
+          zone,
+          pgen.get(gen_index)));
       }
 
       if (LOG.isTraceEnabled()) {
@@ -560,7 +571,9 @@ public final class NTInterpreters implements NTInterpreterProviderType
 
       for (var mod_index = mod_range.lower(); mod_index < mod_range.upper(); ++mod_index) {
         checkPresetZoneModulatorIndex(preset, pmod, pmod_source, mod_index);
-        zone.addModulator(interpretPresetZoneModulator(zone, pmod.get(mod_index)));
+        zone.addModulator(interpretPresetZoneModulator(
+          zone,
+          pmod.get(mod_index)));
       }
 
       if (LOG.isTraceEnabled()) {
@@ -630,7 +643,11 @@ public final class NTInterpreters implements NTInterpreterProviderType
         }
 
         final var input_next = inst.get(index + 1);
-        font.addInstrument(this.interpretInstrument(font, index, input_curr, input_next));
+        font.addInstrument(this.interpretInstrument(
+          font,
+          index,
+          input_curr,
+          input_next));
       }
     }
 
@@ -676,9 +693,17 @@ public final class NTInterpreters implements NTInterpreterProviderType
       }
 
       for (var zone_index = zone_range.lower(); zone_index < zone_range.upper(); ++zone_index) {
-        checkInstrumentZoneIndex(instrument_index, ibag, ibag_source, zone_index);
+        checkInstrumentZoneIndex(
+          instrument_index,
+          ibag,
+          ibag_source,
+          zone_index);
         final var zone_curr = ibag.get(zone_index);
-        checkInstrumentZoneIndex(instrument_index, ibag, ibag_source, zone_index + 1);
+        checkInstrumentZoneIndex(
+          instrument_index,
+          ibag,
+          ibag_source,
+          zone_index + 1);
         final var zone_next = ibag.get(zone_index + 1);
 
         instrument.addZone(
@@ -714,9 +739,17 @@ public final class NTInterpreters implements NTInterpreterProviderType
       final var zone =
         new NTIInstrumentZone(instrument, zone_index - zone_lower);
       final var gen_range =
-        makeInstrumentZoneGeneratorRange(instrument, zone_curr, zone_next, igen_source);
+        makeInstrumentZoneGeneratorRange(
+          instrument,
+          zone_curr,
+          zone_next,
+          igen_source);
       final var mod_range =
-        makeInstrumentZoneModulatorRange(instrument, zone_curr, zone_next, imod_source);
+        makeInstrumentZoneModulatorRange(
+          instrument,
+          zone_curr,
+          zone_next,
+          imod_source);
 
       if (LOG.isTraceEnabled()) {
         LOG.trace(
@@ -730,8 +763,14 @@ public final class NTInterpreters implements NTInterpreterProviderType
       }
 
       for (var gen_index = gen_range.lower(); gen_index < gen_range.upper(); ++gen_index) {
-        checkInstrumentZoneGeneratorIndex(instrument, igen, igen_source, gen_index);
-        zone.addGenerator(interpretInstrumentZoneGenerator(zone, igen.get(gen_index)));
+        checkInstrumentZoneGeneratorIndex(
+          instrument,
+          igen,
+          igen_source,
+          gen_index);
+        zone.addGenerator(interpretInstrumentZoneGenerator(
+          zone,
+          igen.get(gen_index)));
       }
 
       if (LOG.isTraceEnabled()) {
@@ -746,8 +785,14 @@ public final class NTInterpreters implements NTInterpreterProviderType
       }
 
       for (var mod_index = mod_range.lower(); mod_index < mod_range.upper(); ++mod_index) {
-        checkInstrumentZoneModulatorIndex(instrument, imod, imod_source, mod_index);
-        zone.addModulator(this.interpretInstrumentZoneModulator(zone, imod.get(mod_index)));
+        checkInstrumentZoneModulatorIndex(
+          instrument,
+          imod,
+          imod_source,
+          mod_index);
+        zone.addModulator(this.interpretInstrumentZoneModulator(
+          zone,
+          imod.get(mod_index)));
       }
 
       if (LOG.isTraceEnabled()) {
@@ -800,7 +845,11 @@ public final class NTInterpreters implements NTInterpreterProviderType
 
       for (var sample_index = 0; sample_index < samples.size(); ++sample_index) {
         final var input_sample = samples.get(sample_index);
-        if (isNamedTerminalRecord(sample_index, samples.size(), input_sample, "EOS")) {
+        if (isNamedTerminalRecord(
+          sample_index,
+          samples.size(),
+          input_sample,
+          "EOS")) {
           break;
         }
 

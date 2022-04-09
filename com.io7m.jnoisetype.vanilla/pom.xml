@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -8,7 +9,7 @@
   <parent>
     <artifactId>com.io7m.jnoisetype</artifactId>
     <groupId>com.io7m.jnoisetype</groupId>
-    <version>0.0.4</version>
+    <version>0.0.5</version>
   </parent>
 
   <artifactId>com.io7m.jnoisetype.vanilla</artifactId>
@@ -16,7 +17,7 @@
 
   <name>com.io7m.jnoisetype.vanilla</name>
   <description>Soundfont manipulation (Vanilla implementation)</description>
-  <url>http://github.com/io7m/jnoisetype</url>
+  <url>https://www.io7m.com/software/jnoisetype</url>
 
   <dependencies>
     <dependency>
@@ -59,18 +60,14 @@
     </dependency>
     <dependency>
       <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.annotation.versioning</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
       <artifactId>org.osgi.service.component.annotations</artifactId>
       <scope>provided</scope>
     </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </build>
 
 </project>

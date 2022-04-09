@@ -8,7 +8,7 @@
   <parent>
     <artifactId>com.io7m.jnoisetype</artifactId>
     <groupId>com.io7m.jnoisetype</groupId>
-    <version>0.0.4</version>
+    <version>0.0.5</version>
   </parent>
 
   <artifactId>com.io7m.jnoisetype.tests</artifactId>
@@ -16,7 +16,7 @@
 
   <name>com.io7m.jnoisetype.tests</name>
   <description>Soundfont manipulation (Unit tests)</description>
-  <url>http://github.com/io7m/jnoisetype</url>
+  <url>https://www.io7m.com/software/jnoisetype</url>
 
   <properties>
     <mdep.analyze.skip>true</mdep.analyze.skip>
@@ -67,6 +67,10 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-launcher</artifactId>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
