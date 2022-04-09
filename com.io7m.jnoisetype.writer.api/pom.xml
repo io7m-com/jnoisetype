@@ -16,7 +16,7 @@
 
   <name>com.io7m.jnoisetype.writer.api</name>
   <description>Soundfont manipulation (Writer API)</description>
-  <url>https://github.com/io7m/jnoisetype</url>
+  <url>https://www.io7m.com/software/jnoisetype</url>
 
   <dependencies>
     <dependency>

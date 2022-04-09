@@ -16,7 +16,7 @@
 
   <name>com.io7m.jnoisetype.tests</name>
   <description>Soundfont manipulation (Unit tests)</description>
-  <url>https://github.com/io7m/jnoisetype</url>
+  <url>https://www.io7m.com/software/jnoisetype</url>
 
   <properties>
     <mdep.analyze.skip>true</mdep.analyze.skip>
