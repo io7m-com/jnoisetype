@@ -134,7 +134,7 @@
       <dependency>
         <groupId>com.io7m.jranges</groupId>
         <artifactId>com.io7m.jranges.core</artifactId>
-        <version>4.0.0</version>
+        <version>5.0.0</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.jintegers</groupId>
