@@ -686,7 +686,7 @@ public abstract class NTInterpretersContract
 
   /**
    * @throws Exception On errors
-   * @see "https://github.com/io7m/jnoisetype/issues/5"
+   * @see "https://www.github.com/io7m-com/jnoisetype/issues/5"
    */
 
   @Test

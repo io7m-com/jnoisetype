@@ -50,9 +50,9 @@
   </licenses>
 
   <scm>
-    <url>https://github.com/io7m/jnoisetype</url>
-    <connection>scm:git:https://github.com/io7m/jnoisetype</connection>
-    <developerConnection>scm:git:https://github.com/io7m/jnoisetype</developerConnection>
+    <url>https://www.github.com/io7m-com/jnoisetype</url>
+    <connection>scm:git:https://www.github.com/io7m-com/jnoisetype</connection>
+    <developerConnection>scm:git:https://www.github.com/io7m-com/jnoisetype</developerConnection>
   </scm>
 
   <developers>
@@ -65,7 +65,7 @@
   </developers>
 
   <issueManagement>
-    <url>https://github.com/io7m/jnoisetype/issues</url>
+    <url>https://www.github.com/io7m-com/jnoisetype/issues</url>
     <system>GitHub Issues</system>
   </issueManagement>
 
