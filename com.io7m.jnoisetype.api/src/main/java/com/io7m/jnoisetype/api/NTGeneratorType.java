@@ -20,7 +20,7 @@ import com.io7m.immutables.styles.ImmutablesStyleType;
 import org.immutables.value.Value;
 
 /**
- * @see "SoundFontⓡ Technical Specification 2.04, §8.1 Generator Enumerators Defined"
+ * @see "SoundFont® Technical Specification 2.04, §8.1 Generator Enumerators Defined"
  */
 
 @ImmutablesStyleType

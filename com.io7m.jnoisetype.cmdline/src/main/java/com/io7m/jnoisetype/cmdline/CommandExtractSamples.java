@@ -46,7 +46,7 @@ import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 import static java.nio.file.StandardOpenOption.WRITE;
 import static javax.sound.sampled.AudioFileFormat.Type;
 
-@Parameters(commandDescription = "Extract samples from a SoundFontⓡ file")
+@Parameters(commandDescription = "Extract samples from a SoundFont® file")
 final class CommandExtractSamples extends CommandRoot
 {
   private static final Logger LOG = LoggerFactory.getLogger(CommandExtractSamples.class);
@@ -56,7 +56,7 @@ final class CommandExtractSamples extends CommandRoot
   @Parameter(
     names = "--file",
     required = true,
-    description = "The SoundFontⓡ file to extract")
+    description = "The SoundFont® file to extract")
   Path path;
 
   @Parameter(
@@ -91,13 +91,13 @@ final class CommandExtractSamples extends CommandRoot
       ServiceLoader.load(NTFileParserProviderType.class)
         .findFirst()
         .orElseThrow(() -> new IllegalStateException(
-          "No SoundFontⓡ file parser service available"));
+          "No SoundFont® file parser service available"));
 
     final var interpreters =
       ServiceLoader.load(NTInterpreterProviderType.class)
         .findFirst()
         .orElseThrow(() -> new IllegalStateException(
-          "No SoundFontⓡ file interpreter service available"));
+          "No SoundFont® file interpreter service available"));
 
     final var pattern_include = Pattern.compile(this.regex_include);
     final var pattern_exclude = Pattern.compile(this.regex_exclude);

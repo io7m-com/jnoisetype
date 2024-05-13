@@ -90,7 +90,7 @@ public interface NTSampleBuilderType
   /**
    * @return The sample to which this sample is linked
    *
-   * @see "SoundFontⓡ Technical Specification 2.04, §7.10 The SHDR sub-chunk"
+   * @see "SoundFont® Technical Specification 2.04, §7.10 The SHDR sub-chunk"
    */
 
   default NTSampleIndex linked()
@@ -105,7 +105,7 @@ public interface NTSampleBuilderType
    *
    * @return The current builder
    *
-   * @see "SoundFontⓡ Technical Specification 2.04, §7.10 The SHDR sub-chunk"
+   * @see "SoundFont® Technical Specification 2.04, §7.10 The SHDR sub-chunk"
    */
 
   NTSampleBuilderType setLinked(NTSampleIndex index);

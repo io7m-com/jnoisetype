@@ -35,7 +35,7 @@ import java.util.ServiceLoader;
 import static java.nio.channels.FileChannel.MapMode.READ_ONLY;
 import static java.nio.file.StandardOpenOption.READ;
 
-@Parameters(commandDescription = "Display the contents of a SoundFontⓡ file")
+@Parameters(commandDescription = "Display the contents of a SoundFont® file")
 final class CommandShow extends CommandRoot
 {
   // CHECKSTYLE:OFF
@@ -43,7 +43,7 @@ final class CommandShow extends CommandRoot
   @Parameter(
     names = "--file",
     required = true,
-    description = "The SoundFontⓡ file to display")
+    description = "The SoundFont® file to display")
   Path path;
 
   // CHECKSTYLE:ON
@@ -58,13 +58,13 @@ final class CommandShow extends CommandRoot
       ServiceLoader.load(NTFileParserProviderType.class)
         .findFirst()
         .orElseThrow(() -> new IllegalStateException(
-          "No SoundFontⓡ file parser service available"));
+          "No SoundFont® file parser service available"));
 
     final var interpreters =
       ServiceLoader.load(NTInterpreterProviderType.class)
         .findFirst()
         .orElseThrow(() -> new IllegalStateException(
-          "No SoundFontⓡ file interpreter service available"));
+          "No SoundFont® file interpreter service available"));
 
     try (var channel = FileChannel.open(this.path, READ)) {
       final var map = channel.map(READ_ONLY, 0L, channel.size());

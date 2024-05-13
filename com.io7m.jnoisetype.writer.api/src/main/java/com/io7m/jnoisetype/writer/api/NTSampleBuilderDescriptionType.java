@@ -66,7 +66,7 @@ public interface NTSampleBuilderDescriptionType
   /**
    * @return The sample to which this sample is linked
    *
-   * @see "SoundFontⓡ Technical Specification 2.04, §7.10 The SHDR sub-chunk"
+   * @see "SoundFont® Technical Specification 2.04, §7.10 The SHDR sub-chunk"
    */
 
   @Value.Default

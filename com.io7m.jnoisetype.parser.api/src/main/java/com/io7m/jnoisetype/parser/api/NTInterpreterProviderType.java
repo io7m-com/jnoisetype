@@ -17,7 +17,7 @@
 package com.io7m.jnoisetype.parser.api;
 
 /**
- * A provider of SoundFontⓡ interpreters.
+ * A provider of SoundFont® interpreters.
  */
 
 public interface NTInterpreterProviderType

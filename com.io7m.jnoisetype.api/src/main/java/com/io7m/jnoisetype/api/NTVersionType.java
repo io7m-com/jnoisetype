@@ -25,7 +25,7 @@ import java.util.Comparator;
 /**
  * A version number.
  *
- * @see "SoundFontⓡ Technical Specification 2.04, §5.1, sfVersionTag"
+ * @see "SoundFont® Technical Specification 2.04, §5.1, sfVersionTag"
  */
 
 @ImmutablesStyleType

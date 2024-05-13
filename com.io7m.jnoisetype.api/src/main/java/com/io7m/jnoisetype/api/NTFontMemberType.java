@@ -17,13 +17,13 @@
 package com.io7m.jnoisetype.api;
 
 /**
- * An object that appears as a direct member of a SoundFontⓡ.
+ * An object that appears as a direct member of a SoundFont®.
  */
 
 public interface NTFontMemberType
 {
   /**
-   * @return The SoundFontⓡ to which the object belongs
+   * @return The SoundFont® to which the object belongs
    */
 
   NTFontType font();

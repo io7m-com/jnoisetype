@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 /**
  * Standard transforms.
  *
- * @see "SoundFontⓡ Technical Specification 2.04, §8.3 Modulator Transform Enumerators"
+ * @see "SoundFont® Technical Specification 2.04, §8.3 Modulator Transform Enumerators"
  */
 
 public final class NTTransforms

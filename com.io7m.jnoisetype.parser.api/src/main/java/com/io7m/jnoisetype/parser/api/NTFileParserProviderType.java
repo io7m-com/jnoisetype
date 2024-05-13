@@ -20,7 +20,7 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 
 /**
- * A provider of SoundFontⓡ parsers.
+ * A provider of SoundFont® parsers.
  */
 
 public interface NTFileParserProviderType

@@ -17,13 +17,13 @@
 package com.io7m.jnoisetype.parser.api;
 
 /**
- * A SoundFontⓡ parser.
+ * A SoundFont® parser.
  */
 
 public interface NTFileParserType
 {
   /**
-   * Parse a SoundFontⓡ.
+   * Parse a SoundFont®.
    *
    * @return The resulting parsed file
    *

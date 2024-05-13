@@ -19,13 +19,13 @@ package com.io7m.jnoisetype.api;
 import java.util.List;
 
 /**
- * The type of SoundFontsⓡ
+ * The type of SoundFonts®
  */
 
 public interface NTFontType
 {
   /**
-   * @return Information about the SoundFontⓡ
+   * @return Information about the SoundFont®
    */
 
   NTInfo info();

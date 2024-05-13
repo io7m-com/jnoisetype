@@ -24,9 +24,9 @@ import org.immutables.value.Value;
 import java.util.List;
 
 /**
- * A parsed SoundFontⓡ.
+ * A parsed SoundFont®.
  *
- * @see "SoundFontⓡ Technical Specification 2.04"
+ * @see "SoundFont® Technical Specification 2.04"
  */
 
 @Value.Immutable

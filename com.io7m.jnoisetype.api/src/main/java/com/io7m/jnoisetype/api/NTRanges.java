@@ -20,13 +20,13 @@ import com.io7m.jaffirm.core.Invariants;
 import com.io7m.jranges.RangeInclusiveI;
 
 /**
- * Various ranges defined by the SountFontⓡ specification.
+ * Various ranges defined by the SountFont® specification.
  */
 
 public final class NTRanges
 {
   /**
-   * The length range of short strings. The SountFontⓡ specification defines many strings as "an
+   * The length range of short strings. The SountFont® specification defines many strings as "an
    * ASCII string of 256 or fewer bytes including one or two terminators of value zero, so as to
    * make the total byte count even".
    */
@@ -35,7 +35,7 @@ public final class NTRanges
     RangeInclusiveI.of(0, 253);
 
   /**
-   * The length range of long strings. The SountFontⓡ specification defines many strings as "an
+   * The length range of long strings. The SountFont® specification defines many strings as "an
    * ASCII string of 65535 or fewer bytes including one or two terminators of value zero, so as to
    * make the total byte count even".
    */

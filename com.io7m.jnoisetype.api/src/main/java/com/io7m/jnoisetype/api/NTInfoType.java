@@ -22,7 +22,7 @@ import org.immutables.value.Value;
 import java.util.Optional;
 
 /**
- * @see "SoundFontⓡ Technical Specification 2.04, §5 The INFO-list Chunk"
+ * @see "SoundFont® Technical Specification 2.04, §5 The INFO-list Chunk"
  */
 
 @ImmutablesStyleType

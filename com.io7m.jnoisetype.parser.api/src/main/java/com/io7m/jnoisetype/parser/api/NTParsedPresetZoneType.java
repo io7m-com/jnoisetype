@@ -20,7 +20,7 @@ import com.io7m.immutables.styles.ImmutablesStyleType;
 import org.immutables.value.Value;
 
 /**
- * @see "SoundFontⓡ Technical Specification 2.04, §7.3 The PBAG subchunk"
+ * @see "SoundFont® Technical Specification 2.04, §7.3 The PBAG subchunk"
  */
 
 @ImmutablesStyleType

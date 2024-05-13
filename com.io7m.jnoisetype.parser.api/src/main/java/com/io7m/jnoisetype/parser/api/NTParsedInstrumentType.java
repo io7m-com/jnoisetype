@@ -22,7 +22,7 @@ import com.io7m.jnoisetype.api.NTNamedType;
 import org.immutables.value.Value;
 
 /**
- * @see "SoundFontⓡ Technical Specification 2.04, §7.6 The INST subchunk"
+ * @see "SoundFont® Technical Specification 2.04, §7.6 The INST subchunk"
  */
 
 @ImmutablesStyleType

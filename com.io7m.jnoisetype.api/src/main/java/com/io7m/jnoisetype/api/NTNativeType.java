@@ -20,7 +20,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
 /**
- * An annotation used to link the API types with those defined in the SoundFontⓡ specification.
+ * An annotation used to link the API types with those defined in the SoundFont® specification.
  */
 
 @Target({ElementType.TYPE, ElementType.METHOD})

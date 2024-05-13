@@ -21,7 +21,7 @@ import com.io7m.jnoisetype.api.NTNativeType;
 import org.immutables.value.Value;
 
 /**
- * @see "SoundFontⓡ Technical Specification 2.04, §7.4 The PMOD subchunk"
+ * @see "SoundFont® Technical Specification 2.04, §7.4 The PMOD subchunk"
  */
 
 @ImmutablesStyleType

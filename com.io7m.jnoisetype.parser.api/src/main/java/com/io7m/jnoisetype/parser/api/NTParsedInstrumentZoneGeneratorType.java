@@ -21,7 +21,7 @@ import com.io7m.jnoisetype.api.NTGenericAmount;
 import org.immutables.value.Value;
 
 /**
- * @see "SoundFontⓡ Technical Specification 2.04, §7.9 The IGEN subchunk"
+ * @see "SoundFont® Technical Specification 2.04, §7.9 The IGEN subchunk"
  */
 
 @ImmutablesStyleType

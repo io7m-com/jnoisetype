@@ -23,7 +23,7 @@ import com.io7m.jnoisetype.api.NTPresetName;
 import com.io7m.jnoisetype.api.NTSampleName;
 
 /**
- * A builder of writer descriptions for SoundFontⓡ files.
+ * A builder of writer descriptions for SoundFont® files.
  */
 
 public interface NTBuilderType

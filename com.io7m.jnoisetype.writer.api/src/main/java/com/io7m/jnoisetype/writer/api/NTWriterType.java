@@ -17,7 +17,7 @@
 package com.io7m.jnoisetype.writer.api;
 
 /**
- * The type of writers for SoundFontⓡ files.
+ * The type of writers for SoundFont® files.
  */
 
 public interface NTWriterType

@@ -2,8 +2,8 @@
 
 <div xmlns="http://www.w3.org/1999/xhtml">
   <ul>
-    <li>Ultra-efficient memory-mapped SoundFontⓡ parsing</li>
-    <li>Safe, easy, and correct lazy SoundFontⓡ file writing</li>
+    <li>Ultra-efficient memory-mapped SoundFont® parsing</li>
+    <li>Safe, easy, and correct lazy SoundFont® file writing</li>
     <li>Command-line tools and API</li>
     <li>Strongly-typed interfaces with a heavy emphasis on immutable value types</li>
     <li>Fully documented (JavaDoc)</li>

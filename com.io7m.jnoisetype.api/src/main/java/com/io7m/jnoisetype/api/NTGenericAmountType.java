@@ -21,7 +21,7 @@ import com.io7m.jranges.RangeCheck;
 import org.immutables.value.Value;
 
 /**
- * @see "SoundFontⓡ Technical Specification 2.04, §7.5 The PGEN subchunk"
+ * @see "SoundFont® Technical Specification 2.04, §7.5 The PGEN subchunk"
  */
 
 @NTNativeType(name = "genAmountType")

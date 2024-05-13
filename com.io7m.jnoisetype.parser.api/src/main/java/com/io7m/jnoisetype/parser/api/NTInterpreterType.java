@@ -19,7 +19,7 @@ package com.io7m.jnoisetype.parser.api;
 import com.io7m.jnoisetype.api.NTFontType;
 
 /**
- * A SoundFontⓡ interpreter.
+ * A SoundFont® interpreter.
  */
 
 public interface NTInterpreterType

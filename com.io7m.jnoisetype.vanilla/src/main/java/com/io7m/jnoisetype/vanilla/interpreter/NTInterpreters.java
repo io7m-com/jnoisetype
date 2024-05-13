@@ -53,7 +53,7 @@ import java.util.Objects;
 import java.util.function.IntSupplier;
 
 /**
- * An interpreter of parsed SoundFontⓡ values.
+ * An interpreter of parsed SoundFont® values.
  */
 
 @Component

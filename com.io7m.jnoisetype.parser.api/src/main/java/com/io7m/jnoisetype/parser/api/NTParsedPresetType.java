@@ -22,7 +22,7 @@ import com.io7m.jnoisetype.api.NTPresetName;
 import org.immutables.value.Value;
 
 /**
- * @see "SoundFontⓡ Technical Specification 2.04, §7.2 The PHDR subchunk"
+ * @see "SoundFont® Technical Specification 2.04, §7.2 The PHDR subchunk"
  */
 
 @ImmutablesStyleType

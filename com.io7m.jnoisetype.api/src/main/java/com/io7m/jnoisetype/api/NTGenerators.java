@@ -29,7 +29,7 @@ import java.util.TreeMap;
 /**
  * Standard generators.
  *
- * @see "SoundFontⓡ Technical Specification 2.04, §8.1 Generator Enumerators Defined"
+ * @see "SoundFont® Technical Specification 2.04, §8.1 Generator Enumerators Defined"
  */
 
 public final class NTGenerators

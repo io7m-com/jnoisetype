@@ -17,7 +17,7 @@
 package com.io7m.jnoisetype.api;
 
 /**
- * @see "SoundFontⓡ Technical Specification 2.04, §7.10 The SHDR subchunk"
+ * @see "SoundFont® Technical Specification 2.04, §7.10 The SHDR subchunk"
  */
 
 public enum NTSampleKind

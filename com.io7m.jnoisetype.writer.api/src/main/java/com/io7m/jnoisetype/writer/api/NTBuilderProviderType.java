@@ -17,7 +17,7 @@
 package com.io7m.jnoisetype.writer.api;
 
 /**
- * A provider of SoundFontⓡ builders.
+ * A provider of SoundFont® builders.
  */
 
 public interface NTBuilderProviderType
