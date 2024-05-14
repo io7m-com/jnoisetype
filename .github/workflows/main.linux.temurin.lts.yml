@@ -38,7 +38,7 @@ jobs:
           path: ./com.io7m.jnoisetype.tests/target/surefire-reports
 
       - name: Coverage
-        uses: codecov/codecov-action@v4.3.1
+        uses: codecov/codecov-action@v4.4.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: com.io7m.jnoisetype.tests/target/site/jacoco-aggregate/jacoco.xml
