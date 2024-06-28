@@ -39,7 +39,7 @@
     <io7m.api.previousVersion>0.0.1</io7m.api.previousVersion>
     <io7m.java.targetJavaVersion>21</io7m.java.targetJavaVersion>
     <org.immutables.value.version>2.10.1</org.immutables.value.version>
-    <junit.version>5.10.2</junit.version>
+    <junit.version>5.10.3</junit.version>
   </properties>
 
   <licenses>
