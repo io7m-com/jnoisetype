@@ -35,7 +35,7 @@
 
   <properties>
     <com.io7m.immutables.style.version>0.0.1</com.io7m.immutables.style.version>
-    <com.io7m.jspiel.version>0.0.4</com.io7m.jspiel.version>
+    <com.io7m.jspiel.version>1.0.0</com.io7m.jspiel.version>
     <io7m.api.previousVersion>0.0.1</io7m.api.previousVersion>
     <io7m.java.targetJavaVersion>21</io7m.java.targetJavaVersion>
     <org.immutables.value.version>2.10.1</org.immutables.value.version>
