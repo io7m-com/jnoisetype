@@ -30,6 +30,7 @@ module com.io7m.jnoisetype.vanilla
 
   requires com.io7m.jspiel.api;
   requires org.slf4j;
+  requires com.io7m.jaffirm.core;
 
   uses com.io7m.jspiel.api.RiffFileParserProviderType;
   uses com.io7m.jspiel.api.RiffFileWriterProviderType;
