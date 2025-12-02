@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
-  xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
@@ -34,6 +32,8 @@
   </modules>
 
   <properties>
+    <io7m.workID>2de8883d-3d03-3daa-9da2-f9cf40fd156f</io7m.workID>
+
     <com.io7m.immutables.style.version>0.0.1</com.io7m.immutables.style.version>
     <com.io7m.jspiel.version>1.0.0</com.io7m.jspiel.version>
     <io7m.api.previousVersion>0.0.1</io7m.api.previousVersion>
